@@ -12,10 +12,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-    private final CANSparkFlex m_shooterTopLeft = new CANSparkFlex(ShooterConstants.kTopLeft, MotorType.kBrushless);
-    private final CANSparkFlex m_shooterTopRight = new CANSparkFlex(ShooterConstants.kTopRight, MotorType.kBrushless); 
-    private final CANSparkFlex m_shooterBottomLeft = new CANSparkFlex(ShooterConstants.kBottomLeft, MotorType.kBrushless); 
-    private final CANSparkFlex m_shooterBottomRight = new CANSparkFlex(ShooterConstants.kBottomRight, MotorType.kBrushless);
+    private final CANSparkFlex m_shooterTopLeft = new CANSparkFlex(ShooterConstants.kTopLeftShooterMotorCanId, MotorType.kBrushless);
+    private final CANSparkFlex m_shooterTopRight = new CANSparkFlex(ShooterConstants.kTopRightShooterMotorCanId, MotorType.kBrushless); 
+    private final CANSparkFlex m_shooterBottomLeft = new CANSparkFlex(ShooterConstants.kBottomLeftShooterMotorCanId, MotorType.kBrushless); 
+    private final CANSparkFlex m_shooterBottomRight = new CANSparkFlex(ShooterConstants.kBottomRightShooterMotorCanId, MotorType.kBrushless);
 
     public ShooterSubsystem() {
         m_shooterBottomRight.setInverted(true);
@@ -49,6 +49,11 @@ public class ShooterSubsystem extends SubsystemBase {
     m_shooterBottomLeft.setVoltage(0);
     m_shooterBottomRight.setVoltage(0);
   }
+
+  public void doSolonoid(boolean toggleSolonoid) {
+    ShooterConstants.m_solenoid.set(toggleSolonoid);
+  }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a digital sensor).
    *

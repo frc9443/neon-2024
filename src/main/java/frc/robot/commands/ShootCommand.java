@@ -16,7 +16,6 @@ public class ShootCommand extends Command {
     }
 
     
-
     @Override
     public void initialize() {
         time.restart();

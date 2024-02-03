@@ -22,9 +22,11 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.GyroConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
+import frc.robot.commands.ActivateCompressorCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TurnToAngleCommand;
+import frc.robot.subsystems.CompressorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.utils.VisionUtils;
@@ -33,6 +35,7 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.List;
 
 import com.kauailabs.navx.frc.AHRS;
@@ -48,6 +51,7 @@ public class RobotContainer {
   // The robot's subsystems
   private DriveSubsystem m_robotDrive;
   private ShooterSubsystem m_ShooterSubsystem;
+  private CompressorSubsystem m_CompressorSubsystem;
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -58,9 +62,9 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-        m_gyro = new AHRS(SerialPort.Port.kUSB);
-        m_robotDrive = new DriveSubsystem(m_gyro);
-        m_ShooterSubsystem = new ShooterSubsystem();
+    m_gyro = new AHRS(SerialPort.Port.kUSB);
+    m_robotDrive = new DriveSubsystem(m_gyro);
+    m_ShooterSubsystem = new ShooterSubsystem();
 
     // Configure the button bindings
     configureButtonBindings();
@@ -88,12 +92,16 @@ public class RobotContainer {
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
+    //Turns on Compressor when under 70 PSI and off at 90 PSI
+    new Trigger(m_CompressorSubsystem.morePressureNeeded())
+    .whileTrue(new ActivateCompressorCommand(m_CompressorSubsystem));
+
     new JoystickButton(m_driverController, Button.kRightBumper.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
 
-
+    
     // Activates  Shooter for 3 seconds. hopefully.
      new JoystickButton(m_driverController, Button.kA.value)
     .onTrue(new ShootCommand(m_ShooterSubsystem).withTimeout(3));
@@ -113,6 +121,7 @@ public class RobotContainer {
     new JoystickButton(m_OperatorController, Button.kA.value)
     .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_robotDrive).withTimeout(3));
     //On A press of a second Controller will turn to note/tag I don't know how to make it pick
+
 
 
    // Stabilize robot to drive straight with gyro when left bumper is held

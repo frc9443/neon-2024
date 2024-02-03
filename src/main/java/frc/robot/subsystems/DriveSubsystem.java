@@ -99,7 +99,6 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("tY", LimelightHelpers.getTY(""));
         SmartDashboard.putNumber("Target Angle To Turn : FR", VisionUtils.calculateAngle(m_gyro));
         SmartDashboard.putNumber("Distance From Target Range", VisionUtils.calculateDistance());
-
         if((Math.abs(VisionUtils.calculateDistance()) <= 3) && (Math.abs(LimelightHelpers.getTX("")) <= 1))
         {
             SmartDashboard.putBoolean("Ready To Shoot", true);

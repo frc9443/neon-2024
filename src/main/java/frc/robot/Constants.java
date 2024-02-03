@@ -10,6 +10,10 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
+import edu.wpi.first.wpilibj.Compressor;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -51,18 +55,32 @@ public final class Constants {
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
-    // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 8;
-    public static final int kRearLeftDrivingCanId = 2;
-    public static final int kFrontRightDrivingCanId = 6;
-    public static final int kRearRightDrivingCanId = 4;
+    public static final boolean kGyroReversed = true;
 
-    public static final int kFrontLeftTurningCanId = 9;
+    // SPARK MAX CAN IDs
+    public static final int kFrontLeftDrivingCanId = 6;
+    public static final int kRearLeftDrivingCanId = 4;
+    public static final int kFrontRightDrivingCanId = 8;
+    public static final int kRearRightDrivingCanId = 2;
+
+    public static final int kFrontLeftTurningCanId = 5;
     public static final int kRearLeftTurningCanId = 3;
     public static final int kFrontRightTurningCanId = 7;
-    public static final int kRearRightTurningCanId = 5;
-
-    public static final boolean kGyroReversed = true;
+    public static final int kRearRightTurningCanId = 1;
+  }
+  public static final class IntakeConstants { 
+    public static final int kIntakeLiftMotorCanId = 30;
+    public static final int kIntakeRightRollerCanId = 32;
+    public static final int kIntakeLeftRollerCanId = 31;
+    }
+  public static final class ShooterConstants {
+    public static final int PneumaticHubCanId = 20;
+    public static final Solenoid m_solenoid = new Solenoid(PneumaticHubCanId, PneumaticsModuleType.REVPH, 0);
+    public static final DutyCycleEncoder m_encoder = new DutyCycleEncoder(9);
+    public static final int kTopLeftShooterMotorCanId = 21;
+    public static final int kTopRightShooterMotorCanId = 22;
+    public static final int kBottomLeftShooterMotorCanId = 23;
+    public static final int kBottomRightShooterMotorCanId = 24;
   }
 
   public static final class ModuleConstants {
@@ -138,12 +156,6 @@ public final class Constants {
     public static final double kStabilizationD = 0;
   }
 
-  public static final class ShooterConstants {
-    public static final int kTopLeft = 21;
-    public static final int kTopRight = 22;
-    public static final int kBottomLeft = 23;
-    public static final int kBottomRight = 24;
-  }
   public static final class AutoConstants {
     public static final double kMaxSpeedMetersPerSecond = 3;
     public static final double kMaxAccelerationMetersPerSecondSquared = 3;
