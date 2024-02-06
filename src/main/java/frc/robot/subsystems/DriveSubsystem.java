@@ -49,6 +49,8 @@ public class DriveSubsystem extends SubsystemBase {
   // The gyro sensor
   private final AHRS m_gyro;
   
+  public static double speedAdjustVal = 1;
+  
 
   // Slew rate filter variables for controlling lateral acceleration
   private double m_currentRotation = 0.0;
@@ -108,7 +110,8 @@ public class DriveSubsystem extends SubsystemBase {
         }
         
           SmartDashboard.putBoolean("In Range", (Math.abs(VisionUtils.calculateDistance()) <= 3));
-
+        SmartDashboard.putNumber("speed adjust", speedAdjustVal);
+        SmartDashboard.putNumber("Max Speed", getMaxSpeed());
   }
 
   /**
@@ -202,8 +205,8 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     // Convert the commanded speeds into the correct units for the drivetrain
-    double xSpeedDelivered = xSpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
-    double ySpeedDelivered = ySpeedCommanded * DriveConstants.kMaxSpeedMetersPerSecond;
+    double xSpeedDelivered = xSpeedCommanded * getMaxSpeed();
+    double ySpeedDelivered = ySpeedCommanded * getMaxSpeed();
     double rotDelivered = m_currentRotation * DriveConstants.kMaxAngularSpeed;
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
@@ -211,7 +214,7 @@ public class DriveSubsystem extends SubsystemBase {
             ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(getAngle()))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        swerveModuleStates, getMaxSpeed());
     m_frontLeft.setDesiredState(swerveModuleStates[0]);
     m_frontRight.setDesiredState(swerveModuleStates[1]);
     m_rearLeft.setDesiredState(swerveModuleStates[2]);
@@ -235,7 +238,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void setModuleStates(SwerveModuleState[] desiredStates) {
     SwerveDriveKinematics.desaturateWheelSpeeds(
-        desiredStates, DriveConstants.kMaxSpeedMetersPerSecond);
+        desiredStates, getMaxSpeed());
     m_frontLeft.setDesiredState(desiredStates[0]);
     m_frontRight.setDesiredState(desiredStates[1]);
     m_rearLeft.setDesiredState(desiredStates[2]);
@@ -277,5 +280,9 @@ public class DriveSubsystem extends SubsystemBase {
 
   public double getAngle() {
     return m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+  }
+  private double getMaxSpeed()
+  {
+    return DriveConstants.kMaxSpeedMetersPerSecond * speedAdjustVal;
   }
 }

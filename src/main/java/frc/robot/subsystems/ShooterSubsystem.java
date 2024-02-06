@@ -50,8 +50,8 @@ public class ShooterSubsystem extends SubsystemBase {
     m_shooterBottomRight.setVoltage(0);
   }
 
-  public void doSolonoid(boolean toggleSolonoid) {
-    ShooterConstants.m_solenoid.set(toggleSolonoid);
+  public void doSolonoid(boolean isUp) {
+    ShooterConstants.m_solenoid.set(isUp);
   }
 
   /**

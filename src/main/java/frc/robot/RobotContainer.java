@@ -24,8 +24,10 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.ActivateCompressorCommand;
 import frc.robot.commands.FollowAprilTagCommand;
+import frc.robot.commands.MoveShooterCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TurnToAngleCommand;
+import frc.robot.commands.speedAdjustCommand;
 import frc.robot.subsystems.CompressorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
@@ -35,6 +37,7 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
+import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.List;
 
@@ -65,7 +68,7 @@ public class RobotContainer {
     m_gyro = new AHRS(SerialPort.Port.kUSB);
     m_robotDrive = new DriveSubsystem(m_gyro);
     m_ShooterSubsystem = new ShooterSubsystem();
-
+    m_CompressorSubsystem = new CompressorSubsystem();
     // Configure the button bindings
     configureButtonBindings();
 
@@ -94,53 +97,71 @@ public class RobotContainer {
   private void configureButtonBindings() {
     //Turns on Compressor when under 70 PSI and off at 90 PSI
     new Trigger(m_CompressorSubsystem.morePressureNeeded())
-    .whileTrue(new ActivateCompressorCommand(m_CompressorSubsystem));
+    .onTrue(new ActivateCompressorCommand(m_CompressorSubsystem));
+
+    new POVButton(m_OperatorController, 0)
+    .onTrue(new MoveShooterCommand(m_ShooterSubsystem, true));
+    
+    new POVButton(m_OperatorController, 180)
+    .onTrue(new MoveShooterCommand(m_ShooterSubsystem, false));
 
     new JoystickButton(m_driverController, Button.kRightBumper.value)
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
-
     
     // Activates  Shooter for 3 seconds. hopefully.
-     new JoystickButton(m_driverController, Button.kA.value)
+     new JoystickButton(m_OperatorController, Button.kA.value)
     .onTrue(new ShootCommand(m_ShooterSubsystem).withTimeout(3));
 
-    // Turn to 90 degrees when the 'X' button is pressed, with a 5 second timeout
+    // Turn to 180 degrees when the 'X' button is pressed, with a 5 second timeout
+    new JoystickButton(m_driverController, Button.kA.value)
+    .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
+    
     new JoystickButton(m_driverController, Button.kX.value)
-    .onTrue(new TurnToAngleCommand(() -> 90, m_robotDrive).withTimeout(3));
-
-    // Turn to -90 degrees with a profile when the Circle button is pressed, with a 5 second timeout
+    .onTrue(new TurnToAngleCommand(() -> -135, m_robotDrive).withTimeout(3));
+    
     new JoystickButton(m_driverController, Button.kB.value)
+    .onTrue(new TurnToAngleCommand(() -> 135, m_robotDrive).withTimeout(3));
+
+    // Turn to 0 degrees when the 'B' button is pressed, with a 3 second timeout
+    new JoystickButton(m_driverController, Button.kY.value)
     .onTrue(new TurnToAngleCommand(() -> 0, m_robotDrive).withTimeout(3));
+
+    
+    // new JoystickButton(m_driverController, Button.kRightBumper.value)
+    // .onTrue(new speedAdjustCommand(m_robotDrive, true));
+    
+    // new JoystickButton(m_driverController, Button.kLeftBumper.value)
+    // .onTrue(new speedAdjustCommand(m_robotDrive, false));
     
 
-    new JoystickButton(m_driverController, Button.kY.value)
-    .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateAngle(m_gyro), m_robotDrive).withTimeout(3));
+    // new JoystickButton(m_driverController, Button.kY.value)
+    // .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateAngle(m_gyro), m_robotDrive).withTimeout(3));
 
-    new JoystickButton(m_OperatorController, Button.kA.value)
-    .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_robotDrive).withTimeout(3));
-    //On A press of a second Controller will turn to note/tag I don't know how to make it pick
+    // new JoystickButton(m_OperatorController, Button.kA.value)
+    // .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_robotDrive).withTimeout(3));
+    // //On A press of a second Controller will turn to note/tag I don't know how to make it pick
 
 
 
-   // Stabilize robot to drive straight with gyro when left bumper is held
-    new JoystickButton(m_driverController, Button.kLeftBumper.value)
-        .whileTrue(
-            new PIDCommand(
-                new PIDController(
-                    GyroConstants.kStabilizationP,
-                    GyroConstants.kStabilizationI,
-                    GyroConstants.kStabilizationD),
+//    // Stabilize robot to drive straight with gyro when left bumper is held
+//     new JoystickButton(m_driverController, Button.kLeftBumper.value)
+//         .whileTrue(
+//             new PIDCommand(
+//                 new PIDController(
+//                     GyroConstants.kStabilizationP,
+//                     GyroConstants.kStabilizationI,
+//                     GyroConstants.kStabilizationD),
                     
-                // Close the loop on the turn rate
-                m_robotDrive::getTurnRate,
-                // Setpoint is 0
-                0,
-                // Pipe the output to the turning controls
-                output -> m_robotDrive.drive(-m_driverController.getLeftY(), output,0,true,true),
-                // Require the robot drive
-                m_robotDrive));
+//                 // Close the loop on the turn rate
+//                 m_robotDrive::getTurnRate,
+//                 // Setpoint is 0
+//                 0,
+//                 // Pipe the output to the turning controls
+//                 output -> m_robotDrive.drive(-m_driverController.getLeftY(), output,0,true,true),
+//                 // Require the robot drive
+//                 m_robotDrive));
     
 
   }

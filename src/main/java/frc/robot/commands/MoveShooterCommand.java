@@ -15,9 +15,9 @@ public class MoveShooterCommand extends Command {
   private final ShooterSubsystem m_ShooterSubsystem;
   public static boolean solonoidOpen = false;
 
-  public MoveShooterCommand(ShooterSubsystem ss, boolean toggleSolonoid) {
+  public MoveShooterCommand(ShooterSubsystem ss, boolean isUp) {
     m_ShooterSubsystem = ss;
-    solonoidOpen = toggleSolonoid;
+    solonoidOpen = isUp;
     addRequirements(m_ShooterSubsystem);
   }
 

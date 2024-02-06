@@ -39,6 +39,9 @@ public double getPressure(){
     return m_compressor.getPressure();
 }
 public BooleanSupplier morePressureNeeded(){
+    m_compressor.enableAnalog(70, 90);
+    SmartDashboard.putBoolean("Compresser On", m_compressor.isEnabled());
+    
     return ()->{
         if(getPressure() < 70)
         {
