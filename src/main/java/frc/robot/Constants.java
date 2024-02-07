@@ -56,16 +56,27 @@ public final class Constants {
 
     public static final boolean kGyroReversed = true;
 
-    // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 6;
-    public static final int kRearLeftDrivingCanId = 4;
-    public static final int kFrontRightDrivingCanId = 8;
-    public static final int kRearRightDrivingCanId = 2;
+    // SPARK MAX CAN IDs    Top 8 are Neon
+    // public static final int kFrontLeftDrivingCanId = 6;
+    // public static final int kRearLeftDrivingCanId = 4;
+    // public static final int kFrontRightDrivingCanId = 8;
+    // public static final int kRearRightDrivingCanId = 2;
 
-    public static final int kFrontLeftTurningCanId = 5;
+    // public static final int kFrontLeftTurningCanId = 5;
+    // public static final int kRearLeftTurningCanId = 3;
+    // public static final int kFrontRightTurningCanId = 7;
+    // public static final int kRearRightTurningCanId = 9;
+
+
+    public static final int kFrontLeftDrivingCanId = 8;
+    public static final int kRearLeftDrivingCanId = 2;
+    public static final int kFrontRightDrivingCanId = 6;
+    public static final int kRearRightDrivingCanId = 4;
+
+    public static final int kFrontLeftTurningCanId = 9;
     public static final int kRearLeftTurningCanId = 3;
     public static final int kFrontRightTurningCanId = 7;
-    public static final int kRearRightTurningCanId = 9;
+    public static final int kRearRightTurningCanId = 5;
   }
   public static final class IntakeConstants { 
     public static final int kIntakeLiftMotorCanId = 30;
