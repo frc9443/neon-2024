@@ -4,8 +4,10 @@
 
 package frc.robot.subsystems;
 
+import frc.robot.Constants.IntakeConstants;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 
 public class IntakeSubsystem extends SubsystemBase {
   /** Creates a new ExampleSubsystem. */
@@ -43,5 +45,12 @@ public class IntakeSubsystem extends SubsystemBase {
   @Override
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
+  }
+  public void Intake()
+  {
+    kIntakeRightRollerCanId.run();
+  }
+  public void Stop()
+  {
   }
 }
