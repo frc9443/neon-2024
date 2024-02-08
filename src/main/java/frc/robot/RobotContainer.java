@@ -23,6 +23,7 @@ import frc.robot.Constants.GyroConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.ActivateCompressorCommand;
+import frc.robot.commands.ActivateIntakeCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.MoveShooterCommand;
 import frc.robot.commands.ShootCommand;
@@ -139,17 +140,18 @@ public class RobotContainer {
     // new JoystickButton(m_OperatorController, Button.kRightBumper.value)
     // .onTrue(new ActiveIntakeCommand(m_IntakeSubsystem, ));
 
-    new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
-    .onTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem));
+    // Manual Overrides for stick control of intake arm and climber
+    // new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
+    // .onTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem));
 
-    new JoystickButton(m_OperatorController, Button.kA.values)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, .2));
+    new JoystickButton(m_OperatorController, Button.kA.value)
+    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, .3).withTimeout(3));
 
-    new JoystickButton(m_OperatorController, Button.kB.values)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -.2));
+    new JoystickButton(m_OperatorController, Button.kB.value)
+    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -.5).withTimeout(3));
 
-    new JoystickButton(m_OperatorController, Button.kX.values)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -.8));
+    new JoystickButton(m_OperatorController, Button.kX.value)
+    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -.8).withTimeout(3));
 
     new POVButton(m_OperatorController, 90)
     .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_robotDrive).withTimeout(3));

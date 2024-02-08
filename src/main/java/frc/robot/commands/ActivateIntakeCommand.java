@@ -11,14 +11,11 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ActivateIntakeCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
   private final IntakeSubsystem m_IntakeSubsystem;
-
-  /**
-   * Creates a new ExampleCommand.
-   *
-   * @param subsystem The subsystem used by this command.
-   */
-  public ActivateIntakeCommand(IntakeSubsystem subsystem) {
+  private double speed;
+  
+  public ActivateIntakeCommand(IntakeSubsystem subsystem, double setSpeed) {
     m_IntakeSubsystem = subsystem;
+    speed = setSpeed;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -26,7 +23,7 @@ public class ActivateIntakeCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_IntakeSubsystem.run(1);
+    m_IntakeSubsystem.run(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
