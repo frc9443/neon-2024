@@ -12,11 +12,13 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
+import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.IntakeArmConstants;
 import frc.robot.Constants.VisionConstants;
 import frc.utils.LimelightHelpers;
 import frc.utils.SwerveUtils;
@@ -50,6 +52,10 @@ public class DriveSubsystem extends SubsystemBase {
   public static double speedAdjustVal = 1;
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
   private ChassisSpeeds m_prevTarget = new ChassisSpeeds();
+
+  private final Encoder m_ArmEncoder = new 
+  Encoder(IntakeArmConstants.kIntakeArmEncoderADioId, IntakeArmConstants.kIntakeArmEncoderBDioId);
+
 
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
@@ -102,6 +108,7 @@ public class DriveSubsystem extends SubsystemBase {
           SmartDashboard.putBoolean("In Range", (Math.abs(VisionUtils.calculateDistance()) <= 3));
         SmartDashboard.putNumber("speed adjust", speedAdjustVal);
         SmartDashboard.putNumber("Max Speed", getMaxSpeed());
+        SmartDashboard.putNumber("Encoder Distance" , m_ArmEncoder.getDistance());
   }
 
   /**
@@ -204,6 +211,7 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearLeft.resetEncoders();
     m_frontRight.resetEncoders();
     m_rearRight.resetEncoders();
+    m_ArmEncoder.reset();
   }
 
   /** Zeroes the heading of the robot. */

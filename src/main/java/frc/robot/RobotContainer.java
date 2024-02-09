@@ -25,12 +25,16 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.ActivateCompressorCommand;
 import frc.robot.commands.ActivateIntakeCommand;
 import frc.robot.commands.FollowAprilTagCommand;
+import frc.robot.commands.ManualOverrideCommand;
+import frc.robot.commands.MoveIntakeCommandWStick;
 import frc.robot.commands.MoveShooterCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TurnToAngleCommand;
 import frc.robot.commands.speedAdjustCommand;
+import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CompressorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.utils.VisionUtils;
@@ -58,6 +62,8 @@ public class RobotContainer {
   private ShooterSubsystem m_ShooterSubsystem;
   private CompressorSubsystem m_CompressorSubsystem;
   private IntakeSubsystem m_IntakeSubsystem;
+  private IntakeArmSubsystem m_IntakeArmSubsystem;
+  private ClimberSubsystem m_ClimberSubsystem;
 
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
@@ -73,6 +79,7 @@ public class RobotContainer {
     m_ShooterSubsystem = new ShooterSubsystem();
     m_CompressorSubsystem = new CompressorSubsystem();
     m_IntakeSubsystem = new IntakeSubsystem();
+    m_ClimberSubsystem = new ClimberSubsystem();
     // Configure the button bindings
     configureButtonBindings();
 
@@ -124,7 +131,9 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
     .onTrue(new speedAdjustCommand(m_robotDrive, false));
 
-
+    
+    new POVButton(m_OperatorController, 45)
+    .onTrue(new MoveIntakeCommandWStick(m_IntakeSubsystem));
   
     
     // Activates  Shooter for 3 seconds. hopefully.
@@ -137,12 +146,9 @@ public class RobotContainer {
     new POVButton(m_OperatorController, 180)
     .onTrue(new MoveShooterCommand(m_ShooterSubsystem, false));
 
-    // new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-    // .onTrue(new ActiveIntakeCommand(m_IntakeSubsystem, ));
-
-    // Manual Overrides for stick control of intake arm and climber
-    // new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
-    // .onTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem));
+    //Manual Overrides for stick control of intake arm and climber
+    new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
+    .onTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController));
 
     new JoystickButton(m_OperatorController, Button.kA.value)
     .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, .3).withTimeout(3));

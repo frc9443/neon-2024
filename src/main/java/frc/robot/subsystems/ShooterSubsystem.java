@@ -19,7 +19,9 @@ public class ShooterSubsystem extends SubsystemBase {
 
     public ShooterSubsystem() {
         m_shooterBottomRight.setInverted(true);
-        m_shooterTopRight.setInverted(true);
+        m_shooterTopRight.setInverted(false);
+        m_shooterBottomLeft.setInverted(false);
+        m_shooterTopLeft.setInverted(true);
     }
 
   /**
