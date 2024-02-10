@@ -44,7 +44,7 @@ public class ManualOverrideCommand extends Command {
     }
     if(m_OperatorController.getLeftX() != 0)
     {
-        double rate = m_OperatorController.getRightX() / 10;
+        double rate = m_OperatorController.getLeftX() / 10;
         m_ClimberSubsystem.moveClimber(rate);
     }
 

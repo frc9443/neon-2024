@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -8,10 +9,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class ShootCommand extends Command {
     private final ShooterSubsystem m_ShooterSubsystem;
+    private final IntakeSubsystem m_IntakeSubsystem;
     private final Timer time = new Timer();
 
-    public ShootCommand(ShooterSubsystem ss) {
-        m_ShooterSubsystem = ss;
+    public ShootCommand(ShooterSubsystem shooterSubsystem, IntakeSubsystem intakeSubsystem) {
+        m_ShooterSubsystem = shooterSubsystem;
+        m_IntakeSubsystem = intakeSubsystem;
         addRequirements(m_ShooterSubsystem);
     }
 
@@ -20,6 +23,7 @@ public class ShootCommand extends Command {
     public void initialize() {
         time.restart();
         m_ShooterSubsystem.Shoot();
+        m_IntakeSubsystem.run(.25);
     }
 
     @Override
@@ -29,6 +33,7 @@ public class ShootCommand extends Command {
         {
             time.stop();
             m_ShooterSubsystem.Stop();
+            m_IntakeSubsystem.stop();
             return true;
         }
         return false;

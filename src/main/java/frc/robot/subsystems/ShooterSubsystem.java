@@ -39,10 +39,10 @@ public class ShooterSubsystem extends SubsystemBase {
   }
   public void Shoot()
   {
-    m_shooterTopLeft.setVoltage(11);
-    m_shooterTopRight.setVoltage(11);
-    m_shooterBottomLeft.setVoltage(5.5);
-    m_shooterBottomRight.setVoltage(5.5);
+    m_shooterTopLeft.setVoltage(3);
+    m_shooterTopRight.setVoltage(3);
+    m_shooterBottomLeft.setVoltage(1.5);
+    m_shooterBottomRight.setVoltage(1.5);
   }
   public void Stop()
   {
