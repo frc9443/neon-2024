@@ -26,7 +26,6 @@ import frc.robot.commands.ActivateCompressorCommand;
 import frc.robot.commands.ActivateIntakeCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.ManualOverrideCommand;
-import frc.robot.commands.MoveIntakeCommandWStick;
 import frc.robot.commands.MoveShooterCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TurnToAngleCommand;
@@ -132,9 +131,7 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
     .onTrue(new speedAdjustCommand(m_robotDrive, false));
 
-    
-    new POVButton(m_OperatorController, 45)
-    .onTrue(new MoveIntakeCommandWStick(m_IntakeSubsystem));
+
   
     
     // Activates  Shooter for 3 seconds. hopefully.
@@ -147,18 +144,21 @@ public class RobotContainer {
     new POVButton(m_OperatorController, 180)
     .onTrue(new MoveShooterCommand(m_ShooterSubsystem, false));
 
-    //Manual Overrides for stick control of intake arm and climber
+    new JoystickButton(m_OperatorController, Button.kRightBumper.value)
+    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, 0.5));
+
+    // Manual Overrides for stick control of intake arm and climber
     new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
     .onTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController));
 
     new JoystickButton(m_OperatorController, Button.kA.value)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, .3).withTimeout(3));
+    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, .3).withTimeout(1));
 
     new JoystickButton(m_OperatorController, Button.kB.value)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -.5).withTimeout(3));
+    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -.5).withTimeout(1));
 
     new JoystickButton(m_OperatorController, Button.kX.value)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -.8).withTimeout(3));
+    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -.8).withTimeout(1));
 
     new POVButton(m_OperatorController, 90)
     .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_robotDrive).withTimeout(3));

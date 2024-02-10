@@ -13,13 +13,13 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.I2C;
+import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.kauailabs.navx.frc.AHRS;
 import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.IntakeArmConstants;
-import frc.robot.Constants.VisionConstants;
 import frc.utils.LimelightHelpers;
 import frc.utils.SwerveUtils;
 import frc.utils.VisionUtils;
@@ -52,17 +52,14 @@ public class DriveSubsystem extends SubsystemBase {
   public static double speedAdjustVal = 1;
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
   private ChassisSpeeds m_prevTarget = new ChassisSpeeds();
-
-  private final Encoder m_ArmEncoder = new 
-  Encoder(IntakeArmConstants.kIntakeArmEncoderADioId, IntakeArmConstants.kIntakeArmEncoderBDioId);
-
-
+  
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(AHRS gyro) {
     m_gyro = gyro;
+    
     m_odometry= new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,
       Rotation2d.fromDegrees(getAngle()),
@@ -95,7 +92,7 @@ public class DriveSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Has Targed", LimelightHelpers.getTV(""));
         SmartDashboard.putNumber("tX", LimelightHelpers.getTX(""));
         SmartDashboard.putNumber("tY", LimelightHelpers.getTY(""));
-        SmartDashboard.putNumber("Target Angle To Turn : FR", VisionUtils.calculateAngle(m_gyro));
+       SmartDashboard.putNumber("Target Angle To Turn : FR", VisionUtils.calculateAngle(m_gyro));
         SmartDashboard.putNumber("Distance From Target Range", VisionUtils.calculateDistance());
         if((Math.abs(VisionUtils.calculateDistance()) <= 3) && (Math.abs(LimelightHelpers.getTX("")) <= 1))
         {
@@ -108,7 +105,6 @@ public class DriveSubsystem extends SubsystemBase {
           SmartDashboard.putBoolean("In Range", (Math.abs(VisionUtils.calculateDistance()) <= 3));
         SmartDashboard.putNumber("speed adjust", speedAdjustVal);
         SmartDashboard.putNumber("Max Speed", getMaxSpeed());
-        SmartDashboard.putNumber("Encoder Distance" , m_ArmEncoder.getDistance());
   }
 
   /**
@@ -211,12 +207,11 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearLeft.resetEncoders();
     m_frontRight.resetEncoders();
     m_rearRight.resetEncoders();
-    m_ArmEncoder.reset();
   }
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-    m_gyro.reset();
+  //  m_gyro.reset();
   }
 
   /**
@@ -234,11 +229,13 @@ public class DriveSubsystem extends SubsystemBase {
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+   // return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+   return 0;
   }
 
   public double getAngle() {
-    return m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    //return m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return 0;
   }
   private double getMaxSpeed()
   {
