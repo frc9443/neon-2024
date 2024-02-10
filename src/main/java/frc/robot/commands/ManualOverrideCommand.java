@@ -39,7 +39,7 @@ public class ManualOverrideCommand extends Command {
     
     if(m_OperatorController.getRightX() != 0)
     {
-        double rate = m_OperatorController.getRightX() / 10;
+        double rate = m_OperatorController.getRightX() / 2.0;
         m_IntakeArmSubsystem.moveArm(rate);
     }
     if(m_OperatorController.getLeftX() != 0)

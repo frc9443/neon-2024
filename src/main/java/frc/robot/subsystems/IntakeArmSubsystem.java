@@ -9,17 +9,16 @@ import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.IntakeArmConstants;
-import frc.robot.Constants.IntakeConstants;
 
 
 public class IntakeArmSubsystem extends SubsystemBase {
 
-  private final CANSparkMax m_IntakeArm = new CANSparkMax(IntakeConstants.kIntakeLeftRollerCanId, MotorType.kBrushless);
-  private final Encoder m_ArmEncoder = new 
-  Encoder(IntakeArmConstants.kIntakeArmEncoderADioId, IntakeArmConstants.kIntakeArmEncoderBDioId);
-
+  private final Talon m_IntakeArm = new Talon(IntakeArmConstants.kIntakeLiftMotorPWMId);
+  private final DutyCycleEncoder m_ArmEncoder = new DutyCycleEncoder(IntakeArmConstants.kIntakeArmEncoderDioId);
 
   public IntakeArmSubsystem() {}
 
@@ -36,6 +35,9 @@ public class IntakeArmSubsystem extends SubsystemBase {
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
+
+    // Smart Dashboard output
+    SmartDashboard.putNumber("IntakeArm position", getPosition());
   }
 
   @Override
@@ -48,12 +50,14 @@ public class IntakeArmSubsystem extends SubsystemBase {
   {
     m_IntakeArm.set(rate);
   }
+
   public void stopArm()
   {
     m_IntakeArm.stopMotor();
   }
-  public double getDistance()
+
+  public double getPosition()
   {
-    return m_ArmEncoder.getDistance();
+    return m_ArmEncoder.getAbsolutePosition();
   }
 }

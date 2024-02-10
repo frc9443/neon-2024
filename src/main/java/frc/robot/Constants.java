@@ -78,19 +78,21 @@ public final class Constants {
     public static final int kFrontRightTurningCanId = 7;
     public static final int kRearRightTurningCanId = 5;
   }
+
   public static final class IntakeConstants { 
     public static final int kIntakeRightRollerCanId = 32;
     public static final int kIntakeLeftRollerCanId = 31;
-    }
+  }
+
   public static final class IntakeArmConstants{
-    public static final int kIntakeLiftMotorCanId = 30;
-    public static final int kIntakeArmEncoderADioId = 9;
-    public static final int kIntakeArmEncoderBDioId = 8;
+    public static final int kIntakeLiftMotorPWMId = 9;
+    public static final int kIntakeArmEncoderDioId = 9;
   }
 
   public static final class ClimberConstants{
     public static final int kClibmerMotorCanId = 200;
   }
+  
   public static final class ShooterConstants {
     public static final int PneumaticHubCanId = 20;
     public static final Solenoid m_solenoid = new Solenoid(PneumaticHubCanId, PneumaticsModuleType.REVPH, 0);

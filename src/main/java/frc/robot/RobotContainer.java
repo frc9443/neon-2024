@@ -79,6 +79,7 @@ public class RobotContainer {
     m_ShooterSubsystem = new ShooterSubsystem();
     m_CompressorSubsystem = new CompressorSubsystem();
     m_IntakeSubsystem = new IntakeSubsystem();
+    m_IntakeArmSubsystem = new IntakeArmSubsystem();
     m_ClimberSubsystem = new ClimberSubsystem();
     // Configure the button bindings
     configureButtonBindings();
@@ -138,7 +139,7 @@ public class RobotContainer {
     
     // Activates  Shooter for 3 seconds. hopefully.
      new JoystickButton(m_OperatorController, Button.kY.value)
-    .onTrue(new ShootCommand(m_ShooterSubsystem).withTimeout(3));
+    .onTrue(new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(3));
 
     new POVButton(m_OperatorController, 0)
     .onTrue(new MoveShooterCommand(m_ShooterSubsystem, true));
