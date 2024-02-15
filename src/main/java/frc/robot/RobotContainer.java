@@ -165,7 +165,7 @@ public class RobotContainer {
     new POVButton(m_OperatorController, 90)
     .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_robotDrive).withTimeout(3));
     
-    new POVButton(m_OperatorController, 180)
+    new POVButton(m_OperatorController, 270)
     .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_robotDrive).withTimeout(3));
     
 
