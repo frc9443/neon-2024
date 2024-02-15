@@ -7,6 +7,8 @@ package frc.robot.subsystems;
 import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import frc.robot.Constants.ShooterConstants;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -16,6 +18,9 @@ public class ShooterSubsystem extends SubsystemBase {
     private final CANSparkFlex m_shooterTopRight = new CANSparkFlex(ShooterConstants.kTopRightShooterMotorCanId, MotorType.kBrushless); 
     private final CANSparkFlex m_shooterBottomLeft = new CANSparkFlex(ShooterConstants.kBottomLeftShooterMotorCanId, MotorType.kBrushless); 
     private final CANSparkFlex m_shooterBottomRight = new CANSparkFlex(ShooterConstants.kBottomRightShooterMotorCanId, MotorType.kBrushless);
+
+    private final Solenoid m_solenoid = new Solenoid(ShooterConstants.PneumaticHubCanId,
+     PneumaticsModuleType.REVPH, ShooterConstants.SolenoidId);
 
     public ShooterSubsystem() {
         m_shooterBottomRight.setInverted(true);
@@ -39,10 +44,10 @@ public class ShooterSubsystem extends SubsystemBase {
   }
   public void Shoot()
   {
-    m_shooterTopLeft.setVoltage(3);
-    m_shooterTopRight.setVoltage(3);
-    m_shooterBottomLeft.setVoltage(1.5);
-    m_shooterBottomRight.setVoltage(1.5);
+    m_shooterTopLeft.set(0.8);
+    m_shooterTopRight.set(0.8);
+    m_shooterBottomLeft.set(0.5);
+    m_shooterBottomRight.set(0.5);
   }
   public void Stop()
   {
@@ -53,7 +58,7 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void doSolonoid(boolean isUp) {
-    ShooterConstants.m_solenoid.set(isUp);
+    m_solenoid.set(isUp);
   }
 
   /**

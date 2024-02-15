@@ -5,9 +5,9 @@
 package frc.robot.subsystems;
 
 import frc.robot.Constants.IntakeConstants;
-import frc.utils.TCS34725_I2C;
-import frc.utils.TCS34725_I2C.TCSColor;
-import frc.utils.TCS34725_I2C.TransferAbortedException;
+// import frc.utils.TCS34725_I2C;
+// import frc.utils.TCS34725_I2C.TCSColor;
+// import frc.utils.TCS34725_I2C.TransferAbortedException;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
@@ -19,7 +19,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class IntakeSubsystem extends SubsystemBase {
   private final CANSparkMax m_IntakeLeft = new CANSparkMax(IntakeConstants.kIntakeLeftRollerCanId, MotorType.kBrushless);
   private final CANSparkMax m_IntakeRight = new CANSparkMax(IntakeConstants.kIntakeRightRollerCanId, MotorType.kBrushless);
-  private final TCS34725_I2C m_ColorSensor = new TCS34725_I2C(false);
+  // private final TCS34725_I2C m_ColorSensor = new TCS34725_I2C(false);
 
   public IntakeSubsystem() {}
 
@@ -37,20 +37,20 @@ public class IntakeSubsystem extends SubsystemBase {
   public void periodic() {
     // This method will be called once per scheduler run
 
-    try {
-      TCSColor color = m_ColorSensor.getRawData();
-      SmartDashboard.putNumber("ColorSensor R", color.getR());
-      SmartDashboard.putNumber("ColorSensor G", color.getG());
-      SmartDashboard.putNumber("ColorSensor B", color.getB());
-      double[] colors = {
-          color.getR(), color.getB(), color.getG()
-      };
-      SmartDashboard.putNumberArray("ColorSensor", colors);
-      SmartDashboard.putNumber("ColorSensor Temp", TCS34725_I2C.calculateColorTemperature(color));
-      SmartDashboard.putNumber("ColorSensor LUX", TCS34725_I2C.calculateLux(color));
-    } catch (TransferAbortedException ex) {
-      // noop
-    }
+    // try {
+    //   TCSColor color = m_ColorSensor.getRawData();
+    //   SmartDashboard.putNumber("ColorSensor R", color.getR());
+    //   SmartDashboard.putNumber("ColorSensor G", color.getG());
+    //   SmartDashboard.putNumber("ColorSensor B", color.getB());
+    //   double[] colors = {
+    //       color.getR(), color.getB(), color.getG()
+    //   };
+    //   SmartDashboard.putNumberArray("ColorSensor", colors);
+      // SmartDashboard.putNumber("ColorSensor Temp", TCS34725_I2C.calculateColorTemperature(color));
+      // SmartDashboard.putNumber("ColorSensor LUX", TCS34725_I2C.calculateLux(color));
+    // } catch (TransferAbortedException ex) {
+    //   // noop
+    // }
   }
 
   @Override

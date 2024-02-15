@@ -94,6 +94,8 @@ public class RobotContainer {
                 -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
                 true, true),
             m_robotDrive));
+
+    // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
   }
 
   /**
@@ -145,20 +147,20 @@ public class RobotContainer {
     .onTrue(new MoveShooterCommand(m_ShooterSubsystem, false));
 
     new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, 0.5));
+    .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.5)); // Negative = ingest note
 
     // Manual Overrides for stick control of intake arm and climber
     new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
     .onTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController));
 
     new JoystickButton(m_OperatorController, Button.kA.value)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, .3).withTimeout(1));
+    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.3).withTimeout(1));
 
     new JoystickButton(m_OperatorController, Button.kB.value)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -.5).withTimeout(1));
+    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, 0.5).withTimeout(1));
 
     new JoystickButton(m_OperatorController, Button.kX.value)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -.8).withTimeout(1));
+    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, 0.8).withTimeout(1));
 
     new POVButton(m_OperatorController, 90)
     .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_robotDrive).withTimeout(3));

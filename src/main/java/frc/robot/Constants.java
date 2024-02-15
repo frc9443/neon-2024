@@ -57,17 +57,17 @@ public final class Constants {
     public static final boolean kGyroReversed = true;
 
     // SPARK MAX CAN IDs    Top 8 are Neon
-    // public static final int kFrontLeftDrivingCanId = 6;
-    // public static final int kRearLeftDrivingCanId = 4;
-    // public static final int kFrontRightDrivingCanId = 8;
-    // public static final int kRearRightDrivingCanId = 2;
+    public static final int kFrontLeftDrivingCanId = 6;
+    public static final int kRearLeftDrivingCanId = 4;
+    public static final int kFrontRightDrivingCanId = 8;
+    public static final int kRearRightDrivingCanId = 2;
 
-    // public static final int kFrontLeftTurningCanId = 5;
-    // public static final int kRearLeftTurningCanId = 3;
-    // public static final int kFrontRightTurningCanId = 7;
-    // public static final int kRearRightTurningCanId = 9;
+    public static final int kFrontLeftTurningCanId = 5;
+    public static final int kRearLeftTurningCanId = 3;
+    public static final int kFrontRightTurningCanId = 7;
+    public static final int kRearRightTurningCanId = 9;
 
-
+    public static final class Helium {
     public static final int kFrontLeftDrivingCanId = 8;
     public static final int kRearLeftDrivingCanId = 2;
     public static final int kFrontRightDrivingCanId = 6;
@@ -77,6 +77,7 @@ public final class Constants {
     public static final int kRearLeftTurningCanId = 3;
     public static final int kFrontRightTurningCanId = 7;
     public static final int kRearRightTurningCanId = 5;
+    }
   }
 
   public static final class IntakeConstants { 
@@ -95,12 +96,12 @@ public final class Constants {
   
   public static final class ShooterConstants {
     public static final int PneumaticHubCanId = 20;
-    public static final Solenoid m_solenoid = new Solenoid(PneumaticHubCanId, PneumaticsModuleType.REVPH, 0);
     public static final DutyCycleEncoder m_encoder = new DutyCycleEncoder(9);
     public static final int kTopLeftShooterMotorCanId = 21;
     public static final int kTopRightShooterMotorCanId = 22;
     public static final int kBottomLeftShooterMotorCanId = 23;
     public static final int kBottomRightShooterMotorCanId = 24;
+    public static final int SolenoidId = 0;
   }
 
   public static final class ModuleConstants {

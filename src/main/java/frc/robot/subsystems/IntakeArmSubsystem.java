@@ -8,7 +8,9 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -45,10 +47,19 @@ public class IntakeArmSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-
   public void moveArm(double rate)
   {
     m_IntakeArm.set(rate);
+  }
+
+  public Command loadPosition() {
+    return new PIDCommand(new PIDController(1,0,0),
+     this::getPosition, 0.02, this::moveArm, this);
+  }
+
+  public Command shootPosition() {
+    return new PIDCommand(new PIDController(1,0,0),
+     this::getPosition, 0.6, this::moveArm, this);
   }
 
   public void stopArm()
