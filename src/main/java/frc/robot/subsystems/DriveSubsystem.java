@@ -28,25 +28,13 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
 
-  private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
-      DriveConstants.kFrontLeftDrivingCanId,
-      DriveConstants.kFrontLeftTurningCanId,
-      DriveConstants.kFrontLeftChassisAngularOffset);
+  private MAXSwerveModule m_frontLeft;
 
-  private final MAXSwerveModule m_frontRight = new MAXSwerveModule(
-      DriveConstants.kFrontRightDrivingCanId,
-      DriveConstants.kFrontRightTurningCanId,
-      DriveConstants.kFrontRightChassisAngularOffset);
+  private MAXSwerveModule m_frontRight;
 
-  private final MAXSwerveModule m_rearLeft = new MAXSwerveModule(
-      DriveConstants.kRearLeftDrivingCanId,
-      DriveConstants.kRearLeftTurningCanId,
-      DriveConstants.kBackLeftChassisAngularOffset);
+  private MAXSwerveModule m_rearLeft;
 
-  private final MAXSwerveModule m_rearRight = new MAXSwerveModule(
-      DriveConstants.kRearRightDrivingCanId,
-      DriveConstants.kRearRightTurningCanId,
-      DriveConstants.kBackRightChassisAngularOffset);
+  private MAXSwerveModule m_rearRight;
 
   // The gyro sensor
   private final AHRS m_gyro;
@@ -60,6 +48,33 @@ public class DriveSubsystem extends SubsystemBase {
   /** Creates a new DriveSubsystem. */
   public DriveSubsystem(AHRS gyro) {
     m_gyro = gyro;
+
+      Class<?> robotDrive = DriveConstants.Helium.class;
+      try{
+      m_frontLeft = new MAXSwerveModule(
+      (int)robotDrive.getField("kFrontLeftDrivingCanId").get(robotDrive),
+      (int)robotDrive.getField("kFrontLeftTurningCanId").get(robotDrive),
+      (int)robotDrive.getField("kFrontLeftChassisAngularOffset)").get(robotDrive));
+
+      m_frontRight = new MAXSwerveModule(
+      (int)robotDrive.getField("kFrontRightDrivingCanId").get(robotDrive),
+      (int)robotDrive.getField("kFrontRightTurningCanId").get(robotDrive),
+      (int)robotDrive.getField("kFrontRightChassisAngularOffset)").get(robotDrive));
+
+     m_rearLeft = new MAXSwerveModule(
+      (int)robotDrive.getField("kRearLeftDrivingCanId").get(robotDrive),
+      (int)robotDrive.getField("kRearLeftTurningCanId").get(robotDrive),
+      (int)robotDrive.getField("kBackLeftChassisAngularOffset").get(robotDrive));
+
+     m_rearRight = new MAXSwerveModule(
+      (int)robotDrive.getField("kRearRightDrivingCanId").get(robotDrive),
+      (int)robotDrive.getField("kRearRightTurningCanId").get(robotDrive),
+      (int)robotDrive.getField("kBackRightChassisAngularOffset").get(robotDrive));
+      }
+      catch(Exception e){
+
+      }
+
     
     m_odometry= new SwerveDriveOdometry(
       DriveConstants.kDriveKinematics,

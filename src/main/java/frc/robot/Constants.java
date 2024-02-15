@@ -57,6 +57,7 @@ public final class Constants {
     public static final boolean kGyroReversed = true;
 
     // SPARK MAX CAN IDs    Top 8 are Neon
+    public static final class Neon { 
     public static final int kFrontLeftDrivingCanId = 6;
     public static final int kRearLeftDrivingCanId = 4;
     public static final int kFrontRightDrivingCanId = 8;
@@ -66,6 +67,7 @@ public final class Constants {
     public static final int kRearLeftTurningCanId = 3;
     public static final int kFrontRightTurningCanId = 7;
     public static final int kRearRightTurningCanId = 9;
+    }
 
     public static final class Helium {
     public static final int kFrontLeftDrivingCanId = 8;
@@ -91,7 +93,8 @@ public final class Constants {
   }
 
   public static final class ClimberConstants{
-    public static final int kClibmerMotorCanId = 200;
+    public static final int kLeftClimberMotorCanId = 41;
+    public static final int kRightClimberMotorCanId = 42;
   }
   
   public static final class ShooterConstants {

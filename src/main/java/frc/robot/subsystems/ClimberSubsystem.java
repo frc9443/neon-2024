@@ -12,7 +12,8 @@ import frc.robot.Constants.ClimberConstants;
 
 public class ClimberSubsystem extends SubsystemBase {
 
-    private CANSparkMax m_ClimberMotor = new CANSparkMax(ClimberConstants.kClibmerMotorCanId, MotorType.kBrushless);
+    private CANSparkMax m_LeftClimberMotor = new CANSparkMax(ClimberConstants.kLeftClimberMotorCanId, MotorType.kBrushless);
+    private CANSparkMax m_RightClimberMotor = new CANSparkMax(ClimberConstants.kRightClimberMotorCanId, MotorType.kBrushless);
   
 
   public ClimberSubsystem() {
@@ -43,10 +44,12 @@ public class ClimberSubsystem extends SubsystemBase {
   }
   public void moveClimber(double rate)
   {
-    m_ClimberMotor.set(rate);
+    m_LeftClimberMotor.set(rate);
+    m_RightClimberMotor.set(rate);
   }
   public void stopClimber()
   {
-    m_ClimberMotor.stopMotor();
+    m_LeftClimberMotor.stopMotor();
+    m_RightClimberMotor.stopMotor();
   }
 }
