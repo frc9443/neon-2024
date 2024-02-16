@@ -17,6 +17,8 @@ import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.GyroConstants;
@@ -64,6 +66,13 @@ public class RobotContainer {
   private IntakeArmSubsystem m_IntakeArmSubsystem;
   private ClimberSubsystem m_ClimberSubsystem;
 
+  private final Command m_TurnLeftAuto;
+  // A complex auto routine that drives forward, drops a hatch, and then drives backward.
+  private final Command m_TurnRightAuto;
+
+  // A chooser for autonomous commands
+  SendableChooser<Command> m_chooser = new SendableChooser<>();
+
   // The driver's controller
   XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
   XboxController m_OperatorController = new XboxController(OIConstants.kOperatorControllerPort);
@@ -95,6 +104,14 @@ public class RobotContainer {
                 true, true),
             m_robotDrive));
 
+            
+
+      m_TurnLeftAuto = new TurnToAngleCommand(() -> -90, m_robotDrive);
+      m_TurnRightAuto = new TurnToAngleCommand(()-> 90, m_robotDrive);
+      m_chooser.setDefaultOption("Turn Left Auto", m_TurnLeftAuto);
+      m_chooser.addOption("Turn Right Auto", m_TurnRightAuto);
+            
+SmartDashboard.putData(m_chooser);
     // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
   }
 
@@ -181,7 +198,7 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    return new FollowAprilTagCommand(m_robotDrive);
+      return m_chooser.getSelected();
   }
 
   public Command getOldAutonomousCommand() {
