@@ -14,6 +14,7 @@ import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
@@ -82,7 +83,13 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_gyro = new AHRS(SerialPort.Port.kMXP);
+
+    // For USB gyro (Neon)
+    // m_gyro = new AHRS(SerialPort.Port.kUSB);
+    // For MXP gyro card (Helium)
+    m_gyro = new AHRS(SPI.Port.kMXP);
+    
+    
     m_robotDrive = new DriveSubsystem(m_gyro);
     m_ShooterSubsystem = new ShooterSubsystem();
     m_CompressorSubsystem = new CompressorSubsystem();
