@@ -73,7 +73,7 @@ public class RobotContainer {
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
   public RobotContainer() {
-    m_gyro = new AHRS(SerialPort.Port.kUSB);
+    m_gyro = new AHRS(SerialPort.Port.kMXP);
     m_robotDrive = new DriveSubsystem(m_gyro);
     m_ShooterSubsystem = new ShooterSubsystem();
     m_CompressorSubsystem = new CompressorSubsystem();

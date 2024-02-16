@@ -57,7 +57,7 @@ public final class Constants {
     public static final boolean kGyroReversed = true;
 
     // SPARK MAX CAN IDs    Top 8 are Neon
-    public static final class Neon { 
+   public static final class Neon { 
     public static final int kFrontLeftDrivingCanId = 6;
     public static final int kRearLeftDrivingCanId = 4;
     public static final int kFrontRightDrivingCanId = 8;
@@ -69,7 +69,7 @@ public final class Constants {
     public static final int kRearRightTurningCanId = 9;
     }
 
-    public static final class Helium {
+    public static final class Helium{
     public static final int kFrontLeftDrivingCanId = 8;
     public static final int kRearLeftDrivingCanId = 2;
     public static final int kFrontRightDrivingCanId = 6;
