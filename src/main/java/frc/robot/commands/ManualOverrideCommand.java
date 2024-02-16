@@ -37,18 +37,16 @@ public class ManualOverrideCommand extends Command {
   @Override
   public void execute() {
     
-    if(m_OperatorController.getRightX() != 0)
+    if(m_OperatorController.getRightY() != 0)
     {
         double rate = m_OperatorController.getRightY() / 2.0;
         m_IntakeArmSubsystem.moveArm(rate);
     }
-    if(m_OperatorController.getLeftX() != 0)
+    if(m_OperatorController.getLeftY() != 0)
     {
-        double rate = m_OperatorController.getLeftX() / 10;
+        double rate = m_OperatorController.getLeftY() / 5;
         m_ClimberSubsystem.moveClimber(rate);
     }
-
-
   }
 
   // Called once the command ends or is interrupted.

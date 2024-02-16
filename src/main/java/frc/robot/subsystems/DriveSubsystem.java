@@ -59,7 +59,7 @@ private MAXSwerveModule m_rearRight;
   public DriveSubsystem(AHRS gyro){
     m_gyro = gyro;
 
-      Class<?> robotDrive = DriveConstants.Helium.class;
+      Class<?> robotDrive = DriveConstants.Neon.class;
       
       m_frontLeft = fromConfig(robotDrive, 
       "kFrontLeftDrivingCanId","kFrontLeftTurningCanId",

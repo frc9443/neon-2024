@@ -85,9 +85,9 @@ public class RobotContainer {
   public RobotContainer() {
 
     // For USB gyro (Neon)
-    // m_gyro = new AHRS(SerialPort.Port.kUSB);
+    m_gyro = new AHRS(SerialPort.Port.kUSB);
     // For MXP gyro card (Helium)
-    m_gyro = new AHRS(SPI.Port.kMXP);
+    // m_gyro = new AHRS(SPI.Port.kMXP);
     
     
     m_robotDrive = new DriveSubsystem(m_gyro);
@@ -175,7 +175,7 @@ SmartDashboard.putData(m_chooser);
 
     // Manual Overrides for stick control of intake arm and climber
     new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
-    .onTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController));
+    .whileTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController));
 
     new JoystickButton(m_OperatorController, Button.kA.value)
     .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.3).withTimeout(1));
