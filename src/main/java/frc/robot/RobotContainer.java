@@ -25,11 +25,13 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.GyroConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.ActivateCompressorCommand;
+import frc.robot.commands.ToggleCompressorActiveCommand;
 import frc.robot.commands.ActivateIntakeCommand;
+import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.ManualOverrideCommand;
-import frc.robot.commands.MoveShooterCommand;
+import frc.robot.commands.DropShooterAngleCommand;
+import frc.robot.commands.RestartGyroCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TurnToAngleCommand;
 import frc.robot.commands.speedAdjustCommand;
@@ -41,6 +43,8 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.utils.VisionUtils;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
@@ -67,9 +71,9 @@ public class RobotContainer {
   private IntakeArmSubsystem m_IntakeArmSubsystem;
   private ClimberSubsystem m_ClimberSubsystem;
 
-  private final Command m_TurnLeftAuto;
+  // private final Command m_TurnShootAuto;
   // A complex auto routine that drives forward, drops a hatch, and then drives backward.
-  private final Command m_TurnRightAuto;
+  private final Command m_ShootAuto;
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -113,10 +117,14 @@ public class RobotContainer {
 
             
 
-      m_TurnLeftAuto = new TurnToAngleCommand(() -> -90, m_robotDrive);
-      m_TurnRightAuto = new TurnToAngleCommand(()-> 90, m_robotDrive);
-      m_chooser.setDefaultOption("Turn Left Auto", m_TurnLeftAuto);
-      m_chooser.addOption("Turn Right Auto", m_TurnRightAuto);
+      m_ShootAuto = new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem);
+      // m_TurnShootAuto = Commands.sequence(
+      //   new TurnToAngleCommand(()-> -135, m_robotDrive),
+      //   new DriveCommand(m_robotDrive, .2, 0, 0, false).withTimeout(1),
+      //   m_ShootAuto
+      // );
+      m_chooser.setDefaultOption("Shoot Auto", m_ShootAuto);
+      // m_chooser.addOption("Turn and Shoot Auto", m_TurnShootAuto);
             
 SmartDashboard.putData(m_chooser);
     // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
@@ -134,13 +142,16 @@ SmartDashboard.putData(m_chooser);
   private void configureButtonBindings() {
     //Turns on Compressor when under 70 PSI and off at 90 PSI
     new Trigger(m_CompressorSubsystem.morePressureNeeded())
-    .onTrue(new ActivateCompressorCommand(m_CompressorSubsystem));
+    .onTrue(new ToggleCompressorActiveCommand(m_CompressorSubsystem));
 
 
     // Turn to 180 degrees when the 'X' button is pressed, with a 5 second timeout
+    // new JoystickButton(m_driverController, Button.kA.value)
+    // .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
+
     new JoystickButton(m_driverController, Button.kA.value)
-    .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
-    
+    .whileTrue(new DropShooterAngleCommand(m_ShooterSubsystem, false));
+
     new JoystickButton(m_driverController, Button.kX.value)
     .onTrue(new TurnToAngleCommand(() -> -135, m_robotDrive).withTimeout(3));
     
@@ -148,14 +159,17 @@ SmartDashboard.putData(m_chooser);
     .onTrue(new TurnToAngleCommand(() -> 135, m_robotDrive).withTimeout(3));
 
     // Turn to 0 degrees when the 'B' button is pressed, with a 3 second timeout
-    new JoystickButton(m_driverController, Button.kY.value)
-    .onTrue(new TurnToAngleCommand(() -> 0, m_robotDrive).withTimeout(3));
+   // new JoystickButton(m_driverController, Button.kY.value)
+   // .onTrue(new TurnToAngleCommand(() -> 0, m_robotDrive).withTimeout(3));
 
     new JoystickButton(m_driverController, Button.kRightBumper.value)
     .onTrue(new speedAdjustCommand(m_robotDrive, true));
     
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
     .onTrue(new speedAdjustCommand(m_robotDrive, false));
+
+    new JoystickButton(m_driverController, Button.kY.value)
+    .onTrue(new RestartGyroCommand(m_robotDrive));
 
 
   
@@ -165,17 +179,17 @@ SmartDashboard.putData(m_chooser);
     .onTrue(new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(3));
 
     new POVButton(m_OperatorController, 0)
-    .onTrue(new MoveShooterCommand(m_ShooterSubsystem, true));
+    .onTrue(new DropShooterAngleCommand(m_ShooterSubsystem, true));
     
     new POVButton(m_OperatorController, 180)
-    .onTrue(new MoveShooterCommand(m_ShooterSubsystem, false));
+    .onTrue(new DropShooterAngleCommand(m_ShooterSubsystem, false));
 
     new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-    .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.5)); // Negative = ingest note
+    .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.45)); // Negative = ingest note
 
     // Manual Overrides for stick control of intake arm and climber
     new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
-    .whileTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController));
+    .whileTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController, m_IntakeSubsystem));
 
     new JoystickButton(m_OperatorController, Button.kA.value)
     .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.3).withTimeout(1));

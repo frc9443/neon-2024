@@ -44,10 +44,10 @@ public class ShooterSubsystem extends SubsystemBase {
   }
   public void Shoot()
   {
-    m_shooterTopLeft.set(0.8);
-    m_shooterTopRight.set(0.8);
-    m_shooterBottomLeft.set(0.5);
-    m_shooterBottomRight.set(0.5);
+    m_shooterTopLeft.set(1);
+    m_shooterTopRight.set(1);
+    m_shooterBottomLeft.set(0.8);
+    m_shooterBottomRight.set(0.8);
   }
   public void Stop()
   {

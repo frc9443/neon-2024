@@ -4,27 +4,24 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.subsystems.CompressorSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class MoveShooterCommand extends Command {
+public class ToggleCompressorActiveCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final ShooterSubsystem m_ShooterSubsystem;
-  public static boolean solonoidOpen = false;
+  private final CompressorSubsystem m_CompressorSubsystem;
 
-  public MoveShooterCommand(ShooterSubsystem ss, boolean isUp) {
-    m_ShooterSubsystem = ss;
-    solonoidOpen = isUp;
-    addRequirements(m_ShooterSubsystem);
+  public ToggleCompressorActiveCommand(CompressorSubsystem ss) {
+    m_CompressorSubsystem = ss;
+    // Use addRequirements() here to declare subsystem dependencies.
+    addRequirements(m_CompressorSubsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_ShooterSubsystem.doSolonoid(solonoidOpen);
+    m_CompressorSubsystem.doCompressor(true);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

@@ -44,12 +44,17 @@ public class ClimberSubsystem extends SubsystemBase {
   }
   public void moveClimber(double rate)
   {
-    m_LeftClimberMotor.set(rate);
-    m_RightClimberMotor.set(rate);
+  this.moveClimber(rate,rate);
+  }
+  public void moveClimber(double leftClimberRate, double rightClimberRate) {
+    m_LeftClimberMotor.set(-leftClimberRate);
+    m_RightClimberMotor.set(-rightClimberRate);
   }
   public void stopClimber()
   {
     m_LeftClimberMotor.stopMotor();
     m_RightClimberMotor.stopMotor();
   }
+
+
 }

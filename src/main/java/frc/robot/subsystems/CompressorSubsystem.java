@@ -33,6 +33,8 @@ public void doCompressor(boolean toggleCompressor){
       } else {
         m_compressor.enableAnalog(70, 90);
       }
+    } else {
+      m_compressor.enableAnalog(70, 90);
     }
   }
 public double getPressure(){

@@ -4,29 +4,35 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.CompressorSubsystem;
+import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class ActivateCompressorCommand extends Command {
+public class RestartGyroCommand extends Command {
   @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
-  private final CompressorSubsystem m_CompressorSubsystem;
+  private final DriveSubsystem m_DriveSubsystem;
 
-  public ActivateCompressorCommand(CompressorSubsystem ss) {
-    m_CompressorSubsystem = ss;
+  /**
+   * Creates a new ExampleCommand.
+   *
+   * @param subsystem The subsystem used by this command.
+   */
+  public RestartGyroCommand(DriveSubsystem subsystem) {
+    m_DriveSubsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(m_CompressorSubsystem);
+    addRequirements(subsystem);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {
-    m_CompressorSubsystem.doCompressor(true);
-  }
+  public void initialize() {}
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+    m_DriveSubsystem.resetGyro();
+    
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -35,6 +41,6 @@ public class ActivateCompressorCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return false;
+    return true;
   }
 }

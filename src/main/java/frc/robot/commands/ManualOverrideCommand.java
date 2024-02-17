@@ -7,6 +7,7 @@ package frc.robot.commands;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 
@@ -16,16 +17,18 @@ public class ManualOverrideCommand extends Command {
   private final IntakeArmSubsystem m_IntakeArmSubsystem;
   private final ClimberSubsystem m_ClimberSubsystem;
   private final XboxController m_OperatorController;
+  private final IntakeSubsystem m_IntakeSubsystem;
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ManualOverrideCommand(IntakeArmSubsystem armSubsystem, ClimberSubsystem climberSubsystem, XboxController controller) {
+  public ManualOverrideCommand(IntakeArmSubsystem armSubsystem, ClimberSubsystem climberSubsystem, 
+  XboxController controller, IntakeSubsystem intakeSubsystem) {
     m_IntakeArmSubsystem = armSubsystem;
     m_ClimberSubsystem = climberSubsystem;
     m_OperatorController = controller;
-
+    m_IntakeSubsystem = intakeSubsystem;
 
   }
 
@@ -37,21 +40,29 @@ public class ManualOverrideCommand extends Command {
   @Override
   public void execute() {
     
-    if(m_OperatorController.getRightY() != 0)
-    {
-        double rate = m_OperatorController.getRightY() / 2.0;
-        m_IntakeArmSubsystem.moveArm(rate);
-    }
-    if(m_OperatorController.getLeftY() != 0)
-    {
-        double rate = m_OperatorController.getLeftY() / 5;
-        m_ClimberSubsystem.moveClimber(rate);
-    }
+        double intakeArmRate = m_OperatorController.getRightY();
+        m_IntakeArmSubsystem.moveArm(Math.abs(intakeArmRate)< 0.05 ? 0.0 : intakeArmRate);
+        double intakeRate = m_OperatorController.getRightX() / 6;
+        m_IntakeSubsystem.run(intakeRate);
+
+        double climberRate = m_OperatorController.getLeftY() * 0.75;
+        if (Math.abs(climberRate)> 0.05){
+          m_ClimberSubsystem.moveClimber(climberRate);
+        }
+        else {
+          double leftClimberRate = m_OperatorController.getLeftTriggerAxis() / 5;
+          double rightClimberRate = m_OperatorController.getRightTriggerAxis() / 5;
+          m_ClimberSubsystem.moveClimber(leftClimberRate, rightClimberRate);
+        };
+      
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+        m_ClimberSubsystem.stopClimber();
+        m_IntakeArmSubsystem.stopArm();
+  }
 
   // Returns true when the command should end.
   @Override
