@@ -59,7 +59,7 @@ private MAXSwerveModule m_rearRight;
   public DriveSubsystem(AHRS gyro){
     m_gyro = gyro;
 
-      Class<?> robotDrive = DriveConstants.Neon.class;
+      Class<?> robotDrive = DriveConstants.Helium.class;
       
       m_frontLeft = fromConfig(robotDrive, 
       "kFrontLeftDrivingCanId","kFrontLeftTurningCanId",
@@ -112,7 +112,7 @@ private MAXSwerveModule m_rearRight;
         SmartDashboard.putBoolean("Has Targed", LimelightHelpers.getTV(""));
         SmartDashboard.putNumber("tX", LimelightHelpers.getTX(""));
         SmartDashboard.putNumber("tY", LimelightHelpers.getTY(""));
-       SmartDashboard.putNumber("Target Angle To Turn : FR", VisionUtils.calculateAngle(m_gyro));
+        SmartDashboard.putNumber("Target Angle To Turn : FR", VisionUtils.calculateAngle(m_gyro));
         SmartDashboard.putNumber("Distance From Target Range", VisionUtils.calculateDistance());
         if((Math.abs(VisionUtils.calculateDistance()) <= 3) && (Math.abs(LimelightHelpers.getTX("")) <= 1))
         {
@@ -123,8 +123,8 @@ private MAXSwerveModule m_rearRight;
         }
         
           SmartDashboard.putBoolean("In Range", (Math.abs(VisionUtils.calculateDistance()) <= 3));
-        SmartDashboard.putNumber("speed adjust", speedAdjustVal);
-        SmartDashboard.putNumber("Max Speed", getMaxSpeed());
+        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+
   }
 
   /**
@@ -232,6 +232,7 @@ private MAXSwerveModule m_rearRight;
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
   m_gyro.reset();
+  resetOdometry(new Pose2d(0,0, new Rotation2d(0)));
   }
 
   /**
@@ -254,11 +255,6 @@ private MAXSwerveModule m_rearRight;
 
   public double getAngle() {
     return m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-    
-  }
-  private double getMaxSpeed()
-  {
-    return DriveConstants.kMaxSpeedMetersPerSecond * speedAdjustVal;
   }
 
 }

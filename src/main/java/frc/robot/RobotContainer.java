@@ -10,6 +10,7 @@ import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
@@ -44,8 +45,10 @@ import frc.utils.VisionUtils;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
@@ -88,9 +91,9 @@ public class RobotContainer {
   public RobotContainer() {
 
     // For USB gyro (Neon)
-    m_gyro = new AHRS(SerialPort.Port.kUSB);
+    // m_gyro = new AHRS(SerialPort.Port.kUSB);
     // For MXP gyro card (Helium)
-    // m_gyro = new AHRS(SPI.Port.kMXP);
+    m_gyro = new AHRS(SPI.Port.kMXP);
     
     
     m_robotDrive = new DriveSubsystem(m_gyro);
@@ -213,7 +216,64 @@ SmartDashboard.putData(m_chooser);
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-      return m_chooser.getSelected();
+      TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+        AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+                .setKinematics(DriveConstants.kDriveKinematics);
+      
+      Trajectory toFirstNote = TrajectoryGenerator.generateTrajectory(
+        new Pose2d(0,0,new Rotation2d(0)), 
+              List.of(
+                  new Translation2d(1,0),
+                  new Translation2d(1,1)
+                  ),
+              new Pose2d(2,1, Rotation2d.fromDegrees(0)),
+              trajectoryConfig);
+      Trajectory toSpeakerFromFirstNote = TrajectoryGenerator.generateTrajectory(
+        new Pose2d(2,1,new Rotation2d(0)), 
+              List.of(
+                  new Translation2d(1,1),
+                  new Translation2d(1,0)
+                  ),
+              new Pose2d(0,0, Rotation2d.fromDegrees(0)),
+              trajectoryConfig);
+      PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+      PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+      ProfiledPIDController theteController = new ProfiledPIDController(
+        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+      theteController.enableContinuousInput(-Math.PI, Math.PI);
+
+
+      SwerveControllerCommand toFirstNoteControllerCommand = new SwerveControllerCommand(
+        toFirstNote,
+        m_robotDrive::getPose,
+        DriveConstants.kDriveKinematics,
+        xController,
+        yController,
+        theteController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);
+      
+      SwerveControllerCommand toSpeakerFromFirstControllerCommand = new SwerveControllerCommand(
+        toSpeakerFromFirstNote,
+        m_robotDrive::getPose,
+        DriveConstants.kDriveKinematics,
+        xController,
+        yController,
+        theteController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);
+
+
+      return new SequentialCommandGroup(
+        new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1),
+        new InstantCommand(() -> m_robotDrive.resetOdometry(toFirstNote.getInitialPose())),
+        toFirstNoteControllerCommand,
+
+        toSpeakerFromFirstControllerCommand,
+        new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1)
+        );
+      
+      // return m_chooser.getSelected();
   }
 
   public Command getOldAutonomousCommand() {

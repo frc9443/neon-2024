@@ -30,7 +30,7 @@ public class RestartGyroCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_DriveSubsystem.resetGyro();
+    m_DriveSubsystem.zeroHeading();
     
   }
 
