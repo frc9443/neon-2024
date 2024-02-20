@@ -261,7 +261,4 @@ private MAXSwerveModule m_rearRight;
     return DriveConstants.kMaxSpeedMetersPerSecond * speedAdjustVal;
   }
 
-public void resetGyro() {
-  m_gyro.reset();
-}
 }

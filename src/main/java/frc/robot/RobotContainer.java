@@ -25,7 +25,6 @@ import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.GyroConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
-import frc.robot.commands.ToggleCompressorActiveCommand;
 import frc.robot.commands.ActivateIntakeCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FollowAprilTagCommand;
@@ -140,11 +139,6 @@ SmartDashboard.putData(m_chooser);
    * {@link JoystickButton}.
    */
   private void configureButtonBindings() {
-    //Turns on Compressor when under 70 PSI and off at 90 PSI
-    new Trigger(m_CompressorSubsystem.morePressureNeeded())
-    .onTrue(new ToggleCompressorActiveCommand(m_CompressorSubsystem));
-
-
     // Turn to 180 degrees when the 'X' button is pressed, with a 5 second timeout
     // new JoystickButton(m_driverController, Button.kA.value)
     // .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
