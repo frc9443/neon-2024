@@ -9,6 +9,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.Trajectory;
@@ -216,60 +217,98 @@ SmartDashboard.putData(m_chooser);
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-      TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-                .setKinematics(DriveConstants.kDriveKinematics);
+      // conditional block if using robot-relative Pose
+      Pose2d requestedPose = new Pose2d(1,2,new Rotation2d(0));
+      Pose2d relativePose = m_robotDrive.getPose().plus(
+        new Transform2d(
+          new Pose2d(0,0,new Rotation2d(0)),
+          requestedPose)
+      );
+      // pass relativePose to TrajectoryGenerator if "useRobotRelativeTranslation = true"
       
-      Trajectory toFirstNote = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(0,0,new Rotation2d(0)), 
-              List.of(
-                  new Translation2d(1,0),
-                  new Translation2d(1,1)
-                  ),
-              new Pose2d(2,1, Rotation2d.fromDegrees(0)),
-              trajectoryConfig);
-      Trajectory toSpeakerFromFirstNote = TrajectoryGenerator.generateTrajectory(
-        new Pose2d(2,1,new Rotation2d(0)), 
-              List.of(
-                  new Translation2d(1,1),
-                  new Translation2d(1,0)
-                  ),
-              new Pose2d(0,0, Rotation2d.fromDegrees(0)),
-              trajectoryConfig);
+      
       PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
       PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-      ProfiledPIDController theteController = new ProfiledPIDController(
+      ProfiledPIDController thetaController = new ProfiledPIDController(
         AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-      theteController.enableContinuousInput(-Math.PI, Math.PI);
+      thetaController.enableContinuousInput(-Math.PI, Math.PI);
 
 
-      SwerveControllerCommand toFirstNoteControllerCommand = new SwerveControllerCommand(
-        toFirstNote,
+      
+        // Pose2d positionOfNote = new Pose2d(2,1, Rotation2d.fromDegrees(0));
+        // List<Translation2d> noteWaypoints =               List.of(
+        //           new Translation2d(1,0),
+        //           new Translation2d(1,1)
+        //           );
+        // List<Pose2d> explicitRouteToNote = List.of(
+        //   new Pose2d(1, 1, Rotation2d.fromDegrees(-33)),
+        //   new Pose2d(1, 0, Rotation2d.fromDegrees(33)),
+        //   new Pose2d(2, 1, Rotation2d.fromDegrees(0))
+        // );
+        // Trajectory firstNoteTrajectory = m_robotDrive.buildRelativeTrajectory(positionOfNote);
+        // Trajectory firstNoteTrajectory2 = m_robotDrive.buildRelativeTrajectory(positionOfNote, noteWaypoints);
+        // Trajectory firstNoteTrajectory3 = m_robotDrive.buildRelativeTrajectory(explicitRouteToNote);
+        //Trajectory firstNoteTrajectory4 = m_robotDrive.buildFieldTrajectory(positionOfNote);
+
+        //Command driveToFirstNoteCommand = m_robotDrive.drive(firstNoteTrajectory);
+      Pose2d positionOfFirstNote = new Pose2d(1.778, 0, Rotation2d.fromDegrees(0));
+      Pose2d positionOfSecondNote = new Pose2d(1.778, 1.397, Rotation2d.fromDegrees(0));
+      Pose2d positionOfThirdNote = new Pose2d(-1.778, 1.397, Rotation2d.fromDegrees(0));
+      Pose2d positionOfHome = new Pose2d(0,0, Rotation2d.fromDegrees(0));
+
+      Trajectory toFirst = m_robotDrive.buildRelativeTrajectory(positionOfFirstNote);
+      Trajectory toSecond = m_robotDrive.buildRelativeTrajectory(positionOfSecondNote);
+      Trajectory toThird = m_robotDrive.buildRelativeTrajectory(positionOfThirdNote);
+      Trajectory TrajHome = m_robotDrive.buildRelativeTrajectory(positionOfHome);
+      
+
+
+      SwerveControllerCommand goToFirst = new SwerveControllerCommand(
+        toFirst,
         m_robotDrive::getPose,
         DriveConstants.kDriveKinematics,
         xController,
         yController,
-        theteController,
+        thetaController,
         m_robotDrive::setModuleStates,
         m_robotDrive);
-      
-      SwerveControllerCommand toSpeakerFromFirstControllerCommand = new SwerveControllerCommand(
-        toSpeakerFromFirstNote,
+      SwerveControllerCommand goToSecond = new SwerveControllerCommand(
+        toSecond,
         m_robotDrive::getPose,
         DriveConstants.kDriveKinematics,
         xController,
         yController,
-        theteController,
+        thetaController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);
+      SwerveControllerCommand goToThird = new SwerveControllerCommand(
+        toThird,
+        m_robotDrive::getPose,
+        DriveConstants.kDriveKinematics,
+        xController,
+        yController,
+        thetaController,
+        m_robotDrive::setModuleStates,
+        m_robotDrive);
+      SwerveControllerCommand goToHome = new SwerveControllerCommand(
+        TrajHome,
+        m_robotDrive::getPose,
+        DriveConstants.kDriveKinematics,
+        xController,
+        yController,
+        thetaController,
         m_robotDrive::setModuleStates,
         m_robotDrive);
 
 
       return new SequentialCommandGroup(
         new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1),
-        new InstantCommand(() -> m_robotDrive.resetOdometry(toFirstNote.getInitialPose())),
-        toFirstNoteControllerCommand,
-
-        toSpeakerFromFirstControllerCommand,
+        new InstantCommand(() -> m_robotDrive.resetOdometry(TrajHome.getInitialPose())),
+        goToFirst,
+        goToHome,
+        goToSecond,
+        goToHome,
+        goToThird,
         new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1)
         );
       

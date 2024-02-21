@@ -6,11 +6,14 @@ package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.Trajectory;
+import edu.wpi.first.math.trajectory.TrajectoryGenerator;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.I2C;
@@ -18,7 +21,11 @@ import edu.wpi.first.wpilibj.I2C.Port;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
+import java.util.List;
+
 import com.kauailabs.navx.frc.AHRS;
+
+import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.LimelightHelpers;
 import frc.utils.SwerveUtils;
@@ -256,5 +263,23 @@ private MAXSwerveModule m_rearRight;
   public double getAngle() {
     return m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
-
+  public Trajectory buildRelativeTrajectory(Pose2d endPose, List<Translation2d> pointsToNote ){
+    Trajectory relativeTrajectory = TrajectoryGenerator.generateTrajectory(
+      new Pose2d(0,0, Rotation2d.fromDegrees(0)),            
+      pointsToNote,
+      endPose,
+        AutoConstants.kTrajectoryConfig);  
+    return relativeTrajectory;
+  }
+  public Trajectory buildRelativeTrajectory(Pose2d endPose){
+    return buildRelativeTrajectory(endPose, List.of());
+  }
+  public Trajectory buildRelativeTrajectory(List<Pose2d> routeToPose){
+    Trajectory relativeTrajectory = TrajectoryGenerator
+        .generateTrajectory(routeToPose, AutoConstants.kTrajectoryConfig);
+    return relativeTrajectory;
+  }
+  // public Trajectory buildFieldTrajectory(Pose2d endPose){
+  //   Trajectory fieldRelativeTrajectory = TrajectoryGenerator();
+  // }
 }

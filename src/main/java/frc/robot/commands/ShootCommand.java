@@ -31,11 +31,15 @@ public class ShootCommand extends Command {
         SmartDashboard.putNumber("time", time.get());
         if(time.hasElapsed(2))
         {
-            time.stop();
-            m_ShooterSubsystem.Stop();
-            m_IntakeSubsystem.stop();
             return true;
         }
         return false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+            time.stop();
+            m_ShooterSubsystem.Stop();
+            m_IntakeSubsystem.stop();
     }
 }
