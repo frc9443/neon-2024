@@ -13,18 +13,19 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class ManualOverrideCommand extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final IntakeArmSubsystem m_IntakeArmSubsystem;
   private final ClimberSubsystem m_ClimberSubsystem;
   private final XboxController m_OperatorController;
   private final IntakeSubsystem m_IntakeSubsystem;
+
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public ManualOverrideCommand(IntakeArmSubsystem armSubsystem, ClimberSubsystem climberSubsystem, 
-  XboxController controller, IntakeSubsystem intakeSubsystem) {
+  public ManualOverrideCommand(IntakeArmSubsystem armSubsystem, ClimberSubsystem climberSubsystem,
+      XboxController controller, IntakeSubsystem intakeSubsystem) {
     m_IntakeArmSubsystem = armSubsystem;
     m_ClimberSubsystem = climberSubsystem;
     m_OperatorController = controller;
@@ -34,44 +35,44 @@ public class ManualOverrideCommand extends Command {
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    
-        double intakeArmRate = m_OperatorController.getRightY();
-        m_IntakeArmSubsystem.moveArm(Math.abs(intakeArmRate)< 0.05 ? 0.0 : intakeArmRate);
-        double intakeRate = m_OperatorController.getRightX() / 6;
-        m_IntakeSubsystem.run(intakeRate);
 
-        double climberRate = m_OperatorController.getLeftY() * 0.75;
-        if (Math.abs(climberRate)> 0.05){
-          m_ClimberSubsystem.moveClimber(climberRate);
-        }
-        else {
-          double leftClimberRate = m_OperatorController.getLeftTriggerAxis() / 5;
-          double rightClimberRate = m_OperatorController.getRightTriggerAxis() / 5;
-          m_ClimberSubsystem.moveClimber(leftClimberRate, rightClimberRate);
-        };
-      
+    double intakeArmRate = m_OperatorController.getRightY();
+    m_IntakeArmSubsystem.moveArm(Math.abs(intakeArmRate) < 0.05 ? 0.0 : intakeArmRate);
+    double intakeRate = m_OperatorController.getRightX() / 6;
+    m_IntakeSubsystem.run(intakeRate / 10000);
+
+    double climberRate = m_OperatorController.getLeftY() * 0.75;
+    if (Math.abs(climberRate) > 0.05) {
+      m_ClimberSubsystem.moveClimber(climberRate);
+    } else {
+      double leftClimberRate = m_OperatorController.getLeftTriggerAxis() / 5;
+      double rightClimberRate = m_OperatorController.getRightTriggerAxis() / 5;
+      m_ClimberSubsystem.moveClimber(leftClimberRate, rightClimberRate);
+    }
+    ;
+
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-        m_ClimberSubsystem.stopClimber();
-        m_IntakeArmSubsystem.stopArm();
+    m_ClimberSubsystem.stopClimber();
+    m_IntakeArmSubsystem.stopArm();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_OperatorController.getLeftBumper() == false)
-    {
-        m_ClimberSubsystem.stopClimber();
-        m_IntakeArmSubsystem.stopArm();
-        return true;
+    if (m_OperatorController.getLeftBumper() == false) {
+      m_ClimberSubsystem.stopClimber();
+      m_IntakeArmSubsystem.stopArm();
+      return true;
     }
     return false;
   }

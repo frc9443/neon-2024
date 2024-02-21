@@ -9,8 +9,8 @@ public class DriveCommand extends Command {
     private final double m_Yspeed;
     private final double m_Rot;
     private final boolean m_FieldRelative;
-    public DriveCommand(DriveSubsystem ds, double xSpeed, double ySpeed, double rot, boolean fieldRelative
-    ) {
+
+    public DriveCommand(DriveSubsystem ds, double xSpeed, double ySpeed, double rot, boolean fieldRelative) {
         m_DriveSubsystem = ds;
         m_Xspeed = xSpeed;
         m_Yspeed = ySpeed;
@@ -21,7 +21,7 @@ public class DriveCommand extends Command {
 
     @Override
     public void execute() {
-        m_DriveSubsystem.drive(m_Xspeed, m_Yspeed,m_Rot,m_FieldRelative,false);
+        m_DriveSubsystem.drive(m_Xspeed, m_Yspeed, m_Rot, m_FieldRelative, false);
     }
 
 }

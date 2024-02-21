@@ -60,7 +60,6 @@ public class FollowAprilTagCommand extends Command {
             rot = 0.2;
         }
 
-
         m_DriveSubsystem.drive(0, 0, rot, false, false);
     }
 

@@ -15,17 +15,15 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ShooterConstants;
 
 public class CompressorSubsystem extends SubsystemBase {
-public final Compressor m_compressor = new Compressor(ShooterConstants.PneumaticHubCanId, PneumaticsModuleType.REVPH);
-   
-  
+  public final Compressor m_compressor = new Compressor(ShooterConstants.PneumaticHubCanId, PneumaticsModuleType.REVPH);
+
   public CompressorSubsystem() {
-    m_compressor.enableAnalog(70, 90);
+    m_compressor.enableAnalog(105, 110);
   }
 
-
-public double getPressure(){
+  public double getPressure() {
     return m_compressor.getPressure();
-}
+  }
 
   @Override
   public void periodic() {

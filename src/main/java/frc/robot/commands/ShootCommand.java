@@ -6,7 +6,6 @@ import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-
 public class ShootCommand extends Command {
     private final ShooterSubsystem m_ShooterSubsystem;
     private final IntakeSubsystem m_IntakeSubsystem;
@@ -18,7 +17,6 @@ public class ShootCommand extends Command {
         addRequirements(m_ShooterSubsystem);
     }
 
-    
     @Override
     public void initialize() {
         time.restart();
@@ -29,8 +27,7 @@ public class ShootCommand extends Command {
     @Override
     public boolean isFinished() {
         SmartDashboard.putNumber("time", time.get());
-        if(time.hasElapsed(2))
-        {
+        if (time.hasElapsed(2)) {
             return true;
         }
         return false;
@@ -38,8 +35,8 @@ public class ShootCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-            time.stop();
-            m_ShooterSubsystem.Stop();
-            m_IntakeSubsystem.stop();
+        time.stop();
+        m_ShooterSubsystem.Stop();
+        m_IntakeSubsystem.stop();
     }
 }

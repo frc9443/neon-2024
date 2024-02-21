@@ -4,8 +4,11 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
@@ -30,72 +33,71 @@ import frc.robot.Constants.DriveConstants;
 import frc.utils.LimelightHelpers;
 import frc.utils.SwerveUtils;
 import frc.utils.VisionUtils;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 
 public class DriveSubsystem extends SubsystemBase {
   // Create MAXSwerveModules
-private MAXSwerveModule m_frontLeft;
+  private MAXSwerveModule m_frontLeft;
 
-private MAXSwerveModule m_frontRight;
+  private MAXSwerveModule m_frontRight;
 
-private MAXSwerveModule m_rearLeft;
+  private MAXSwerveModule m_rearLeft;
 
-private MAXSwerveModule m_rearRight;
+  private MAXSwerveModule m_rearRight;
 
   // The gyro sensor
   private final AHRS m_gyro;
   public static double speedAdjustVal = 1;
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
   private ChassisSpeeds m_prevTarget = new ChassisSpeeds();
-  
+
   // Odometry class for tracking robot pose
   SwerveDriveOdometry m_odometry;
 
   public static MAXSwerveModule fromConfig(Class<?> config, String drivingId, String turningId, double angularOffset) {
     try {
       return new MAXSwerveModule(
-      (int)config.getField(drivingId).get(config),
-      (int)config.getField(turningId).get(config),
-       angularOffset);
+          (int) config.getField(drivingId).get(config),
+          (int) config.getField(turningId).get(config),
+          angularOffset);
     } catch (Exception e) {
       e.printStackTrace();
       return null;
     }
   }
 
-  public DriveSubsystem(AHRS gyro){
+  public DriveSubsystem(AHRS gyro) {
     m_gyro = gyro;
 
-      Class<?> robotDrive = DriveConstants.Helium.class;
-      
-      m_frontLeft = fromConfig(robotDrive, 
-      "kFrontLeftDrivingCanId","kFrontLeftTurningCanId",
-      DriveConstants.kFrontLeftChassisAngularOffset);
+    Class<?> robotDrive = DriveConstants.Helium.class;
 
-      m_frontRight = fromConfig(robotDrive,
-        "kFrontRightDrivingCanId", "kFrontRightTurningCanId", 
+    m_frontLeft = fromConfig(robotDrive,
+        "kFrontLeftDrivingCanId", "kFrontLeftTurningCanId",
+        DriveConstants.kFrontLeftChassisAngularOffset);
+
+    m_frontRight = fromConfig(robotDrive,
+        "kFrontRightDrivingCanId", "kFrontRightTurningCanId",
         DriveConstants.kFrontRightChassisAngularOffset);
 
-      
-     m_rearLeft = fromConfig(robotDrive,
-      "kRearLeftDrivingCanId", "kRearLeftTurningCanId",
-      DriveConstants.kBackLeftChassisAngularOffset);
+    m_rearLeft = fromConfig(robotDrive,
+        "kRearLeftDrivingCanId", "kRearLeftTurningCanId",
+        DriveConstants.kBackLeftChassisAngularOffset);
 
-     m_rearRight = fromConfig(robotDrive,
-      "kRearRightDrivingCanId","kRearRightTurningCanId",
-      DriveConstants.kBackRightChassisAngularOffset);
-      
+    m_rearRight = fromConfig(robotDrive,
+        "kRearRightDrivingCanId", "kRearRightTurningCanId",
+        DriveConstants.kBackRightChassisAngularOffset);
 
-    
-    m_odometry= new SwerveDriveOdometry(
-      DriveConstants.kDriveKinematics,
-      Rotation2d.fromDegrees(getAngle()),
-      new SwerveModulePosition[] {
-          m_frontLeft.getPosition(),
-          m_frontRight.getPosition(),
-          m_rearLeft.getPosition(),
-          m_rearRight.getPosition()
-      });
+    m_odometry = new SwerveDriveOdometry(
+        DriveConstants.kDriveKinematics,
+        Rotation2d.fromDegrees(getAngle()),
+        new SwerveModulePosition[] {
+            m_frontLeft.getPosition(),
+            m_frontRight.getPosition(),
+            m_rearLeft.getPosition(),
+            m_rearRight.getPosition()
+        });
   }
 
   @Override
@@ -110,27 +112,25 @@ private MAXSwerveModule m_rearRight;
             m_rearRight.getPosition()
         });
 
-        SmartDashboard.putBoolean(  "IMU_Connected",        m_gyro.isConnected());
-        SmartDashboard.putBoolean(  "IMU_IsCalibrating",    m_gyro.isCalibrating());
-        SmartDashboard.putNumber(   "IMU_Yaw",              m_gyro.getYaw());
-        SmartDashboard.putNumber(   "IMU_Pitch",            m_gyro.getPitch());
-        SmartDashboard.putNumber(   "IMU_Roll",             m_gyro.getRoll());
-        SmartDashboard.putNumber(   "IMU_Angle",            getAngle());
-        SmartDashboard.putBoolean("Has Targed", LimelightHelpers.getTV(""));
-        SmartDashboard.putNumber("tX", LimelightHelpers.getTX(""));
-        SmartDashboard.putNumber("tY", LimelightHelpers.getTY(""));
-        SmartDashboard.putNumber("Target Angle To Turn : FR", VisionUtils.calculateAngle(m_gyro));
-        SmartDashboard.putNumber("Distance From Target Range", VisionUtils.calculateDistance());
-        if((Math.abs(VisionUtils.calculateDistance()) <= 3) && (Math.abs(LimelightHelpers.getTX("")) <= 1))
-        {
-            SmartDashboard.putBoolean("Ready To Shoot", true);
-        }else
-        {
-          SmartDashboard.putBoolean("Ready To Shoot", false);
-        }
-        
-          SmartDashboard.putBoolean("In Range", (Math.abs(VisionUtils.calculateDistance()) <= 3));
-        SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
+    SmartDashboard.putBoolean("IMU_Connected", m_gyro.isConnected());
+    SmartDashboard.putBoolean("IMU_IsCalibrating", m_gyro.isCalibrating());
+    SmartDashboard.putNumber("IMU_Yaw", m_gyro.getYaw());
+    SmartDashboard.putNumber("IMU_Pitch", m_gyro.getPitch());
+    SmartDashboard.putNumber("IMU_Roll", m_gyro.getRoll());
+    SmartDashboard.putNumber("IMU_Angle", getAngle());
+    SmartDashboard.putBoolean("Has Targed", LimelightHelpers.getTV(""));
+    SmartDashboard.putNumber("tX", LimelightHelpers.getTX(""));
+    SmartDashboard.putNumber("tY", LimelightHelpers.getTY(""));
+    SmartDashboard.putNumber("Target Angle To Turn : FR", VisionUtils.calculateAngle(m_gyro));
+    SmartDashboard.putNumber("Distance From Target Range", VisionUtils.calculateDistance());
+    if ((Math.abs(VisionUtils.calculateDistance()) <= 3) && (Math.abs(LimelightHelpers.getTX("")) <= 1)) {
+      SmartDashboard.putBoolean("Ready To Shoot", true);
+    } else {
+      SmartDashboard.putBoolean("Ready To Shoot", false);
+    }
+
+    SmartDashboard.putBoolean("In Range", (Math.abs(VisionUtils.calculateDistance()) <= 3));
+    SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
 
   }
 
@@ -178,19 +178,17 @@ private MAXSwerveModule m_rearRight;
     rot *= DriveConstants.kMaxAngularSpeed;
 
     // Get the target chassis speeds relative to the robot
-    final ChassisSpeeds vel = ( fieldRelative ?
-      ChassisSpeeds.fromFieldRelativeSpeeds( xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getAngle()) )
-        : new ChassisSpeeds( xSpeed, ySpeed, rot )
-    );
+    final ChassisSpeeds vel = (fieldRelative
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getAngle()))
+        : new ChassisSpeeds(xSpeed, ySpeed, rot));
 
     // Rate limit if applicable
-    if(rateLimit) {
-      final double
-        currentTime = WPIUtilJNI.now() * 1e-6,
-        elapsedTime = currentTime - m_prevTime;
+    if (rateLimit) {
+      final double currentTime = WPIUtilJNI.now() * 1e-6,
+          elapsedTime = currentTime - m_prevTime;
       SwerveUtils.RateLimitVelocity(
-        vel, m_prevTarget, elapsedTime,
-        DriveConstants.kMagnitudeSlewRate, DriveConstants.kRotationalSlewRate);
+          vel, m_prevTarget, elapsedTime,
+          DriveConstants.kMagnitudeSlewRate, DriveConstants.kRotationalSlewRate);
       m_prevTime = currentTime;
       m_prevTarget = vel;
     }
@@ -238,8 +236,8 @@ private MAXSwerveModule m_rearRight;
 
   /** Zeroes the heading of the robot. */
   public void zeroHeading() {
-  m_gyro.reset();
-  resetOdometry(new Pose2d(0,0, new Rotation2d(0)));
+    m_gyro.reset();
+    resetOdometry(new Pose2d(0, 0, new Rotation2d(0)));
   }
 
   /**
@@ -257,29 +255,67 @@ private MAXSwerveModule m_rearRight;
    * @return The turn rate of the robot, in degrees per second
    */
   public double getTurnRate() {
-   return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
+    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
 
   public double getAngle() {
     return m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
   }
-  public Trajectory buildRelativeTrajectory(Pose2d endPose, List<Translation2d> pointsToNote ){
-    Trajectory relativeTrajectory = TrajectoryGenerator.generateTrajectory(
-      new Pose2d(0,0, Rotation2d.fromDegrees(0)),            
-      pointsToNote,
-      endPose,
-        AutoConstants.kTrajectoryConfig);  
-    return relativeTrajectory;
+
+  private Pose2d buildRelativePose(Pose2d relativeToRobot) {
+    return getPose().plus(
+        new Transform2d(
+            new Pose2d(0, 0, new Rotation2d(0)),
+            relativeToRobot));
   }
-  public Trajectory buildRelativeTrajectory(Pose2d endPose){
+
+  public Trajectory buildRelativeTrajectory(List<Pose2d> seriesOfPoses) {
+    List<Pose2d> relativePoses = seriesOfPoses.stream().map(
+        this::buildRelativePose).collect(java.util.stream.Collectors.toList());
+    return buildFieldTrajectory(relativePoses);
+  }
+
+  public Trajectory buildRelativeTrajectory(Pose2d endPose, List<Translation2d> pointsToNote) {
+    return buildFieldTrajectory(buildRelativePose(endPose), pointsToNote);
+  }
+
+  public Trajectory buildRelativeTrajectory(Pose2d endPose) {
     return buildRelativeTrajectory(endPose, List.of());
   }
-  public Trajectory buildRelativeTrajectory(List<Pose2d> routeToPose){
+
+  public Trajectory buildFieldTrajectory(Pose2d endPose, List<Translation2d> transitionPoints) {
+    Trajectory relativeTrajectory = TrajectoryGenerator.generateTrajectory(
+        getPose(),
+        transitionPoints,
+        endPose,
+        AutoConstants.kTrajectoryConfig);
+    return relativeTrajectory;
+  }
+
+  public Trajectory buildFieldTrajectory(List<Pose2d> routeToPose) {
     Trajectory relativeTrajectory = TrajectoryGenerator
         .generateTrajectory(routeToPose, AutoConstants.kTrajectoryConfig);
     return relativeTrajectory;
+
   }
-  // public Trajectory buildFieldTrajectory(Pose2d endPose){
-  //   Trajectory fieldRelativeTrajectory = TrajectoryGenerator();
-  // }
+
+  public Command drive(Trajectory objective) {
+
+    PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
+    PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
+    ProfiledPIDController thetaController = new ProfiledPIDController(
+        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
+    thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+    return new SwerveControllerCommand(
+        objective,
+        this::getPose,
+        DriveConstants.kDriveKinematics,
+        xController,
+        yController,
+        thetaController,
+        this::setModuleStates,
+        this);
+
+  }
 }

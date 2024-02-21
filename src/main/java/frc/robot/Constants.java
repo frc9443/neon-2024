@@ -36,7 +36,7 @@ public final class Constants {
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kMagnitudeSlewRate = 1.8 * kMaxSpeedMetersPerSecond; // meters per second^2
-    public static final double kRotationalSlewRate = 2.0 * kMaxAngularSpeed;        // radians per second^2
+    public static final double kRotationalSlewRate = 2.0 * kMaxAngularSpeed; // radians per second^2
 
     // Chassis configuration
     public static final double kTrackWidth = Units.inchesToMeters(24.5);
@@ -57,47 +57,47 @@ public final class Constants {
 
     public static final boolean kGyroReversed = true;
 
-    // SPARK MAX CAN IDs    Top 8 are Neon
-   public static final class Neon { 
-    public static final int kFrontLeftDrivingCanId = 6;
-    public static final int kRearLeftDrivingCanId = 4;
-    public static final int kFrontRightDrivingCanId = 8;
-    public static final int kRearRightDrivingCanId = 2;
+    // SPARK MAX CAN IDs Top 8 are Neon
+    public static final class Neon {
+      public static final int kFrontLeftDrivingCanId = 6;
+      public static final int kRearLeftDrivingCanId = 4;
+      public static final int kFrontRightDrivingCanId = 8;
+      public static final int kRearRightDrivingCanId = 2;
 
-    public static final int kFrontLeftTurningCanId = 5;
-    public static final int kRearLeftTurningCanId = 3;
-    public static final int kFrontRightTurningCanId = 7;
-    public static final int kRearRightTurningCanId = 9;
+      public static final int kFrontLeftTurningCanId = 5;
+      public static final int kRearLeftTurningCanId = 3;
+      public static final int kFrontRightTurningCanId = 7;
+      public static final int kRearRightTurningCanId = 9;
     }
 
-    public static final class Helium{
-    public static final int kFrontLeftDrivingCanId = 8;
-    public static final int kRearLeftDrivingCanId = 2;
-    public static final int kFrontRightDrivingCanId = 6;
-    public static final int kRearRightDrivingCanId = 4;
+    public static final class Helium {
+      public static final int kFrontLeftDrivingCanId = 8;
+      public static final int kRearLeftDrivingCanId = 2;
+      public static final int kFrontRightDrivingCanId = 6;
+      public static final int kRearRightDrivingCanId = 4;
 
-    public static final int kFrontLeftTurningCanId = 9;
-    public static final int kRearLeftTurningCanId = 3;
-    public static final int kFrontRightTurningCanId = 7;
-    public static final int kRearRightTurningCanId = 5;
+      public static final int kFrontLeftTurningCanId = 9;
+      public static final int kRearLeftTurningCanId = 3;
+      public static final int kFrontRightTurningCanId = 7;
+      public static final int kRearRightTurningCanId = 5;
     }
   }
 
-  public static final class IntakeConstants { 
+  public static final class IntakeConstants {
     public static final int kIntakeRightRollerCanId = 32;
     public static final int kIntakeLeftRollerCanId = 31;
   }
 
-  public static final class IntakeArmConstants{
+  public static final class IntakeArmConstants {
     public static final int kIntakeLiftMotorPWMId = 9;
     public static final int kIntakeArmEncoderDioId = 9;
   }
 
-  public static final class ClimberConstants{
+  public static final class ClimberConstants {
     public static final int kLeftClimberMotorCanId = 41;
     public static final int kRightClimberMotorCanId = 42;
   }
-  
+
   public static final class ShooterConstants {
     public static final int PneumaticHubCanId = 20;
     public static final DutyCycleEncoder m_encoder = new DutyCycleEncoder(9);
@@ -109,12 +109,15 @@ public final class Constants {
   }
 
   public static final class ModuleConstants {
-    // The MAXSwerve module can be configured with one of three pinion gears: 12T, 13T, or 14T.
-    // This changes the drive speed of the module (a pinion gear with more teeth will result in a
+    // The MAXSwerve module can be configured with one of three pinion gears: 12T,
+    // 13T, or 14T.
+    // This changes the drive speed of the module (a pinion gear with more teeth
+    // will result in a
     // robot that drives faster).
     public static final int kDrivingMotorPinionTeeth = 14;
 
-    // Invert the turning encoder, since the output shaft rotates in the opposite direction of
+    // Invert the turning encoder, since the output shaft rotates in the opposite
+    // direction of
     // the steering motor in the MAXSwerve Module.
     public static final boolean kTurningEncoderInverted = true;
 
@@ -122,7 +125,8 @@ public final class Constants {
     public static final double kDrivingMotorFreeSpeedRps = NeoMotorConstants.kFreeSpeedRpm / 60;
     public static final double kWheelDiameterMeters = 0.0762;
     public static final double kWheelCircumferenceMeters = kWheelDiameterMeters * Math.PI;
-    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15 teeth on the bevel pinion
+    // 45 teeth on the wheel's bevel gear, 22 teeth on the first-stage spur gear, 15
+    // teeth on the bevel pinion
     public static final double kDrivingMotorReduction = (45.0 * 22) / (kDrivingMotorPinionTeeth * 15);
     public static final double kDriveWheelFreeSpeedRps = (kDrivingMotorFreeSpeedRps * kWheelCircumferenceMeters)
         / kDrivingMotorReduction;
@@ -164,18 +168,20 @@ public final class Constants {
     public static final int kOperatorControllerPort = 1;
     public static final double kDriveDeadband = 0.05;
   }
-  public static final class VisionConstants{
+
+  public static final class VisionConstants {
     public static final double heightOfCamera = 11;
     public static final double heightOfCenterSpeaker = 56.25;
     public static final double angleOfCamera = 15;
     public static final double targetDistanceToShoot = 97;
   }
+
   public static final class GyroConstants {
     public static final double kTurnP = 1;
     public static final double kTurnI = 0;
     public static final double kTurnD = 0;
     public static final double kTurnToleranceDeg = 1;
-    public static final double kTurnRateToleranceDegPerS = 10; // degrees per second    orgininal 10
+    public static final double kTurnRateToleranceDegPerS = 10; // degrees per second orgininal 10
     public static final double kStabilizationP = 1;
     public static final double kStabilizationI = 0.5;
     public static final double kStabilizationD = 0;
@@ -192,8 +198,7 @@ public final class Constants {
     public static final double kPThetaController = 1;
     public static final TrajectoryConfig kTrajectoryConfig = new TrajectoryConfig(
         AutoConstants.kMaxSpeedMetersPerSecond, AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-                .setKinematics(DriveConstants.kDriveKinematics);
-
+        .setKinematics(DriveConstants.kDriveKinematics);
 
     // Constraint for the motion profiled robot angle controller
     public static final TrapezoidProfile.Constraints kThetaControllerConstraints = new TrapezoidProfile.Constraints(

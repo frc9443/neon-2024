@@ -9,10 +9,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class ActivateIntakeCommand extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final IntakeSubsystem m_IntakeSubsystem;
   private double speed;
-  
+
   public ActivateIntakeCommand(IntakeSubsystem subsystem, double setSpeed) {
     m_IntakeSubsystem = subsystem;
     speed = setSpeed;
@@ -23,12 +23,13 @@ public class ActivateIntakeCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_IntakeSubsystem.run(speed);
+    m_IntakeSubsystem.run(speed / 10000);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override
@@ -39,7 +40,7 @@ public class ActivateIntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-   // if(m_colorSensor)
+    // if(m_colorSensor)
     return false;
   }
 }

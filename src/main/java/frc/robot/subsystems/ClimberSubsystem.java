@@ -12,19 +12,18 @@ import frc.robot.Constants.ClimberConstants;
 
 public class ClimberSubsystem extends SubsystemBase {
 
-    private CANSparkMax m_LeftClimberMotor = new CANSparkMax(ClimberConstants.kLeftClimberMotorCanId, MotorType.kBrushless);
-    private CANSparkMax m_RightClimberMotor = new CANSparkMax(ClimberConstants.kRightClimberMotorCanId, MotorType.kBrushless);
-  
+  private CANSparkMax m_LeftClimberMotor = new CANSparkMax(ClimberConstants.kLeftClimberMotorCanId,
+      MotorType.kBrushless);
+  private CANSparkMax m_RightClimberMotor = new CANSparkMax(ClimberConstants.kRightClimberMotorCanId,
+      MotorType.kBrushless);
 
   public ClimberSubsystem() {
 
-
   }
 
-
-
   /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
+   * An example method querying a boolean state of the subsystem (for example, a
+   * digital sensor).
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */
@@ -42,19 +41,19 @@ public class ClimberSubsystem extends SubsystemBase {
   public void simulationPeriodic() {
     // This method will be called once per scheduler run during simulation
   }
-  public void moveClimber(double rate)
-  {
-  this.moveClimber(rate,rate);
+
+  public void moveClimber(double rate) {
+    this.moveClimber(rate, rate);
   }
+
   public void moveClimber(double leftClimberRate, double rightClimberRate) {
     m_LeftClimberMotor.set(-leftClimberRate);
     m_RightClimberMotor.set(-rightClimberRate);
   }
-  public void stopClimber()
-  {
+
+  public void stopClimber() {
     m_LeftClimberMotor.stopMotor();
     m_RightClimberMotor.stopMotor();
   }
-
 
 }

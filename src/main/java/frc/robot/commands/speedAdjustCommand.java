@@ -9,9 +9,10 @@ import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class speedAdjustCommand extends Command {
-  @SuppressWarnings({"PMD.UnusedPrivateField", "PMD.SingularField"})
+  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final DriveSubsystem m_DriveSubsystem;
   private boolean adjustSpeed;
+
   public speedAdjustCommand(DriveSubsystem subsystem, boolean adjustUp) {
     m_DriveSubsystem = subsystem;
     // Use addRequirements() here to declare subsystem dependencies.
@@ -22,29 +23,28 @@ public class speedAdjustCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    if(adjustSpeed = true)
-    {
-        DriveSubsystem.speedAdjustVal += .2;
-        if (DriveSubsystem.speedAdjustVal > 1.21) {
-            DriveSubsystem.speedAdjustVal = 1.2;
-        }
-    }
-    else if (adjustSpeed = false)
-    {
-        DriveSubsystem.speedAdjustVal +=  -.2;
-        if (DriveSubsystem.speedAdjustVal < .79) {
-            DriveSubsystem.speedAdjustVal = .8;
-        }
+    if (adjustSpeed = true) {
+      DriveSubsystem.speedAdjustVal += .2;
+      if (DriveSubsystem.speedAdjustVal > 1.21) {
+        DriveSubsystem.speedAdjustVal = 1.2;
+      }
+    } else if (adjustSpeed = false) {
+      DriveSubsystem.speedAdjustVal += -.2;
+      if (DriveSubsystem.speedAdjustVal < .79) {
+        DriveSubsystem.speedAdjustVal = .8;
+      }
     }
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
-  public void execute() {}
+  public void execute() {
+  }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {}
+  public void end(boolean interrupted) {
+  }
 
   // Returns true when the command should end.
   @Override

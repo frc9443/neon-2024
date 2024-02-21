@@ -58,7 +58,6 @@ import java.util.List;
 
 import com.kauailabs.navx.frc.AHRS;
 
-
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
  * "declarative" paradigm, very little robot logic should actually be handled in the {@link Robot}
@@ -75,7 +74,8 @@ public class RobotContainer {
   private ClimberSubsystem m_ClimberSubsystem;
 
   // private final Command m_TurnShootAuto;
-  // A complex auto routine that drives forward, drops a hatch, and then drives backward.
+  // A complex auto routine that drives forward, drops a hatch, and then drives
+  // backward.
   private final Command m_ShootAuto;
 
   // A chooser for autonomous commands
@@ -95,8 +95,7 @@ public class RobotContainer {
     // m_gyro = new AHRS(SerialPort.Port.kUSB);
     // For MXP gyro card (Helium)
     m_gyro = new AHRS(SPI.Port.kMXP);
-    
-    
+
     m_robotDrive = new DriveSubsystem(m_gyro);
     m_ShooterSubsystem = new ShooterSubsystem();
     m_CompressorSubsystem = new CompressorSubsystem();
@@ -118,18 +117,16 @@ public class RobotContainer {
                 true, true),
             m_robotDrive));
 
-            
+    m_ShootAuto = new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem);
+    // m_TurnShootAuto = Commands.sequence(
+    // new TurnToAngleCommand(()-> -135, m_robotDrive),
+    // new DriveCommand(m_robotDrive, .2, 0, 0, false).withTimeout(1),
+    // m_ShootAuto
+    // );
+    m_chooser.setDefaultOption("Shoot Auto", m_ShootAuto);
+    // m_chooser.addOption("Turn and Shoot Auto", m_TurnShootAuto);
 
-      m_ShootAuto = new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem);
-      // m_TurnShootAuto = Commands.sequence(
-      //   new TurnToAngleCommand(()-> -135, m_robotDrive),
-      //   new DriveCommand(m_robotDrive, .2, 0, 0, false).withTimeout(1),
-      //   m_ShootAuto
-      // );
-      m_chooser.setDefaultOption("Shoot Auto", m_ShootAuto);
-      // m_chooser.addOption("Turn and Shoot Auto", m_TurnShootAuto);
-            
-SmartDashboard.putData(m_chooser);
+    SmartDashboard.putData(m_chooser);
     // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
   }
 
@@ -148,66 +145,59 @@ SmartDashboard.putData(m_chooser);
     // .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
 
     new JoystickButton(m_driverController, Button.kA.value)
-    .whileTrue(new DropShooterAngleCommand(m_ShooterSubsystem, false));
+        .whileTrue(new DropShooterAngleCommand(m_ShooterSubsystem, false));
 
     new JoystickButton(m_driverController, Button.kX.value)
-    .onTrue(new TurnToAngleCommand(() -> -135, m_robotDrive).withTimeout(3));
-    
+        .onTrue(new TurnToAngleCommand(() -> -135, m_robotDrive).withTimeout(3));
+
     new JoystickButton(m_driverController, Button.kB.value)
-    .onTrue(new TurnToAngleCommand(() -> 135, m_robotDrive).withTimeout(3));
+        .onTrue(new TurnToAngleCommand(() -> 135, m_robotDrive).withTimeout(3));
 
     // Turn to 0 degrees when the 'B' button is pressed, with a 3 second timeout
-   // new JoystickButton(m_driverController, Button.kY.value)
-   // .onTrue(new TurnToAngleCommand(() -> 0, m_robotDrive).withTimeout(3));
+    // new JoystickButton(m_driverController, Button.kY.value)
+    // .onTrue(new TurnToAngleCommand(() -> 0, m_robotDrive).withTimeout(3));
 
     new JoystickButton(m_driverController, Button.kRightBumper.value)
-    .onTrue(new speedAdjustCommand(m_robotDrive, true));
-    
+        .onTrue(new speedAdjustCommand(m_robotDrive, true));
+
     new JoystickButton(m_driverController, Button.kLeftBumper.value)
-    .onTrue(new speedAdjustCommand(m_robotDrive, false));
+        .onTrue(new speedAdjustCommand(m_robotDrive, false));
 
     new JoystickButton(m_driverController, Button.kY.value)
-    .onTrue(new RestartGyroCommand(m_robotDrive));
+        .onTrue(new RestartGyroCommand(m_robotDrive));
 
-
-  
-    
-    // Activates  Shooter for 3 seconds. hopefully.
-     new JoystickButton(m_OperatorController, Button.kY.value)
-    .onTrue(new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(3));
+    // Activates Shooter for 3 seconds. hopefully.
+    new JoystickButton(m_OperatorController, Button.kY.value)
+        .onTrue(new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(3));
 
     new POVButton(m_OperatorController, 0)
-    .onTrue(new DropShooterAngleCommand(m_ShooterSubsystem, true));
-    
+        .onTrue(new DropShooterAngleCommand(m_ShooterSubsystem, true));
+
     new POVButton(m_OperatorController, 180)
-    .onTrue(new DropShooterAngleCommand(m_ShooterSubsystem, false));
+        .onTrue(new DropShooterAngleCommand(m_ShooterSubsystem, false));
 
     new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-    .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.45)); // Negative = ingest note
+        .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.45)); // Negative = ingest note
 
     // Manual Overrides for stick control of intake arm and climber
     new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
-    .whileTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController, m_IntakeSubsystem));
+        .whileTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController,
+            m_IntakeSubsystem));
 
     new JoystickButton(m_OperatorController, Button.kA.value)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.3).withTimeout(1));
+        .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.3).withTimeout(1));
 
     new JoystickButton(m_OperatorController, Button.kB.value)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, 0.5).withTimeout(1));
+        .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, 0.5).withTimeout(1));
 
     new JoystickButton(m_OperatorController, Button.kX.value)
-    .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, 0.8).withTimeout(1));
+        .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, 0.8).withTimeout(1));
 
     new POVButton(m_OperatorController, 90)
-    .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_robotDrive).withTimeout(3));
-    
+        .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_robotDrive).withTimeout(3));
+
     new POVButton(m_OperatorController, 270)
-    .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_robotDrive).withTimeout(3));
-    
-
-
-
-
+        .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_robotDrive).withTimeout(3));
 
   }
 
@@ -217,91 +207,85 @@ SmartDashboard.putData(m_chooser);
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-      // conditional block if using robot-relative Pose
-      Pose2d requestedPose = new Pose2d(1,2,new Rotation2d(0));
-      Pose2d relativePose = m_robotDrive.getPose().plus(
-        new Transform2d(
-          new Pose2d(0,0,new Rotation2d(0)),
-          requestedPose)
-      );
-      // pass relativePose to TrajectoryGenerator if "useRobotRelativeTranslation = true"
-      
-      
-      PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-      PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-      ProfiledPIDController thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-      thetaController.enableContinuousInput(-Math.PI, Math.PI);
+    // TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
+    // AutoConstants.kMaxSpeedMetersPerSecond,
+    // AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+    // .setKinematics(DriveConstants.kDriveKinematics);
 
+    // Trajectory toFirstNote = TrajectoryGenerator.generateTrajectory(
+    // new Pose2d(0,0,new Rotation2d(0)),
+    // List.of(
+    // new Translation2d(1,0),
+    // new Translation2d(1,1)
+    // ),
+    // new Pose2d(2,1, Rotation2d.fromDegrees(0)),
+    // trajectoryConfig);
+    // Trajectory toSpeakerFromFirstNote = TrajectoryGenerator.generateTrajectory(
+    // new Pose2d(2,1,new Rotation2d(0)),
+    // List.of(
+    // new Translation2d(1,1),
+    // new Translation2d(1,0)
+    // ),
+    // new Pose2d(0,0, Rotation2d.fromDegrees(0)),
+    // trajectoryConfig);
+    // PIDController xController = new PIDController(AutoConstants.kPXController, 0,
+    // 0);
+    // PIDController yController = new PIDController(AutoConstants.kPYController, 0,
+    // 0);
+    // ProfiledPIDController theteController = new ProfiledPIDController(
+    // AutoConstants.kPThetaController, 0, 0,
+    // AutoConstants.kThetaControllerConstraints);
+    // theteController.enableContinuousInput(-Math.PI, Math.PI);
 
-      
-        // Pose2d positionOfNote = new Pose2d(2,1, Rotation2d.fromDegrees(0));
-        // List<Translation2d> noteWaypoints =               List.of(
-        //           new Translation2d(1,0),
-        //           new Translation2d(1,1)
-        //           );
-        // List<Pose2d> explicitRouteToNote = List.of(
-        //   new Pose2d(1, 1, Rotation2d.fromDegrees(-33)),
-        //   new Pose2d(1, 0, Rotation2d.fromDegrees(33)),
-        //   new Pose2d(2, 1, Rotation2d.fromDegrees(0))
-        // );
-        // Trajectory firstNoteTrajectory = m_robotDrive.buildRelativeTrajectory(positionOfNote);
-        // Trajectory firstNoteTrajectory2 = m_robotDrive.buildRelativeTrajectory(positionOfNote, noteWaypoints);
-        // Trajectory firstNoteTrajectory3 = m_robotDrive.buildRelativeTrajectory(explicitRouteToNote);
-        //Trajectory firstNoteTrajectory4 = m_robotDrive.buildFieldTrajectory(positionOfNote);
+    // SwerveControllerCommand toFirstNoteControllerCommand = new
+    // SwerveControllerCommand(
+    // toFirstNote,
+    // m_robotDrive::getPose,
+    // DriveConstants.kDriveKinematics,
+    // xController,
+    // yController,
+    // theteController,
+    // m_robotDrive::setModuleStates,
+    // m_robotDrive);
 
-        //Command driveToFirstNoteCommand = m_robotDrive.drive(firstNoteTrajectory);
-      Pose2d positionOfFirstNote = new Pose2d(1.778, 0, Rotation2d.fromDegrees(0));
-      Pose2d positionOfSecondNote = new Pose2d(1.778, 1.397, Rotation2d.fromDegrees(0));
-      Pose2d positionOfThirdNote = new Pose2d(-1.778, 1.397, Rotation2d.fromDegrees(0));
-      Pose2d positionOfHome = new Pose2d(0,0, Rotation2d.fromDegrees(0));
+    // SwerveControllerCommand toSpeakerFromFirstControllerCommand = new
+    // SwerveControllerCommand(
+    // toSpeakerFromFirstNote,
+    // m_robotDrive::getPose,
+    // DriveConstants.kDriveKinematics,
+    // xController,
+    // yController,
+    // theteController,
+    // m_robotDrive::setModuleStates,
+    // m_robotDrive);
 
-      Trajectory toFirst = m_robotDrive.buildRelativeTrajectory(positionOfFirstNote);
-      Trajectory toSecond = m_robotDrive.buildRelativeTrajectory(positionOfSecondNote);
-      Trajectory toThird = m_robotDrive.buildRelativeTrajectory(positionOfThirdNote);
-      Trajectory TrajHome = m_robotDrive.buildRelativeTrajectory(positionOfHome);
-      
+    // return new SequentialCommandGroup(
+    // new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1),
+    // new InstantCommand(() ->
+    // m_robotDrive.resetOdometry(toFirstNote.getInitialPose())),
+    // toFirstNoteControllerCommand,
 
+    // toSpeakerFromFirstControllerCommand,
+    // new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1)
+    // );
 
-      SwerveControllerCommand goToFirst = new SwerveControllerCommand(
-        toFirst,
-        m_robotDrive::getPose,
-        DriveConstants.kDriveKinematics,
-        xController,
-        yController,
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
-      SwerveControllerCommand goToSecond = new SwerveControllerCommand(
-        toSecond,
-        m_robotDrive::getPose,
-        DriveConstants.kDriveKinematics,
-        xController,
-        yController,
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
-      SwerveControllerCommand goToThird = new SwerveControllerCommand(
-        toThird,
-        m_robotDrive::getPose,
-        DriveConstants.kDriveKinematics,
-        xController,
-        yController,
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
-      SwerveControllerCommand goToHome = new SwerveControllerCommand(
-        TrajHome,
-        m_robotDrive::getPose,
-        DriveConstants.kDriveKinematics,
-        xController,
-        yController,
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
+    // Command driveToFirstNoteCommand = m_robotDrive.drive(firstNoteTrajectory);
+    Pose2d positionOfFirstNote = new Pose2d(1.778, 0, Rotation2d.fromDegrees(0));
+    Pose2d positionOfSecondNote = new Pose2d(1.778, 1.397, Rotation2d.fromDegrees(0));
+    Pose2d positionOfThirdNote = new Pose2d(-1.778, 1.397, Rotation2d.fromDegrees(0));
+    Pose2d positionOfHome = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
 
+    Trajectory toFirst = m_robotDrive.buildRelativeTrajectory(positionOfFirstNote);
+    Trajectory toSecond = m_robotDrive.buildRelativeTrajectory(positionOfSecondNote);
+    Trajectory toThird = m_robotDrive.buildRelativeTrajectory(positionOfThirdNote);
+    Trajectory TrajHome = m_robotDrive.buildRelativeTrajectory(positionOfHome);
 
-      return new SequentialCommandGroup(
+    Command goToFirst = m_robotDrive.drive(toFirst);
+    Command goToSecond = m_robotDrive.drive(toSecond);
+    Command goToThird = m_robotDrive.drive(toThird);
+    Command goToHome = m_robotDrive.drive(TrajHome);
+
+    return new SequentialCommandGroup(
         new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1),
         new InstantCommand(() -> m_robotDrive.resetOdometry(TrajHome.getInitialPose())),
         goToFirst,
@@ -309,50 +293,52 @@ SmartDashboard.putData(m_chooser);
         goToSecond,
         goToHome,
         goToThird,
-        new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1)
-        );
-      
-      // return m_chooser.getSelected();
-  }
+        new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
 
-  public Command getOldAutonomousCommand() {
-    // Create config for trajectory
-    TrajectoryConfig config = new TrajectoryConfig(
-        AutoConstants.kMaxSpeedMetersPerSecond,
-        AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-        // Add kinematics to ensure max speed is actually obeyed
-        .setKinematics(DriveConstants.kDriveKinematics);
-
-    // An example trajectory to follow. All units in meters.
-    Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-        // Start at the origin facing the +X direction
-        new Pose2d(0, 0, new Rotation2d(0)),
-        // Pass through these two interior waypoints, making an 's' curve path
-        List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-        // End 3 meters straight ahead of where we started, facing forward
-        new Pose2d(3, 0, new Rotation2d(0)),
-        config);
-
-    var thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    SwerveControllerCommand swerveControllerCommand = new SwerveControllerCommand(
-        exampleTrajectory,
-        m_robotDrive::getPose, // Functional interface to feed supplier
-        DriveConstants.kDriveKinematics,
-
-        // Position controllers
-        new PIDController(AutoConstants.kPXController, 0, 0),
-        new PIDController(AutoConstants.kPYController, 0, 0),
-        thetaController,
-        m_robotDrive::setModuleStates,
-        m_robotDrive);
-
-    // Reset odometry to the starting pose of the trajectory.
-    m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
-    // Run path following command, then stop at the end.
-    return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0, false, false));
+    // return m_chooser.getSelected();
   }
 }
+// public Command getOldAutonomousCommand() {
+// // Create config for trajectory
+// TrajectoryConfig config = new TrajectoryConfig(
+// AutoConstants.kMaxSpeedMetersPerSecond,
+// AutoConstants.kMaxAccelerationMetersPerSecondSquared)
+// // Add kinematics to ensure max speed is actually obeyed
+// .setKinematics(DriveConstants.kDriveKinematics);
+
+// // An example trajectory to follow. All units in meters.
+// Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
+// // Start at the origin facing the +X direction
+// new Pose2d(0, 0, new Rotation2d(0)),
+// // Pass through these two interior waypoints, making an 's' curve path
+// List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
+// // End 3 meters straight ahead of where we started, facing forward
+// new Pose2d(3, 0, new Rotation2d(0)),
+// config);
+
+// var thetaController = new ProfiledPIDController(
+// AutoConstants.kPThetaController, 0, 0,
+// AutoConstants.kThetaControllerConstraints);
+// thetaController.enableContinuousInput(-Math.PI, Math.PI);
+
+// SwerveControllerCommand swerveControllerCommand = new
+// SwerveControllerCommand(
+// exampleTrajectory,
+// m_robotDrive::getPose, // Functional interface to feed supplier
+// DriveConstants.kDriveKinematics,
+
+// // Position controllers
+// new PIDController(AutoConstants.kPXController, 0, 0),
+// new PIDController(AutoConstants.kPYController, 0, 0),
+// thetaController,
+// m_robotDrive::setModuleStates,
+// m_robotDrive);
+
+// // Reset odometry to the starting pose of the trajectory.
+// m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
+
+// // Run path following command, then stop at the end.
+// return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
+// false, false));
+// }
+// }

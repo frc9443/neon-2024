@@ -14,20 +14,24 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class ShooterSubsystem extends SubsystemBase {
 
-    private final CANSparkFlex m_shooterTopLeft = new CANSparkFlex(ShooterConstants.kTopLeftShooterMotorCanId, MotorType.kBrushless);
-    private final CANSparkFlex m_shooterTopRight = new CANSparkFlex(ShooterConstants.kTopRightShooterMotorCanId, MotorType.kBrushless); 
-    private final CANSparkFlex m_shooterBottomLeft = new CANSparkFlex(ShooterConstants.kBottomLeftShooterMotorCanId, MotorType.kBrushless); 
-    private final CANSparkFlex m_shooterBottomRight = new CANSparkFlex(ShooterConstants.kBottomRightShooterMotorCanId, MotorType.kBrushless);
+  private final CANSparkFlex m_shooterTopLeft = new CANSparkFlex(ShooterConstants.kTopLeftShooterMotorCanId,
+      MotorType.kBrushless);
+  private final CANSparkFlex m_shooterTopRight = new CANSparkFlex(ShooterConstants.kTopRightShooterMotorCanId,
+      MotorType.kBrushless);
+  private final CANSparkFlex m_shooterBottomLeft = new CANSparkFlex(ShooterConstants.kBottomLeftShooterMotorCanId,
+      MotorType.kBrushless);
+  private final CANSparkFlex m_shooterBottomRight = new CANSparkFlex(ShooterConstants.kBottomRightShooterMotorCanId,
+      MotorType.kBrushless);
 
-    private final Solenoid m_solenoid = new Solenoid(ShooterConstants.PneumaticHubCanId,
-     PneumaticsModuleType.REVPH, ShooterConstants.SolenoidId);
+  private final Solenoid m_solenoid = new Solenoid(ShooterConstants.PneumaticHubCanId,
+      PneumaticsModuleType.REVPH, ShooterConstants.SolenoidId);
 
-    public ShooterSubsystem() {
-        m_shooterBottomRight.setInverted(true);
-        m_shooterTopRight.setInverted(false);
-        m_shooterBottomLeft.setInverted(false);
-        m_shooterTopLeft.setInverted(true);
-    }
+  public ShooterSubsystem() {
+    m_shooterBottomRight.setInverted(true);
+    m_shooterTopRight.setInverted(false);
+    m_shooterBottomLeft.setInverted(false);
+    m_shooterTopLeft.setInverted(true);
+  }
 
   /**
    * Example command factory method.
@@ -42,17 +46,17 @@ public class ShooterSubsystem extends SubsystemBase {
           /* one-time action goes here */
         });
   }
-  public void Shoot()
-  {
+
+  public void Shoot() {
     m_shooterTopLeft.set(1);
     m_shooterTopRight.set(1);
     m_shooterBottomLeft.set(0.8);
     m_shooterBottomRight.set(0.8);
   }
-  public void Stop()
-  {
-    m_shooterTopLeft.setVoltage(0); 
-    m_shooterTopRight.setVoltage(0);  
+
+  public void Stop() {
+    m_shooterTopLeft.setVoltage(0);
+    m_shooterTopRight.setVoltage(0);
     m_shooterBottomLeft.setVoltage(0);
     m_shooterBottomRight.setVoltage(0);
   }
@@ -62,7 +66,8 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   /**
-   * An example method querying a boolean state of the subsystem (for example, a digital sensor).
+   * An example method querying a boolean state of the subsystem (for example, a
+   * digital sensor).
    *
    * @return value of some boolean subsystem state, such as a digital sensor.
    */

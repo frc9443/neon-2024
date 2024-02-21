@@ -17,7 +17,7 @@ public class TurnToAngleCommand extends PIDCommand {
    * Turns to robot to the specified angle.
    *
    * @param targetAngleDegrees The angle to turn to
-   * @param drive The drive subsystem to use
+   * @param drive              The drive subsystem to use
    */
   public TurnToAngleCommand(DoubleSupplier targetAngleFunction, DriveSubsystem drive) {
     super(
@@ -27,14 +27,15 @@ public class TurnToAngleCommand extends PIDCommand {
         // Set reference to target
         targetAngleFunction,
         // Pipe output to turn robot
-        
-        output -> drive.drive(0, 0, (0.97 * output/90) + (Math.signum(output) * 0.03), false, true),
+
+        output -> drive.drive(0, 0, (0.97 * output / 90) + (Math.signum(output) * 0.03), false, true),
         // Require the drive
         drive);
 
     // Set the controller to be continuous (because it is an angle controller)
     getController().enableContinuousInput(-180, 180);
-    // Set the controller tolerance - the delta tolerance ensures the robot is stationary at the
+    // Set the controller tolerance - the delta tolerance ensures the robot is
+    // stationary at the
     // setpoint before it is considered as having reached the reference
     getController()
         .setTolerance(GyroConstants.kTurnToleranceDeg, GyroConstants.kTurnRateToleranceDegPerS);
