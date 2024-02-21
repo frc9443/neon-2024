@@ -228,6 +228,7 @@ public class RobotContainer {
     // ),
     // new Pose2d(0,0, Rotation2d.fromDegrees(0)),
     // trajectoryConfig);
+
     // PIDController xController = new PIDController(AutoConstants.kPXController, 0,
     // 0);
     // PIDController yController = new PIDController(AutoConstants.kPYController, 0,
@@ -272,73 +273,34 @@ public class RobotContainer {
     // Command driveToFirstNoteCommand = m_robotDrive.drive(firstNoteTrajectory);
     Pose2d positionOfFirstNote = new Pose2d(1.778, 0, Rotation2d.fromDegrees(0));
     Pose2d positionOfSecondNote = new Pose2d(1.778, 1.397, Rotation2d.fromDegrees(0));
-    Pose2d positionOfThirdNote = new Pose2d(-1.778, 1.397, Rotation2d.fromDegrees(0));
+    Pose2d positionOfThirdNote = new Pose2d(1.778, -1.397, Rotation2d.fromDegrees(0));
     Pose2d positionOfHome = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-
-    Trajectory toFirst = m_robotDrive.buildRelativeTrajectory(positionOfFirstNote);
-    Trajectory toSecond = m_robotDrive.buildRelativeTrajectory(positionOfSecondNote);
-    Trajectory toThird = m_robotDrive.buildRelativeTrajectory(positionOfThirdNote);
-    Trajectory TrajHome = m_robotDrive.buildRelativeTrajectory(positionOfHome);
+     
+    Trajectory toFirst = m_robotDrive.BuildFieldTrajectory(positionOfFirstNote);
+    Trajectory toSecond = m_robotDrive.BuildFieldTrajectory(positionOfSecondNote);
+    Trajectory toThird = m_robotDrive.BuildFieldTrajectory(positionOfThirdNote);
+    Trajectory toHome = m_robotDrive.BuildFieldTrajectory(positionOfHome);
 
     Command goToFirst = m_robotDrive.drive(toFirst);
     Command goToSecond = m_robotDrive.drive(toSecond);
     Command goToThird = m_robotDrive.drive(toThird);
-    Command goToHome = m_robotDrive.drive(TrajHome);
+    Command goToHome = m_robotDrive.drive(toHome);
+    
+    Command goToHome2 = m_robotDrive.drive(toHome);
+    
+    Command goToHome3 = m_robotDrive.drive(toHome);
 
     return new SequentialCommandGroup(
         new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1),
-        new InstantCommand(() -> m_robotDrive.resetOdometry(TrajHome.getInitialPose())),
+        new InstantCommand(() -> m_robotDrive.resetOdometry(m_robotDrive.getPose())),
         goToFirst,
         goToHome,
         goToSecond,
-        goToHome,
+        goToHome2,
         goToThird,
+        goToHome3,
         new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
 
     // return m_chooser.getSelected();
   }
 }
-// public Command getOldAutonomousCommand() {
-// // Create config for trajectory
-// TrajectoryConfig config = new TrajectoryConfig(
-// AutoConstants.kMaxSpeedMetersPerSecond,
-// AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-// // Add kinematics to ensure max speed is actually obeyed
-// .setKinematics(DriveConstants.kDriveKinematics);
-
-// // An example trajectory to follow. All units in meters.
-// Trajectory exampleTrajectory = TrajectoryGenerator.generateTrajectory(
-// // Start at the origin facing the +X direction
-// new Pose2d(0, 0, new Rotation2d(0)),
-// // Pass through these two interior waypoints, making an 's' curve path
-// List.of(new Translation2d(1, 1), new Translation2d(2, -1)),
-// // End 3 meters straight ahead of where we started, facing forward
-// new Pose2d(3, 0, new Rotation2d(0)),
-// config);
-
-// var thetaController = new ProfiledPIDController(
-// AutoConstants.kPThetaController, 0, 0,
-// AutoConstants.kThetaControllerConstraints);
-// thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-// SwerveControllerCommand swerveControllerCommand = new
-// SwerveControllerCommand(
-// exampleTrajectory,
-// m_robotDrive::getPose, // Functional interface to feed supplier
-// DriveConstants.kDriveKinematics,
-
-// // Position controllers
-// new PIDController(AutoConstants.kPXController, 0, 0),
-// new PIDController(AutoConstants.kPYController, 0, 0),
-// thetaController,
-// m_robotDrive::setModuleStates,
-// m_robotDrive);
-
-// // Reset odometry to the starting pose of the trajectory.
-// m_robotDrive.resetOdometry(exampleTrajectory.getInitialPose());
-
-// // Run path following command, then stop at the end.
-// return swerveControllerCommand.andThen(() -> m_robotDrive.drive(0, 0, 0,
-// false, false));
-// }
-// }

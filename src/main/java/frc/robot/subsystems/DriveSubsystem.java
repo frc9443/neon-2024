@@ -275,12 +275,12 @@ public class DriveSubsystem extends SubsystemBase {
     return buildFieldTrajectory(relativePoses);
   }
 
-  public Trajectory buildRelativeTrajectory(Pose2d endPose, List<Translation2d> pointsToNote) {
-    return buildFieldTrajectory(buildRelativePose(endPose), pointsToNote);
-  }
-
   public Trajectory buildRelativeTrajectory(Pose2d endPose) {
     return buildRelativeTrajectory(endPose, List.of());
+  }
+
+  public Trajectory buildRelativeTrajectory(Pose2d endPose, List<Translation2d> pointsToNote) {
+    return buildFieldTrajectory(buildRelativePose(endPose), pointsToNote);
   }
 
   public Trajectory buildFieldTrajectory(Pose2d endPose, List<Translation2d> transitionPoints) {
@@ -290,6 +290,14 @@ public class DriveSubsystem extends SubsystemBase {
         endPose,
         AutoConstants.kTrajectoryConfig);
     return relativeTrajectory;
+  }
+
+  public Trajectory BuildFieldTrajectory(Pose2d endPose) {
+    return TrajectoryGenerator.generateTrajectory(
+        getPose(),
+        List.of(),
+        endPose,
+        AutoConstants.kTrajectoryConfig);
   }
 
   public Trajectory buildFieldTrajectory(List<Pose2d> routeToPose) {
