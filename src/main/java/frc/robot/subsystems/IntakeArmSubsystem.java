@@ -18,7 +18,7 @@ import frc.robot.Constants.IntakeArmConstants;
 
 public class IntakeArmSubsystem extends SubsystemBase {
 
-  private final Talon m_IntakeArm = new Talon(IntakeArmConstants.kIntakeLiftMotorPWMId);
+  private final CANSparkMax m_IntakeArm = new CANSparkMax(IntakeArmConstants.kIntakeLiftMotorCanId, MotorType.kBrushless);
   private final DutyCycleEncoder m_ArmEncoder = new DutyCycleEncoder(IntakeArmConstants.kIntakeArmEncoderDioId);
 
   public IntakeArmSubsystem() {

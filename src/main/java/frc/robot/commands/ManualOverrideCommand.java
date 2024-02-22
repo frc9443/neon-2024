@@ -42,10 +42,10 @@ public class ManualOverrideCommand extends Command {
   @Override
   public void execute() {
 
-    double intakeArmRate = m_OperatorController.getRightY();
-    m_IntakeArmSubsystem.moveArm(Math.abs(intakeArmRate) < 0.05 ? 0.0 : intakeArmRate);
-    double intakeRate = m_OperatorController.getRightX() / 6;
-    m_IntakeSubsystem.run(intakeRate / 10000);
+    double intakeArmRate = m_OperatorController.getRightY() / 4;
+    m_IntakeArmSubsystem.moveArm(intakeArmRate);
+    // double intakeRate = m_OperatorController.getRightX() / 2;
+    // m_IntakeSubsystem.run(intakeRate);
 
     double climberRate = m_OperatorController.getLeftY() * 0.75;
     if (Math.abs(climberRate) > 0.05) {
@@ -64,6 +64,7 @@ public class ManualOverrideCommand extends Command {
   public void end(boolean interrupted) {
     m_ClimberSubsystem.stopClimber();
     m_IntakeArmSubsystem.stopArm();
+    m_IntakeSubsystem.stop();
   }
 
   // Returns true when the command should end.
@@ -72,6 +73,8 @@ public class ManualOverrideCommand extends Command {
     if (m_OperatorController.getLeftBumper() == false) {
       m_ClimberSubsystem.stopClimber();
       m_IntakeArmSubsystem.stopArm();
+      m_IntakeSubsystem.stop();
+
       return true;
     }
     return false;

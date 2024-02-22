@@ -92,9 +92,9 @@ public class RobotContainer {
   public RobotContainer() {
 
     // For USB gyro (Neon)
-    // m_gyro = new AHRS(SerialPort.Port.kUSB);
+     m_gyro = new AHRS(SerialPort.Port.kUSB);
     // For MXP gyro card (Helium)
-    m_gyro = new AHRS(SPI.Port.kMXP);
+    //m_gyro = new AHRS(SPI.Port.kMXP);
 
     m_DriveSubsystem = new DriveSubsystem(m_gyro);
     m_ShooterSubsystem = new ShooterSubsystem();
