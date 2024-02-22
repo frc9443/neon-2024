@@ -23,7 +23,7 @@ public class ActivateIntakeCommand extends Command {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    m_IntakeSubsystem.run(speed / 10000);
+    m_IntakeSubsystem.run(speed);
   }
 
   // Called every time the scheduler runs while the command is scheduled.

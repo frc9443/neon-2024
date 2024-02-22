@@ -44,8 +44,8 @@ public class ManualOverrideCommand extends Command {
 
     double intakeArmRate = m_OperatorController.getRightY() / 4;
     m_IntakeArmSubsystem.moveArm(intakeArmRate);
-    double intakeRate = m_OperatorController.getRightX() / 2;
-    m_IntakeSubsystem.run(intakeRate);
+    // double intakeRate = m_OperatorController.getRightX() / 2;
+    // m_IntakeSubsystem.run(intakeRate);
 
     double climberRate = m_OperatorController.getLeftY() * 0.75;
     if (Math.abs(climberRate) > 0.05) {
