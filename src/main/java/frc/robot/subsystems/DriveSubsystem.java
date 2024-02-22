@@ -71,7 +71,7 @@ public class DriveSubsystem extends SubsystemBase {
   public DriveSubsystem(AHRS gyro) {
     m_gyro = gyro;
 
-    Class<?> robotDrive = DriveConstants.Helium.class;
+    Class<?> robotDrive = DriveConstants.Neon.class;
 
     m_frontLeft = fromConfig(robotDrive,
         "kFrontLeftDrivingCanId", "kFrontLeftTurningCanId",

@@ -89,8 +89,8 @@ public final class Constants {
   }
 
   public static final class IntakeArmConstants {
-    public static final int kIntakeLiftMotorPWMId = 9;
-    public static final int kIntakeArmEncoderDioId = 9;
+    public static final int kIntakeLiftMotorCanId = 30;
+    public static final int kIntakeArmEncoderDioId = 30;
   }
 
   public static final class ClimberConstants {
