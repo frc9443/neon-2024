@@ -1,46 +1,40 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PIDCommand;
+import frc.robot.Constants.GyroConstants;
 import frc.robot.Constants.IntakeArmConstants;
 import frc.robot.subsystems.IntakeArmSubsystem;
 
-public class MoveIntakeToPositionCommand extends Command {
-    private double m_distance = 10; // Height is in inches
+public class MoveIntakeToPositionCommand extends PIDCommand {
     private double m_speed = .2; // Speed is a _positive_ number, between 0 and 1
     private IntakeArmSubsystem m_IntakeArmSubsystem;
 
     private final double m_tolerance = 1;
 
-    public MoveIntakeToPositionCommand(IntakeArmSubsystem armSubsystem) {
-        m_IntakeArmSubsystem = armSubsystem;
-    }
+    public MoveIntakeToPositionCommand(IntakeArmSubsystem armSubsystem, double targetPosition) {
+        super(
+                new PIDController(GyroConstants.kTurnP, GyroConstants.kTurnI, GyroConstants.kTurnD),
+                // Close loop on heading
+                armSubsystem::getPosition,
+                // Set reference to target
+                targetPosition,
+                // Pipe output to turn robot
 
-    @Override
-    public void initialize() {
-    }
+                output -> armSubsystem.moveArm(output),
+                // Require the drive
+                armSubsystem);
 
-    @Override
-    public void execute() {
-        if (m_IntakeArmSubsystem.getPosition() < m_distance) {
-            // The lift is lower than it should be.
-            // Raise the lift.
-            m_IntakeArmSubsystem.moveArm(m_speed);
-        }
-        if (m_IntakeArmSubsystem.getPosition() > m_distance) {
-            // The lift is higher than it should be.
-            // Lower the lift.
-            m_IntakeArmSubsystem.moveArm(m_speed);
-            ;
-        }
+        // Set the controller tolerance - the delta tolerance ensures the robot is
+        // stationary at the
+        // setpoint before it is considered as having reached the reference
+        getController().setTolerance(0.005);
     }
 
     @Override
     public boolean isFinished() {
-        final double distanceToHeight = m_IntakeArmSubsystem.getPosition() - m_distance; // This can be negative
-                                                                                         // depending on whether the
-                                                                                         // lift is higher or lower than
-                                                                                         // the desired height.
-        final boolean isWithinTolerance = Math.abs(distanceToHeight) < m_tolerance;
-        return isWithinTolerance;
+        // End when the controller is at the reference.
+        return getController().atSetpoint();
     }
 }

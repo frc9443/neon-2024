@@ -103,32 +103,32 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearLeft.getPosition(),
             m_rearRight.getPosition()
         });
-    // AutoBuilder.configureHolonomic(
-    //     this::getPose, // Robot pose supplier
-    //     this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
-    //     this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
-    //     this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
-    //     new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
-    //         new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
-    //         new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
-    //         4.5, // Max module speed, in m/s
-    //         0.4, // Drive base radius in meters. Distance from robot center to furthest module.
-    //         new ReplanningConfig() // Default path replanning config. See the API for the options here
-    //     ),
-    //     () -> {
-    //       // Boolean supplier that controls when the path will be mirrored for the red
-    //       // alliance
-    //       // This will flip the path being followed to the red side of the field.
-    //       // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
+    AutoBuilder.configureHolonomic(
+        this::getPose, // Robot pose supplier
+        this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+        this::getRobotRelativeSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
+        this::driveRobotRelative, // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds
+        new HolonomicPathFollowerConfig( // HolonomicPathFollowerConfig, this should likely live in your Constants class
+            new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
+            new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
+            4.5, // Max module speed, in m/s
+            0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+            new ReplanningConfig() // Default path replanning config. See the API for the options here
+        ),
+        () -> {
+          // Boolean supplier that controls when the path will be mirrored for the red
+          // alliance
+          // This will flip the path being followed to the red side of the field.
+          // THE ORIGIN WILL REMAIN ON THE BLUE SIDE
 
-    //       var alliance = DriverStation.getAlliance();
-    //       if (alliance.isPresent()) {
-    //         return alliance.get() == DriverStation.Alliance.Red;
-    //       }
-    //       return false;
-    //     },
-    //     this // Reference to this subsystem to set requirements
-    // );
+          var alliance = DriverStation.getAlliance();
+          if (alliance.isPresent()) {
+            return alliance.get() == DriverStation.Alliance.Red;
+          }
+          return false;
+        },
+        this // Reference to this subsystem to set requirements
+    );
   }
 
   @Override
@@ -195,9 +195,27 @@ public class DriveSubsystem extends SubsystemBase {
     resetOdometry(pose);
   }
 
-  // public ChassisSpeeds getRobotRelativeSpeeds(){
-  //   return toChassisSpeeds(SwerveModuleState moduleStates);
-  // }
+  // Path Builder Required.
+  public ChassisSpeeds getRobotRelativeSpeeds() {
+    return DriveConstants.kDriveKinematics.toChassisSpeeds(
+        m_frontLeft.getState(),
+        m_frontRight.getState(),
+        m_rearLeft.getState(),
+        m_rearRight.getState());
+  }
+
+  // Path Builder Drive Command
+  public void driveRobotRelative(ChassisSpeeds chassisSpeeds) {
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(chassisSpeeds);
+
+    SwerveDriveKinematics.desaturateWheelSpeeds(
+        swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+  }
 
   /**
    * Method to drive the robot using joystick info.
@@ -299,70 +317,5 @@ public class DriveSubsystem extends SubsystemBase {
 
   public double getAngle() {
     return m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-  }
-
-  private Pose2d buildRelativePose(Pose2d relativeToRobot) {
-    return getPose().plus(
-        new Transform2d(
-            new Pose2d(0, 0, new Rotation2d(0)),
-            relativeToRobot));
-  }
-
-  public Trajectory buildRelativeTrajectory(List<Pose2d> seriesOfPoses) {
-    List<Pose2d> relativePoses = seriesOfPoses.stream().map(
-        this::buildRelativePose).collect(java.util.stream.Collectors.toList());
-    return buildFieldTrajectory(relativePoses);
-  }
-
-  public Trajectory buildRelativeTrajectory(Pose2d endPose) {
-    return buildRelativeTrajectory(endPose, List.of());
-  }
-
-  public Trajectory buildRelativeTrajectory(Pose2d endPose, List<Translation2d> pointsToNote) {
-    return buildFieldTrajectory(buildRelativePose(endPose), pointsToNote);
-  }
-
-  public Trajectory buildFieldTrajectory(Pose2d endPose, List<Translation2d> transitionPoints) {
-    Trajectory relativeTrajectory = TrajectoryGenerator.generateTrajectory(
-        getPose(),
-        transitionPoints,
-        endPose,
-        AutoConstants.kTrajectoryConfig);
-    return relativeTrajectory;
-  }
-
-  public Trajectory BuildFieldTrajectory(Pose2d endPose) {
-    return TrajectoryGenerator.generateTrajectory(
-        getPose(),
-        List.of(),
-        endPose,
-        AutoConstants.kTrajectoryConfig);
-  }
-
-  public Trajectory buildFieldTrajectory(List<Pose2d> routeToPose) {
-    Trajectory relativeTrajectory = TrajectoryGenerator
-        .generateTrajectory(routeToPose, AutoConstants.kTrajectoryConfig);
-    return relativeTrajectory;
-
-  }
-
-  public Command drive(Trajectory objective) {
-
-    PIDController xController = new PIDController(AutoConstants.kPXController, 0, 0);
-    PIDController yController = new PIDController(AutoConstants.kPYController, 0, 0);
-    ProfiledPIDController thetaController = new ProfiledPIDController(
-        AutoConstants.kPThetaController, 0, 0, AutoConstants.kThetaControllerConstraints);
-    thetaController.enableContinuousInput(-Math.PI, Math.PI);
-
-    return new SwerveControllerCommand(
-        objective,
-        this::getPose,
-        DriveConstants.kDriveKinematics,
-        xController,
-        yController,
-        thetaController,
-        this::setModuleStates,
-        this);
-
   }
 }

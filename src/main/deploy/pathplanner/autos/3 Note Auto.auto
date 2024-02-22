@@ -12,6 +12,12 @@
     "data": {
       "commands": [
         {
+          "type": "named",
+          "data": {
+            "name": "ShootCommand"
+          }
+        },
+        {
           "type": "path",
           "data": {
             "pathName": "ToFirst"
@@ -21,6 +27,12 @@
           "type": "named",
           "data": {
             "name": "ActivateIntakeCommand"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToStartFromFirst"
           }
         },
         {
@@ -39,6 +51,24 @@
           "type": "named",
           "data": {
             "name": "ActivateIntakeCommand"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToStart"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootCommand"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToThird"
           }
         },
         {

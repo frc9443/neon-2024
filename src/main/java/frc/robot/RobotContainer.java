@@ -28,9 +28,11 @@ import frc.robot.Constants.GyroConstants;
 import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.ActivateIntakeCommand;
+import frc.robot.commands.AmpShootCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.ManualOverrideCommand;
+import frc.robot.commands.MoveIntakeToPositionCommand;
 import frc.robot.commands.DropShooterAngleCommand;
 import frc.robot.commands.RestartGyroCommand;
 import frc.robot.commands.ShootCommand;
@@ -57,6 +59,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.List;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 
 /*
  * This class is where the bulk of the robot should be declared.  Since Command-based is a
@@ -77,6 +80,7 @@ public class RobotContainer {
   // A complex auto routine that drives forward, drops a hatch, and then drives
   // backward.
   private final Command m_ShootAuto;
+  private final Command m_3NoteAuto;
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -86,6 +90,7 @@ public class RobotContainer {
   XboxController m_OperatorController = new XboxController(OIConstants.kOperatorControllerPort);
   private final AHRS m_gyro;
 
+
   /**
    * The container for the robot. Contains subsystems, OI devices, and commands.
    */
@@ -94,7 +99,7 @@ public class RobotContainer {
     // For USB gyro (Neon)
      m_gyro = new AHRS(SerialPort.Port.kUSB);
     // For MXP gyro card (Helium)
-    //m_gyro = new AHRS(SPI.Port.kMXP);
+    // m_gyro = new AHRS(SPI.Port.kMXP);
 
     m_DriveSubsystem = new DriveSubsystem(m_gyro);
     m_ShooterSubsystem = new ShooterSubsystem();
@@ -118,13 +123,10 @@ public class RobotContainer {
             m_DriveSubsystem));
 
     m_ShootAuto = new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem);
-    // m_TurnShootAuto = Commands.sequence(
-    // new TurnToAngleCommand(()-> -135, m_robotDrive),
-    // new DriveCommand(m_robotDrive, .2, 0, 0, false).withTimeout(1),
-    // m_ShootAuto
-    // );
+    m_3NoteAuto = new PathPlannerAuto("3 Note Auto");
+
     m_chooser.setDefaultOption("Shoot Auto", m_ShootAuto);
-    // m_chooser.addOption("Turn and Shoot Auto", m_TurnShootAuto);
+    m_chooser.addOption("3 note Auto", m_3NoteAuto);
 
     SmartDashboard.putData(m_chooser);
     // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
@@ -166,11 +168,6 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kY.value)
         .onTrue(new RestartGyroCommand(m_DriveSubsystem));
 
-    new JoystickButton(m_driverController, Button.kLeftBumper.value)
-        .onTrue(new InstantCommand(() -> m_DriveSubsystem.drive(m_DriveSubsystem
-        .BuildFieldTrajectory(new Pose2d(1.778, 0, Rotation2d.fromDegrees(180))))));
-
-
     // Activates Shooter for 3 seconds. hopefully.
     new JoystickButton(m_OperatorController, Button.kY.value)
         .onTrue(new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(3));
@@ -189,20 +186,17 @@ public class RobotContainer {
         .whileTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController,
             m_IntakeSubsystem));
 
-    new JoystickButton(m_OperatorController, Button.kA.value)
-        .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.3).withTimeout(1));
-
     new JoystickButton(m_OperatorController, Button.kB.value)
-        .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, 0.5).withTimeout(1));
-
-    new JoystickButton(m_OperatorController, Button.kX.value)
-        .onTrue(new ActivateIntakeCommand(m_IntakeSubsystem, 0.8).withTimeout(1));
+        .onTrue(new AmpShootCommand(m_IntakeSubsystem, m_IntakeArmSubsystem));
 
     new POVButton(m_OperatorController, 90)
         .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_DriveSubsystem).withTimeout(3));
 
     new POVButton(m_OperatorController, 270)
         .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_DriveSubsystem).withTimeout(3));
+
+    new JoystickButton(m_OperatorController, Button.kA.value)
+        .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.71));
 
   }
 
@@ -212,101 +206,6 @@ public class RobotContainer {
    * @return the command to run in autonomous
    */
   public Command getAutonomousCommand() {
-    // TrajectoryConfig trajectoryConfig = new TrajectoryConfig(
-    // AutoConstants.kMaxSpeedMetersPerSecond,
-    // AutoConstants.kMaxAccelerationMetersPerSecondSquared)
-    // .setKinematics(DriveConstants.kDriveKinematics);
-
-    // Trajectory toFirstNote = TrajectoryGenerator.generateTrajectory(
-    // new Pose2d(0,0,new Rotation2d(0)),
-    // List.of(
-    // new Translation2d(1,0),
-    // new Translation2d(1,1)
-    // ),
-    // new Pose2d(2,1, Rotation2d.fromDegrees(0)),
-    // trajectoryConfig);
-    // Trajectory toSpeakerFromFirstNote = TrajectoryGenerator.generateTrajectory(
-    // new Pose2d(2,1,new Rotation2d(0)),
-    // List.of(
-    // new Translation2d(1,1),
-    // new Translation2d(1,0)
-    // ),
-    // new Pose2d(0,0, Rotation2d.fromDegrees(0)),
-    // trajectoryConfig);
-
-    // PIDController xController = new PIDController(AutoConstants.kPXController, 0,
-    // 0);
-    // PIDController yController = new PIDController(AutoConstants.kPYController, 0,
-    // 0);
-    // ProfiledPIDController theteController = new ProfiledPIDController(
-    // AutoConstants.kPThetaController, 0, 0,
-    // AutoConstants.kThetaControllerConstraints);
-    // theteController.enableContinuousInput(-Math.PI, Math.PI);
-
-    // SwerveControllerCommand toFirstNoteControllerCommand = new
-    // SwerveControllerCommand(
-    // toFirstNote,
-    // m_robotDrive::getPose,
-    // DriveConstants.kDriveKinematics,
-    // xController,
-    // yController,
-    // theteController,
-    // m_robotDrive::setModuleStates,
-    // m_robotDrive);
-
-    // SwerveControllerCommand toSpeakerFromFirstControllerCommand = new
-    // SwerveControllerCommand(
-    // toSpeakerFromFirstNote,
-    // m_robotDrive::getPose,
-    // DriveConstants.kDriveKinematics,
-    // xController,
-    // yController,
-    // theteController,
-    // m_robotDrive::setModuleStates,
-    // m_robotDrive);
-
-    // return new SequentialCommandGroup(
-    // new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1),
-    // new InstantCommand(() ->
-    // m_robotDrive.resetOdometry(toFirstNote.getInitialPose())),
-    // toFirstNoteControllerCommand,
-
-    // toSpeakerFromFirstControllerCommand,
-    // new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1)
-    // );
-
-    // Command driveToFirstNoteCommand = m_robotDrive.drive(firstNoteTrajectory);
-    Pose2d positionOfFirstNote = new Pose2d(1.778, 0, Rotation2d.fromDegrees(0));
-    Pose2d positionOfSecondNote = new Pose2d(1.778, 1.397, Rotation2d.fromDegrees(0));
-    Pose2d positionOfThirdNote = new Pose2d(1.778, -1.397, Rotation2d.fromDegrees(0));
-    Pose2d positionOfHome = new Pose2d(0, 0, Rotation2d.fromDegrees(0));
-    
-    Trajectory toFirst = m_DriveSubsystem.BuildFieldTrajectory(positionOfFirstNote);
-    Trajectory toSecond = m_DriveSubsystem.BuildFieldTrajectory(positionOfSecondNote);
-    Trajectory toThird = m_DriveSubsystem.BuildFieldTrajectory(positionOfThirdNote);
-    Trajectory toHome = m_DriveSubsystem.BuildFieldTrajectory(positionOfHome);
-
-    Command goToFirst = m_DriveSubsystem.drive(toFirst);
-    Command goToSecond = m_DriveSubsystem.drive(toSecond);
-    Command goToThird = m_DriveSubsystem.drive(toThird);
-    Command goToHome = m_DriveSubsystem.drive(toHome);
-    
-    Command goToHome2 = m_DriveSubsystem.drive(toHome);
-    
-    Command goToHome3 = m_DriveSubsystem.drive(toHome);
-
-    return new SequentialCommandGroup(
-       // new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1),
-       // new InstantCommand(() -> m_robotDrive.resetOdometry(m_robotDrive.getPose())),
-        goToFirst
-        // goToHome,
-        // goToSecond,
-        // goToHome2,
-        // goToThird,
-        // goToHome3,
-        // new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
-
-    // return m_chooser.getSelected();
-    );
+    return m_chooser.getSelected();
   }
 }

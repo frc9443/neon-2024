@@ -5,7 +5,6 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.ExampleSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
@@ -42,7 +41,7 @@ public class ManualOverrideCommand extends Command {
   @Override
   public void execute() {
 
-    double intakeArmRate = m_OperatorController.getRightY() / 4;
+    double intakeArmRate = m_OperatorController.getRightY() / 3;
     m_IntakeArmSubsystem.moveArm(intakeArmRate);
     // double intakeRate = m_OperatorController.getRightX() / 2;
     // m_IntakeSubsystem.run(intakeRate);
