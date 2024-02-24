@@ -20,8 +20,8 @@
         "y": 5.525086266457521
       },
       "prevControl": {
-        "x": 1.8782852832881245,
-        "y": 5.431086689145389
+        "x": 1.564953358914352,
+        "y": 5.326642714354132
       },
       "nextControl": null,
       "isLocked": false,
@@ -44,8 +44,8 @@
   ],
   "eventMarkers": [
     {
-      "name": "ActivateIntake",
-      "waypointRelativePos": 0.05,
+      "name": "IntakeNote",
+      "waypointRelativePos": 0.1,
       "command": {
         "type": "sequential",
         "data": {
@@ -55,28 +55,17 @@
               "data": {
                 "name": "ActivateIntakeCommand"
               }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "IntakeIn",
-      "waypointRelativePos": 0.3,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "IntakeInCommand"
-              }
             },
             {
               "type": "wait",
               "data": {
-                "waitTime": 1.0
+                "waitTime": 0.5
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeInCommand"
               }
             }
           ]
@@ -119,10 +108,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "iteration 2",
+  "folder": "5 Note Auto",
   "previewStartingState": {
     "rotation": 180.0,
-    "velocity": 0.5
+    "velocity": 0.7
   },
   "useDefaultConstraints": true
 }

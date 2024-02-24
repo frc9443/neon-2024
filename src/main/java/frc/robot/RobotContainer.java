@@ -32,6 +32,7 @@ import frc.robot.commands.AmpShootCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.ManualOverrideCommand;
+import frc.robot.commands.MoveIntakeToAmpPositionCommand;
 import frc.robot.commands.MoveIntakeToPositionCommand;
 import frc.robot.commands.ChangeShooterAngleCommand;
 import frc.robot.commands.RestartGyroCommand;
@@ -69,169 +70,151 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  * (including subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
-  // The robot's subsystems
-  private DriveSubsystem m_DriveSubsystem;
-  private ShooterSubsystem m_ShooterSubsystem;
-  private CompressorSubsystem m_CompressorSubsystem;
-  private IntakeSubsystem m_IntakeSubsystem;
-  private IntakeArmSubsystem m_IntakeArmSubsystem;
-  private ClimberSubsystem m_ClimberSubsystem;
+    // The robot's subsystems
+    private DriveSubsystem m_DriveSubsystem;
+    private ShooterSubsystem m_ShooterSubsystem;
+    private CompressorSubsystem m_CompressorSubsystem;
+    private IntakeSubsystem m_IntakeSubsystem;
+    private IntakeArmSubsystem m_IntakeArmSubsystem;
+    private ClimberSubsystem m_ClimberSubsystem;
 
-  // private final Command m_TurnShootAuto;
-  // A complex auto routine that drives forward, drops a hatch, and then drives
-  // backward.
-  private final Command m_4NoteAuto;
-  private final Command m_3NoteAuto;
-  private final Command m_ShootAuto;
-  private final Command Shoot;
-  private final Command IntakeIn;
-  private final Command IntakeOut;
-  private final Command ActivateIntake;
-  private final Command DropShooterAngle;
-  private final Command RaiseShooterAngle;
-  
+    // A chooser for autonomous commands
+    SendableChooser<Command> m_chooser = new SendableChooser<>();
 
-  // A chooser for autonomous commands
-  SendableChooser<Command> m_chooser = new SendableChooser<>();
+    // The driver's controller
+    XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
+    XboxController m_OperatorController = new XboxController(OIConstants.kOperatorControllerPort);
+    private final AHRS m_gyro;
 
-  // The driver's controller
-  XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-  XboxController m_OperatorController = new XboxController(OIConstants.kOperatorControllerPort);
-  private final AHRS m_gyro;
+    /**
+     * The container for the robot. Contains subsystems, OI devices, and commands.
+     */
+    public RobotContainer() {
 
+        // For USB gyro (Neon)
+        m_gyro = new AHRS(SerialPort.Port.kUSB);
+        // For MXP gyro card (Helium)
+        // m_gyro = new AHRS(SPI.Port.kMXP);
 
-  /**
-   * The container for the robot. Contains subsystems, OI devices, and commands.
-   */
-  public RobotContainer() {
+        m_DriveSubsystem = new DriveSubsystem(m_gyro);
+        m_ShooterSubsystem = new ShooterSubsystem();
+        m_CompressorSubsystem = new CompressorSubsystem();
+        m_IntakeSubsystem = new IntakeSubsystem();
+        m_IntakeArmSubsystem = new IntakeArmSubsystem();
+        m_ClimberSubsystem = new ClimberSubsystem();
+        // Configure the button bindings
+        configureButtonBindings();
 
-    // For USB gyro (Neon)
-     m_gyro = new AHRS(SerialPort.Port.kUSB);
-    // For MXP gyro card (Helium)
-    // m_gyro = new AHRS(SPI.Port.kMXP);
+        // Configure default commands
+        m_DriveSubsystem.setDefaultCommand(
+                // The left stick controls translation of the robot.
+                // Turning is controlled by the X axis of the right stick.
+                new RunCommand(
+                        () -> m_DriveSubsystem.drive(
+                                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
+                                -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
+                                true, true),
+                        m_DriveSubsystem));
 
-    m_DriveSubsystem = new DriveSubsystem(m_gyro);
-    m_ShooterSubsystem = new ShooterSubsystem();
-    m_CompressorSubsystem = new CompressorSubsystem();
-    m_IntakeSubsystem = new IntakeSubsystem();
-    m_IntakeArmSubsystem = new IntakeArmSubsystem();
-    m_ClimberSubsystem = new ClimberSubsystem();
-    // Configure the button bindings
-    configureButtonBindings();
+        // Register Named Commands
+        NamedCommands.registerCommand("ShootCommand",
+                new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem));
 
-    // Configure default commands
-    m_DriveSubsystem.setDefaultCommand(
-        // The left stick controls translation of the robot.
-        // Turning is controlled by the X axis of the right stick.
-        new RunCommand(
-            () -> m_DriveSubsystem.drive(
-                -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband),
-                -MathUtil.applyDeadband(m_driverController.getRightX(), OIConstants.kDriveDeadband),
-                true, true),
-            m_DriveSubsystem));
+        NamedCommands.registerCommand("IntakeInCommand",
+                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.98));
 
-    Shoot = new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem);
-    IntakeIn = new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.98);
-    IntakeOut = new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34);
-    ActivateIntake = new ActivateIntakeCommand(m_IntakeSubsystem, -0.4).withTimeout(1);
-    DropShooterAngle = new ChangeShooterAngleCommand(m_ShooterSubsystem, false);
-    RaiseShooterAngle = new ChangeShooterAngleCommand(m_ShooterSubsystem, true);
+        NamedCommands.registerCommand("IntakeOutCommand",
+                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
 
+        NamedCommands.registerCommand("ActivateIntakeCommand",
+                new ActivateIntakeCommand(m_IntakeSubsystem, -0.4).withTimeout(.7));
 
-    // Register Named Commands
-    NamedCommands.registerCommand("ShootCommand", Shoot);
-    NamedCommands.registerCommand("IntakeInCommand", IntakeIn);
-    NamedCommands.registerCommand("IntakeOutCommand", IntakeOut);
-    NamedCommands.registerCommand("ActivateIntakeCommand", ActivateIntake);
-    NamedCommands.registerCommand("RaiseShooterAngleCommand", RaiseShooterAngle);
-    NamedCommands.registerCommand("DropShooterAngleCommand", DropShooterAngle);
+        NamedCommands.registerCommand("RaiseShooterAngleCommand",
+                new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
 
+        NamedCommands.registerCommand("DropShooterAngleCommand",
+                new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
 
-    m_4NoteAuto = new PathPlannerAuto("4 Note Auto");
-    m_3NoteAuto = new PathPlannerAuto("3 Note Auto");
-    m_ShootAuto = new PathPlannerAuto("Shoot Auto");
+        m_chooser.setDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
+        m_chooser.addOption("5 Note Auto", new PathPlannerAuto("5 Note Auto"));
+        m_chooser.addOption("Defensive Auto", new PathPlannerAuto("Defensive Auto"));
+        m_chooser.addOption("Amp Side Auto", new PathPlannerAuto("Amp Side Auto"));
+        SmartDashboard.putData(m_chooser);
+        // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
+    }
 
-    m_chooser.setDefaultOption("Shoot Auto", m_ShootAuto);
-    m_chooser.addOption("4 Note Auto", m_4NoteAuto);
-    m_chooser.addOption("3 Note Auto", m_3NoteAuto);
+    /**
+     * Use this method to define your button->command mappings. Buttons can be
+     * created by
+     * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
+     * subclasses ({@link
+     * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
+     * passing it to a
+     * {@link JoystickButton}.
+     */
+    private void configureButtonBindings() {
+        // Turn to 180 degrees when the 'X' button is pressed, with a 5 second timeout
+        // new JoystickButton(m_driverController, Button.kA.value)
+        // .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
 
-    SmartDashboard.putData(m_chooser);
-    // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
-  }
+        new JoystickButton(m_driverController, Button.kX.value)
+                .onTrue(new TurnToAngleCommand(() -> -135, m_DriveSubsystem).withTimeout(3));
 
-  /**
-   * Use this method to define your button->command mappings. Buttons can be
-   * created by
-   * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-   * subclasses ({@link
-   * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-   * passing it to a
-   * {@link JoystickButton}.
-   */
-  private void configureButtonBindings() {
-    // Turn to 180 degrees when the 'X' button is pressed, with a 5 second timeout
-    // new JoystickButton(m_driverController, Button.kA.value)
-    // .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
+        new JoystickButton(m_driverController, Button.kB.value)
+                .onTrue(new TurnToAngleCommand(() -> 135, m_DriveSubsystem).withTimeout(3));
 
-    new JoystickButton(m_driverController, Button.kX.value)
-        .onTrue(new TurnToAngleCommand(() -> -135, m_DriveSubsystem).withTimeout(3));
+        // Turn to 0 degrees when the 'B' button is pressed, with a 3 second timeout
+        // new JoystickButton(m_driverController, Button.kY.value)
+        // .onTrue(new TurnToAngleCommand(() -> 0, m_robotDrive).withTimeout(3));
 
-    new JoystickButton(m_driverController, Button.kB.value)
-        .onTrue(new TurnToAngleCommand(() -> 135, m_DriveSubsystem).withTimeout(3));
+        new JoystickButton(m_driverController, Button.kRightBumper.value)
+                .onTrue(new speedAdjustCommand(m_DriveSubsystem, true));
 
-    // Turn to 0 degrees when the 'B' button is pressed, with a 3 second timeout
-    // new JoystickButton(m_driverController, Button.kY.value)
-    // .onTrue(new TurnToAngleCommand(() -> 0, m_robotDrive).withTimeout(3));
+        // new JoystickButton(m_driverController, Button.kLeftBumper.value)
+        // .onTrue(new speedAdjustCommand(m_robotDrive, false));
 
-    new JoystickButton(m_driverController, Button.kRightBumper.value)
-        .onTrue(new speedAdjustCommand(m_DriveSubsystem, true));
+        new JoystickButton(m_driverController, Button.kY.value)
+                .onTrue(new RestartGyroCommand(m_DriveSubsystem));
 
-    // new JoystickButton(m_driverController, Button.kLeftBumper.value)
-    //     .onTrue(new speedAdjustCommand(m_robotDrive, false));
+        // Activates Shooter for 3 seconds.
+        new JoystickButton(m_OperatorController, Button.kY.value)
+                .onTrue(new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
 
-    new JoystickButton(m_driverController, Button.kY.value)
-        .onTrue(new RestartGyroCommand(m_DriveSubsystem));
+        new POVButton(m_OperatorController, 0)
+                .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
 
-    // Activates Shooter for 3 seconds.
-    new JoystickButton(m_OperatorController, Button.kY.value)
-        .onTrue(new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
+        new POVButton(m_OperatorController, 180)
+                .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
 
-    new POVButton(m_OperatorController, 0)
-        .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
+        new JoystickButton(m_OperatorController, Button.kRightBumper.value)
+                .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.45)); // Negative = ingest note
 
-    new POVButton(m_OperatorController, 180)
-        .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
+        // Manual Overrides for stick control of intake arm and climber
+        new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
+                .whileTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController,
+                        m_IntakeSubsystem));
 
-    new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-        .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.45)); // Negative = ingest note
+        new JoystickButton(m_OperatorController, Button.kB.value)
+                .onTrue(new AmpShootCommand(m_IntakeSubsystem, m_IntakeArmSubsystem));
 
-    // Manual Overrides for stick control of intake arm and climber
-    new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
-        .whileTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController,
-            m_IntakeSubsystem));
+        new JoystickButton(m_OperatorController, Button.kA.value)
+                .onTrue(new MoveIntakeToAmpPositionCommand(m_IntakeArmSubsystem, 0.71));
 
-    new JoystickButton(m_OperatorController, Button.kB.value)
-        .onTrue(new AmpShootCommand(m_IntakeSubsystem, m_IntakeArmSubsystem));
+        new POVButton(m_OperatorController, 90)
+                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.98));
 
-    new JoystickButton(m_OperatorController, Button.kA.value)
-        .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.71));
-    
-    new POVButton(m_OperatorController, 90)
-        .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.98));
+        new POVButton(m_OperatorController, 270)
+                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
 
-    new POVButton(m_OperatorController, 270)
-        .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
-    
+    }
 
-  }
-
-  /**
-   * Use this to pass the autonomous command to the main {@link Robot} class.
-   *
-   * @return the command to run in autonomous
-   */
-  public Command getAutonomousCommand() {
-    return m_chooser.getSelected();
-  }
+    /**
+     * Use this to pass the autonomous command to the main {@link Robot} class.
+     *
+     * @return the command to run in autonomous
+     */
+    public Command getAutonomousCommand() {
+        return m_chooser.getSelected();
+    }
 }

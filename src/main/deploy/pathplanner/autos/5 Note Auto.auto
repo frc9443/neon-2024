@@ -52,6 +52,12 @@
           "data": {
             "pathName": "ToMidField"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScoreFourthNote"
+          }
         }
       ]
     }

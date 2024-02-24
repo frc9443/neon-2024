@@ -26,7 +26,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Ls ToMid"
+            "pathName": "Ls PickUpMidNote"
           }
         },
         {
@@ -39,6 +39,18 @@
           "type": "path",
           "data": {
             "pathName": "Ls ScoreMidNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ls ToSecondNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ls ScoreSecondNote"
           }
         }
       ]

@@ -3,10 +3,10 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
-    "Mid Field Autos",
+    "Amp Side Auto",
     "Defensive Auto",
     "iteration 1",
-    "iteration 2"
+    "5 Note Auto"
   ],
   "autoFolders": [
     "Maybe Working Autos"

@@ -59,6 +59,23 @@
           ]
         }
       }
+    },
+    {
+      "name": "IntakeOut",
+      "waypointRelativePos": 0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeOutCommand"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -73,7 +90,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Mid Field Autos",
+  "folder": "Amp Side Auto",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0.7

@@ -20,8 +20,8 @@
         "y": 6.906911291065755
       },
       "prevControl": {
-        "x": 8.387684707749129,
-        "y": 6.821508987621357
+        "x": 8.32247852790871,
+        "y": 6.767969566473484
       },
       "nextControl": null,
       "isLocked": false,
@@ -85,7 +85,7 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.3,
+    "velocity": 0.5,
     "rotation": -90.0,
     "rotateFast": false
   },
@@ -93,7 +93,7 @@
   "folder": "Defensive Auto",
   "previewStartingState": {
     "rotation": -90.0,
-    "velocity": 0.7
+    "velocity": 1.0
   },
   "useDefaultConstraints": true
 }

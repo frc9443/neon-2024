@@ -53,6 +53,12 @@
             {
               "type": "named",
               "data": {
+                "name": "IntakeOutCommand"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
                 "name": "ActivateIntakeCommand"
               }
             }
@@ -99,7 +105,7 @@
             {
               "type": "wait",
               "data": {
-                "waitTime": 1.0
+                "waitTime": 0.5
               }
             }
           ]
@@ -119,7 +125,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "iteration 2",
+  "folder": "5 Note Auto",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0.5

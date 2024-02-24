@@ -49,6 +49,7 @@ public class IntakeArmSubsystem extends SubsystemBase {
   }
 
   public void moveArm(double rate) {
+    SmartDashboard.putNumber("Rate of Arm Movement", rate);
     m_IntakeArm.set(rate);
   }
 

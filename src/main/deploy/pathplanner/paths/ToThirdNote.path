@@ -43,12 +43,6 @@
               "data": {
                 "name": "IntakeOutCommand"
               }
-            },
-            {
-              "type": "wait",
-              "data": {
-                "waitTime": 1.0
-              }
             }
           ]
         }
@@ -62,15 +56,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.5,
+    "velocity": 0.7,
     "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "iteration 2",
+  "folder": "5 Note Auto",
   "previewStartingState": {
     "rotation": 180.0,
-    "velocity": 0
+    "velocity": 0.0
   },
   "useDefaultConstraints": true
 }

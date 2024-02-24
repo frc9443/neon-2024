@@ -59,6 +59,12 @@
             {
               "type": "named",
               "data": {
+                "name": "IntakeOutCommand"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
                 "name": "ActivateIntakeCommand"
               }
             },
@@ -114,7 +120,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Mid Field Autos",
+  "folder": "Amp Side Auto",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0.7

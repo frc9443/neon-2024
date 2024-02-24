@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.39,
-        "y": 5.53
+        "x": 7.41,
+        "y": 7.46
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.49,
-        "y": 5.53
+        "x": 8.804020937040574,
+        "y": 7.4727015513848976
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.18,
-        "y": 5.53
+        "x": 3.0,
+        "y": 6.9
       },
       "prevControl": {
-        "x": 2.48,
-        "y": 5.53
+        "x": 3.8113218827217885,
+        "y": 7.006752879305498
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,8 +32,8 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "IntakeOut",
-      "waypointRelativePos": 0,
+      "name": "IntakeNote",
+      "waypointRelativePos": 0.1,
       "command": {
         "type": "sequential",
         "data": {
@@ -41,7 +41,19 @@
             {
               "type": "named",
               "data": {
-                "name": "IntakeOutCommand"
+                "name": "ActivateIntakeCommand"
+              }
+            },
+            {
+              "type": "wait",
+              "data": {
+                "waitTime": 0.5
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeInCommand"
               }
             }
           ]
@@ -50,7 +62,7 @@
     },
     {
       "name": "Shoot",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 1.0,
       "command": {
         "type": "sequential",
         "data": {
@@ -60,11 +72,22 @@
               "data": {
                 "name": "ShootCommand"
               }
-            },
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "DropShooter",
+      "waypointRelativePos": 0.2,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
             {
-              "type": "wait",
+              "type": "named",
               "data": {
-                "waitTime": 0.3
+                "name": "DropShooterAngleCommand"
               }
             }
           ]
@@ -73,21 +96,21 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.5,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.5,
-    "rotation": 180.0,
+    "velocity": 0,
+    "rotation": -153.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "5 Note Auto",
   "previewStartingState": {
     "rotation": 180.0,
-    "velocity": 0
+    "velocity": 0.7
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
