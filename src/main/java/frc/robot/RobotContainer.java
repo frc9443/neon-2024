@@ -33,7 +33,7 @@ import frc.robot.commands.DriveCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.ManualOverrideCommand;
 import frc.robot.commands.MoveIntakeToPositionCommand;
-import frc.robot.commands.DropShooterAngleCommand;
+import frc.robot.commands.ChangeShooterAngleCommand;
 import frc.robot.commands.RestartGyroCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TurnToAngleCommand;
@@ -59,6 +59,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import java.util.List;
 
 import com.kauailabs.navx.frc.AHRS;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
 /*
@@ -79,8 +80,16 @@ public class RobotContainer {
   // private final Command m_TurnShootAuto;
   // A complex auto routine that drives forward, drops a hatch, and then drives
   // backward.
-  private final Command m_ShootAuto;
+  private final Command m_4NoteAuto;
   private final Command m_3NoteAuto;
+  private final Command m_ShootAuto;
+  private final Command Shoot;
+  private final Command IntakeIn;
+  private final Command IntakeOut;
+  private final Command ActivateIntake;
+  private final Command DropShooterAngle;
+  private final Command RaiseShooterAngle;
+  
 
   // A chooser for autonomous commands
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -122,11 +131,30 @@ public class RobotContainer {
                 true, true),
             m_DriveSubsystem));
 
-    m_ShootAuto = new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem);
+    Shoot = new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem);
+    IntakeIn = new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.98);
+    IntakeOut = new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34);
+    ActivateIntake = new ActivateIntakeCommand(m_IntakeSubsystem, -0.4).withTimeout(1);
+    DropShooterAngle = new ChangeShooterAngleCommand(m_ShooterSubsystem, false);
+    RaiseShooterAngle = new ChangeShooterAngleCommand(m_ShooterSubsystem, true);
+
+
+    // Register Named Commands
+    NamedCommands.registerCommand("ShootCommand", Shoot);
+    NamedCommands.registerCommand("IntakeInCommand", IntakeIn);
+    NamedCommands.registerCommand("IntakeOutCommand", IntakeOut);
+    NamedCommands.registerCommand("ActivateIntakeCommand", ActivateIntake);
+    NamedCommands.registerCommand("RaiseShooterAngleCommand", RaiseShooterAngle);
+    NamedCommands.registerCommand("DropShooterAngleCommand", DropShooterAngle);
+
+
+    m_4NoteAuto = new PathPlannerAuto("4 Note Auto");
     m_3NoteAuto = new PathPlannerAuto("3 Note Auto");
+    m_ShootAuto = new PathPlannerAuto("Shoot Auto");
 
     m_chooser.setDefaultOption("Shoot Auto", m_ShootAuto);
-    m_chooser.addOption("3 note Auto", m_3NoteAuto);
+    m_chooser.addOption("4 Note Auto", m_4NoteAuto);
+    m_chooser.addOption("3 Note Auto", m_3NoteAuto);
 
     SmartDashboard.putData(m_chooser);
     // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
@@ -145,9 +173,6 @@ public class RobotContainer {
     // Turn to 180 degrees when the 'X' button is pressed, with a 5 second timeout
     // new JoystickButton(m_driverController, Button.kA.value)
     // .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
-
-    new JoystickButton(m_driverController, Button.kA.value)
-        .whileTrue(new DropShooterAngleCommand(m_ShooterSubsystem, false));
 
     new JoystickButton(m_driverController, Button.kX.value)
         .onTrue(new TurnToAngleCommand(() -> -135, m_DriveSubsystem).withTimeout(3));
@@ -168,15 +193,15 @@ public class RobotContainer {
     new JoystickButton(m_driverController, Button.kY.value)
         .onTrue(new RestartGyroCommand(m_DriveSubsystem));
 
-    // Activates Shooter for 3 seconds. hopefully.
+    // Activates Shooter for 3 seconds.
     new JoystickButton(m_OperatorController, Button.kY.value)
-        .onTrue(new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(3));
+        .onTrue(new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
 
     new POVButton(m_OperatorController, 0)
-        .onTrue(new DropShooterAngleCommand(m_ShooterSubsystem, true));
+        .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
 
     new POVButton(m_OperatorController, 180)
-        .onTrue(new DropShooterAngleCommand(m_ShooterSubsystem, false));
+        .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
 
     new JoystickButton(m_OperatorController, Button.kRightBumper.value)
         .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.45)); // Negative = ingest note
@@ -189,14 +214,15 @@ public class RobotContainer {
     new JoystickButton(m_OperatorController, Button.kB.value)
         .onTrue(new AmpShootCommand(m_IntakeSubsystem, m_IntakeArmSubsystem));
 
-    new POVButton(m_OperatorController, 90)
-        .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_DriveSubsystem).withTimeout(3));
-
-    new POVButton(m_OperatorController, 270)
-        .onTrue(new TurnToAngleCommand(() -> VisionUtils.calculateNoteAngle(m_gyro), m_DriveSubsystem).withTimeout(3));
-
     new JoystickButton(m_OperatorController, Button.kA.value)
         .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.71));
+    
+    new POVButton(m_OperatorController, 90)
+        .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.98));
+
+    new POVButton(m_OperatorController, 270)
+        .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
+    
 
   }
 

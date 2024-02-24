@@ -8,12 +8,12 @@ import frc.robot.subsystems.ShooterSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
-public class DropShooterAngleCommand extends Command {
+public class ChangeShooterAngleCommand extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final ShooterSubsystem m_ShooterSubsystem;
   public static boolean solonoidOpen = false;
 
-  public DropShooterAngleCommand(ShooterSubsystem ss, boolean isUp) {
+  public ChangeShooterAngleCommand(ShooterSubsystem ss, boolean isUp) {
     m_ShooterSubsystem = ss;
     solonoidOpen = isUp;
     addRequirements(m_ShooterSubsystem);

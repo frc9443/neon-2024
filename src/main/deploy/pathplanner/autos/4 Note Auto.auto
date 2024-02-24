@@ -1,0 +1,61 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 1.39,
+      "y": 5.53
+    },
+    "rotation": 180.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToFirstNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScoreFirstNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToSecondNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScoreSecondNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToThirdNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScoreThirdNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToMidField"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Maybe Working Autos",
+  "choreoAuto": false
+}

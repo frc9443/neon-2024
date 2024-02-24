@@ -1,0 +1,43 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.71,
+      "y": 4.32
+    },
+    "rotation": 120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StartToMid"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PushNotes"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "PickupLastNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToStartFromMid"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Maybe Working Autos",
+  "choreoAuto": false
+}

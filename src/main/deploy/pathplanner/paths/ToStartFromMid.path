@@ -1,0 +1,87 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 8.28,
+        "y": 6.91
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.031923140569297,
+        "y": 7.376623960009948
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.879236135585404,
+        "y": 6.992313594510154
+      },
+      "prevControl": {
+        "x": 3.220845349363,
+        "y": 6.949612442787955
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "eventMarkers": [
+    {
+      "name": "Shoot",
+      "waypointRelativePos": 1.0,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "ShootCommand"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "DropShooter",
+      "waypointRelativePos": 0.2,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "DropShooterAngleCommand"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 4.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -153.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Defensive Auto",
+  "previewStartingState": {
+    "rotation": -90.0,
+    "velocity": 0.3
+  },
+  "useDefaultConstraints": false
+}

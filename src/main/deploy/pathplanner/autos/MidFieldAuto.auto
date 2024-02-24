@@ -1,0 +1,49 @@
+{
+  "version": 1.0,
+  "startingPose": {
+    "position": {
+      "x": 0.7,
+      "y": 6.75
+    },
+    "rotation": -120.0
+  },
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ls ToFirstNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ls ScoreFirstNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ls ToMid"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ls PickUpMidNote"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Ls ScoreMidNote"
+          }
+        }
+      ]
+    }
+  },
+  "folder": "Maybe Working Autos",
+  "choreoAuto": false
+}

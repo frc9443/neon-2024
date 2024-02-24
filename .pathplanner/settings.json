@@ -2,9 +2,14 @@
   "robotWidth": 0.9,
   "robotLength": 0.9,
   "holonomicMode": true,
-  "pathFolders": [],
+  "pathFolders": [
+    "Mid Field Autos",
+    "Defensive Auto",
+    "iteration 1",
+    "iteration 2"
+  ],
   "autoFolders": [
-    "New Folder"
+    "Maybe Working Autos"
   ],
   "defaultMaxVel": 3.0,
   "defaultMaxAccel": 3.0,

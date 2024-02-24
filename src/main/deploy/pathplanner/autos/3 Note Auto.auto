@@ -5,7 +5,7 @@
       "x": 1.3665098068109631,
       "y": 5.535530663936646
     },
-    "rotation": 0
+    "rotation": 180.0
   },
   "command": {
     "type": "sequential",
@@ -21,18 +21,6 @@
           "type": "path",
           "data": {
             "pathName": "ToFirst"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "ActivateIntakeCommand"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ToStartFromFirst"
           }
         },
         {
