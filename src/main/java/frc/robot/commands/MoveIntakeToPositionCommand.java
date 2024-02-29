@@ -25,7 +25,7 @@ public class MoveIntakeToPositionCommand extends PIDCommand {
                 output -> armSubsystem.moveArm((0.9 * output) + (Math.signum(output) * 0.1)),
                 // Require the drive
                 armSubsystem);
-
+ 
         // Set the controller tolerance - the delta tolerance ensures the robot is
         // stationary at the
         // setpoint before it is considered as having reached the reference

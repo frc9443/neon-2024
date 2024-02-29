@@ -32,7 +32,7 @@ public final class Constants {
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
-    public static final double kMaxSpeedMetersPerSecond = 3.0; // 4.8;
+    public static final double kMaxSpeedMetersPerSecond = 3; // 4.8;
     public static final double kMaxAngularSpeed = 2 * Math.PI; // radians per second
 
     public static final double kMagnitudeSlewRate = 1.8 * kMaxSpeedMetersPerSecond; // meters per second^2
@@ -86,6 +86,9 @@ public final class Constants {
   public static final class IntakeConstants {
     public static final int kIntakeRightRollerCanId = 32;
     public static final int kIntakeLeftRollerCanId = 31;
+  }
+  public static final class BlinkinConstants {
+    public static final int kBlinkinPWMId = 0;
   }
 
   public static final class IntakeArmConstants {
@@ -166,6 +169,7 @@ public final class Constants {
   public static final class OIConstants {
     public static final int kDriverControllerPort = 0;
     public static final int kOperatorControllerPort = 1;
+    public static final int kColorControllerPort = 5;
     public static final double kDriveDeadband = 0.05;
   }
 

@@ -2,10 +2,10 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 1.39,
-      "y": 5.53
+      "x": 0.87,
+      "y": 4.4
     },
-    "rotation": 180.0
+    "rotation": 120.0
   },
   "command": {
     "type": "sequential",
@@ -18,15 +18,9 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 2.0
-          }
-        },
-        {
           "type": "path",
           "data": {
-            "pathName": "ToMidField2"
+            "pathName": "RightSideSpeaker"
           }
         }
       ]

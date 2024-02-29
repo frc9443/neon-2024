@@ -20,7 +20,7 @@ public class ShootCommand extends Command {
     @Override
     public void initialize() {
         time.restart();
-        m_ShooterSubsystem.Shoot(.8, .8);
+        m_ShooterSubsystem.Shoot(.85, .85);
         m_IntakeSubsystem.run(.4);
     }
 

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.05,
-        "y": 4.1
+        "x": 2.0,
+        "y": 4.24
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.783158544210455,
-        "y": 4.013908261886745
+        "x": 2.828725453888568,
+        "y": 4.062870619379916
       },
       "isLocked": false,
       "linkedName": null
@@ -45,7 +45,7 @@
   "eventMarkers": [
     {
       "name": "IntakeNote",
-      "waypointRelativePos": 0.1,
+      "waypointRelativePos": 0.0,
       "command": {
         "type": "sequential",
         "data": {
@@ -54,41 +54,6 @@
               "type": "named",
               "data": {
                 "name": "ActivateIntakeCommand"
-              }
-            },
-            {
-              "type": "wait",
-              "data": {
-                "waitTime": 0.5
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "IntakeInCommand"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 1.0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "ShootCommand"
-              }
-            },
-            {
-              "type": "wait",
-              "data": {
-                "waitTime": 0.5
               }
             }
           ]
@@ -110,8 +75,8 @@
   "reversed": false,
   "folder": "5 Note Auto",
   "previewStartingState": {
-    "rotation": 180.0,
-    "velocity": 0.7
+    "rotation": 170.0,
+    "velocity": 0.2
   },
   "useDefaultConstraints": true
 }

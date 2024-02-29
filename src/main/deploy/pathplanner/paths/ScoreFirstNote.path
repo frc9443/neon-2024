@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.18,
+        "x": 2.13,
         "y": 5.53
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.68,
-        "y": 5.53
+        "x": 2.860058646325945,
+        "y": 5.545975061415772
       },
       "isLocked": false,
       "linkedName": null
@@ -29,90 +29,8 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [
-    {
-      "name": "NotePickup",
-      "minWaypointRelativePos": 0,
-      "maxWaypointRelativePos": 0.2,
-      "constraints": {
-        "maxVelocity": 0.7,
-        "maxAcceleration": 0.6,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0
-      }
-    }
-  ],
-  "eventMarkers": [
-    {
-      "name": "IntakeNote",
-      "waypointRelativePos": 0.0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "IntakeOutCommand"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "ActivateIntakeCommand"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "Shoot",
-      "waypointRelativePos": 1.0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "ShootCommand"
-              }
-            },
-            {
-              "type": "wait",
-              "data": {
-                "waitTime": 0.5
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "IntakeIn",
-      "waypointRelativePos": 0.3,
-      "command": {
-        "type": "parallel",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "IntakeInCommand"
-              }
-            },
-            {
-              "type": "wait",
-              "data": {
-                "waitTime": 0.5
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "constraintZones": [],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 3.0,
     "maxAcceleration": 1.5,
