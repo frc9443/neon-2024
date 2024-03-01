@@ -249,7 +249,29 @@ public class DriveSubsystem extends SubsystemBase {
       m_prevTime = currentTime;
       m_prevTarget = vel;
     }
+  }
+    public void DriveOverride(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, double kMaxSpeedMetersPerSecond) {
 
+    // Convert the commanded speeds into the correct units for the drivetrain
+    xSpeed *= kMaxSpeedMetersPerSecond;
+    ySpeed *= kMaxSpeedMetersPerSecond;
+    rot *= DriveConstants.kMaxAngularSpeed;
+
+    // Get the target chassis speeds relative to the robot
+    final ChassisSpeeds vel = (fieldRelative
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getAngle()))
+        : new ChassisSpeeds(xSpeed, ySpeed, rot));
+
+    // Rate limit if applicable
+    if (rateLimit) {
+      final double currentTime = WPIUtilJNI.now() * 1e-6,
+          elapsedTime = currentTime - m_prevTime;
+      SwerveUtils.RateLimitVelocity(
+          vel, m_prevTarget, elapsedTime,
+          DriveConstants.kMagnitudeSlewRate, DriveConstants.kRotationalSlewRate);
+      m_prevTime = currentTime;
+      m_prevTarget = vel;
+    }
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(vel);
     SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
     m_frontLeft.setDesiredState(swerveModuleStates[0]);

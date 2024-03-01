@@ -166,6 +166,29 @@ public class RobotContainer {
                 // Turn to 180 degrees when the 'X' button is pressed, with a 5 second timeout
                 // new JoystickButton(m_driverController, Button.kA.value)
                 // .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
+                new JoystickButton(m_driverController, Button.kLeftBumper.value)
+                                .whileTrue(new RunCommand(
+                                                () -> m_DriveSubsystem.DriveOverride(
+                                                                -MathUtil.applyDeadband(m_driverController.getLeftY(),
+                                                                                OIConstants.kDriveDeadband),
+                                                                -MathUtil.applyDeadband(m_driverController.getLeftX(),
+                                                                                OIConstants.kDriveDeadband),
+                                                                -MathUtil.applyDeadband(m_driverController.getRightX(),
+                                                                                OIConstants.kDriveDeadband),
+                                                                true, true, 4.8),
+                                                m_DriveSubsystem));
+                new JoystickButton(m_driverController, Button.kLeftBumper.value)
+                                .whileTrue(new RunCommand(
+                                                () -> m_DriveSubsystem.DriveOverride(
+                                                                -MathUtil.applyDeadband(m_driverController.getLeftY(),
+                                                                                OIConstants.kDriveDeadband),
+                                                                -MathUtil.applyDeadband(m_driverController.getLeftX(),
+                                                                                OIConstants.kDriveDeadband),
+                                                                -MathUtil.applyDeadband(m_driverController.getRightX(),
+                                                                                OIConstants.kDriveDeadband),
+                                                                true, true, 3),
+                                                m_DriveSubsystem));
+
 
                 new JoystickButton(m_driverController, Button.kX.value)
                                 .onTrue(new TurnToAngleCommand(() -> -135, m_DriveSubsystem).withTimeout(3));
@@ -175,7 +198,6 @@ public class RobotContainer {
 
                 new JoystickButton(m_driverController, Button.kA.value)
                                 .onTrue(new EjectCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
-
 
                 // Turn to 0 degrees when the 'B' button is pressed, with a 3 second timeout
                 // new JoystickButton(m_driverController, Button.kY.value)
