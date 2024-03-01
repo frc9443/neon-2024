@@ -31,6 +31,7 @@ import frc.robot.commands.ActivateIntakeCommand;
 import frc.robot.commands.AmpShootCommand;
 import frc.robot.commands.ChangeColorCommand;
 import frc.robot.commands.DriveCommand;
+import frc.robot.commands.EjectCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.ManualOverrideCommand;
 import frc.robot.commands.MoveIntakeToAmpPositionCommand;
@@ -171,6 +172,10 @@ public class RobotContainer {
 
                 new JoystickButton(m_driverController, Button.kB.value)
                                 .onTrue(new TurnToAngleCommand(() -> 135, m_DriveSubsystem).withTimeout(3));
+
+                new JoystickButton(m_driverController, Button.kA.value)
+                                .onTrue(new EjectCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
+
 
                 // Turn to 0 degrees when the 'B' button is pressed, with a 3 second timeout
                 // new JoystickButton(m_driverController, Button.kY.value)

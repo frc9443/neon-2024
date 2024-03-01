@@ -16,12 +16,6 @@
           "data": {
             "name": "ShootCommand"
           }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RightSideSpeaker"
-          }
         }
       ]
     }
