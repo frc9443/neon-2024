@@ -32,6 +32,7 @@ import frc.robot.commands.AmpShootCommand;
 import frc.robot.commands.ChangeColorCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.EjectCommand;
+import frc.robot.commands.EnsurePressureCommand;
 import frc.robot.commands.FollowAprilTagCommand;
 import frc.robot.commands.ManualOverrideCommand;
 import frc.robot.commands.MoveIntakeToAmpPositionCommand;
@@ -116,19 +117,22 @@ public class RobotContainer {
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
                                 new RunCommand(
-                                                () -> m_DriveSubsystem.drive(
+                                                () -> m_DriveSubsystem.DriveOverride(
                                                                 -MathUtil.applyDeadband(m_driverController.getLeftY(),
                                                                                 OIConstants.kDriveDeadband),
                                                                 -MathUtil.applyDeadband(m_driverController.getLeftX(),
                                                                                 OIConstants.kDriveDeadband),
                                                                 -MathUtil.applyDeadband(m_driverController.getRightX(),
                                                                                 OIConstants.kDriveDeadband),
-                                                                true, true),
+                                                                true, true,m_driverController.getLeftBumper() ? 4.8 : 3.0),
                                                 m_DriveSubsystem));
 
                 // Register Named Commands
                 NamedCommands.registerCommand("ShootCommand",
                                 new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem));
+               
+                NamedCommands.registerCommand("EnsurePressureCommand",
+                                new EnsurePressureCommand(m_CompressorSubsystem));
 
                 NamedCommands.registerCommand("IntakeInCommand",
                                 new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.98));
@@ -146,9 +150,10 @@ public class RobotContainer {
                                 new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
 
                 m_chooser.setDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
-                m_chooser.addOption("5 Note Auto", new PathPlannerAuto("5 Note Auto"));
+                m_chooser.addOption("4 Note Auto", new PathPlannerAuto("4 Note Auto"));
                 m_chooser.addOption("Defensive Auto", new PathPlannerAuto("Defensive Auto"));
                 m_chooser.addOption("Amp Side Auto", new PathPlannerAuto("Amp Side Auto"));
+                m_chooser.addOption("Source Side Auto", new PathPlannerAuto("Source Side Auto"));
                 SmartDashboard.putData(m_chooser);
                 // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
         }
@@ -166,28 +171,6 @@ public class RobotContainer {
                 // Turn to 180 degrees when the 'X' button is pressed, with a 5 second timeout
                 // new JoystickButton(m_driverController, Button.kA.value)
                 // .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
-                new JoystickButton(m_driverController, Button.kLeftBumper.value)
-                                .whileTrue(new RunCommand(
-                                                () -> m_DriveSubsystem.DriveOverride(
-                                                                -MathUtil.applyDeadband(m_driverController.getLeftY(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                -MathUtil.applyDeadband(m_driverController.getLeftX(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                -MathUtil.applyDeadband(m_driverController.getRightX(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                true, true, 4.8),
-                                                m_DriveSubsystem));
-                new JoystickButton(m_driverController, Button.kRightBumper.value)
-                                .whileTrue(new RunCommand(
-                                                () -> m_DriveSubsystem.DriveOverride(
-                                                                -MathUtil.applyDeadband(m_driverController.getLeftY(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                -MathUtil.applyDeadband(m_driverController.getLeftX(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                -MathUtil.applyDeadband(m_driverController.getRightX(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                true, true, 3),
-                                                m_DriveSubsystem));
 
                 new JoystickButton(m_driverController, Button.kX.value)
                                 .onTrue(new TurnToAngleCommand(() -> -135, m_DriveSubsystem).withTimeout(3));
