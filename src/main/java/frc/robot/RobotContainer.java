@@ -177,7 +177,7 @@ public class RobotContainer {
                                                                                 OIConstants.kDriveDeadband),
                                                                 true, true, 4.8),
                                                 m_DriveSubsystem));
-                new JoystickButton(m_driverController, Button.kLeftBumper.value)
+                new JoystickButton(m_driverController, Button.kRightBumper.value)
                                 .whileTrue(new RunCommand(
                                                 () -> m_DriveSubsystem.DriveOverride(
                                                                 -MathUtil.applyDeadband(m_driverController.getLeftY(),
@@ -188,7 +188,6 @@ public class RobotContainer {
                                                                                 OIConstants.kDriveDeadband),
                                                                 true, true, 3),
                                                 m_DriveSubsystem));
-
 
                 new JoystickButton(m_driverController, Button.kX.value)
                                 .onTrue(new TurnToAngleCommand(() -> -135, m_DriveSubsystem).withTimeout(3));
