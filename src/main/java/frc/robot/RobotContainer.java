@@ -135,7 +135,7 @@ public class RobotContainer {
                                 new EnsurePressureCommand(m_CompressorSubsystem));
 
                 NamedCommands.registerCommand("IntakeInCommand",
-                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.98));
+                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.96));
 
                 NamedCommands.registerCommand("IntakeOutCommand",
                                 new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
@@ -218,13 +218,13 @@ public class RobotContainer {
                                 .onTrue(new AmpShootCommand(m_IntakeSubsystem, m_IntakeArmSubsystem));
 
                 new JoystickButton(m_OperatorController, Button.kA.value)
-                                .onTrue(new MoveIntakeToAmpPositionCommand(m_IntakeArmSubsystem, 0.71));
+                                .onTrue(new MoveIntakeToAmpPositionCommand(m_IntakeArmSubsystem, 0.71).withTimeout(3));
 
                 new POVButton(m_OperatorController, 90)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.98));
+                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.96).withTimeout(3));
 
                 new POVButton(m_OperatorController, 270)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
+                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34).withTimeout(3));
 
                 new JoystickButton(m_ColorController, Button.kA.value)
                                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, .57));
