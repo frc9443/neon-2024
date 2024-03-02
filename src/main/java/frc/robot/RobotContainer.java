@@ -135,7 +135,7 @@ public class RobotContainer {
                                 new EnsurePressureCommand(m_CompressorSubsystem));
 
                 NamedCommands.registerCommand("IntakeInCommand",
-                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.96));
+                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.97));
 
                 NamedCommands.registerCommand("IntakeOutCommand",
                                 new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
