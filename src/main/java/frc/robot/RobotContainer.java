@@ -49,6 +49,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.utils.OffsetGyro;
 import frc.utils.VisionUtils;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -90,7 +91,7 @@ public class RobotContainer {
         XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
         XboxController m_OperatorController = new XboxController(OIConstants.kOperatorControllerPort);
         XboxController m_ColorController = new XboxController(OIConstants.kColorControllerPort);
-        private final AHRS m_gyro;
+        private final OffsetGyro m_gyro;
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -98,7 +99,7 @@ public class RobotContainer {
         public RobotContainer() {
 
                 // For USB gyro (Neon)
-                m_gyro = new AHRS(SerialPort.Port.kUSB);
+                m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
                 // For MXP gyro card (Helium)
                 // m_gyro = new AHRS(SPI.Port.kMXP);
 

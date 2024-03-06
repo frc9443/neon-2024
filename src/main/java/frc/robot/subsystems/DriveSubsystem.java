@@ -36,6 +36,7 @@ import com.pathplanner.lib.util.ReplanningConfig;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.LimelightHelpers;
+import frc.utils.OffsetGyro;
 import frc.utils.SwerveUtils;
 import frc.utils.VisionUtils;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -53,7 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
   private MAXSwerveModule m_rearRight;
 
   // The gyro sensor
-  private final AHRS m_gyro;
+  private final OffsetGyro m_gyro;
   public static double speedAdjustVal = 1;
   private double m_prevTime = WPIUtilJNI.now() * 1e-6;
   private ChassisSpeeds m_prevTarget = new ChassisSpeeds();
@@ -73,7 +74,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
   }
 
-  public DriveSubsystem(AHRS gyro) {
+  public DriveSubsystem(OffsetGyro gyro) {
     m_gyro = gyro;
 
     Class<?> robotDrive = DriveConstants.Neon.class;
@@ -96,7 +97,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     m_odometry = new SwerveDriveOdometry(
         DriveConstants.kDriveKinematics,
-        Rotation2d.fromDegrees(getAngle()),
+        Rotation2d.fromDegrees(m_gyro.getAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -135,7 +136,7 @@ public class DriveSubsystem extends SubsystemBase {
   public void periodic() {
     // Update the odometry in the periodic block
     m_odometry.update(
-        Rotation2d.fromDegrees(getAngle()),
+        Rotation2d.fromDegrees(m_gyro.getAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -143,16 +144,17 @@ public class DriveSubsystem extends SubsystemBase {
             m_rearRight.getPosition()
         });
 
-    SmartDashboard.putBoolean("IMU_Connected", m_gyro.isConnected());
-    SmartDashboard.putBoolean("IMU_IsCalibrating", m_gyro.isCalibrating());
-    SmartDashboard.putNumber("IMU_Yaw", m_gyro.getYaw());
-    SmartDashboard.putNumber("IMU_Pitch", m_gyro.getPitch());
-    SmartDashboard.putNumber("IMU_Roll", m_gyro.getRoll());
-    SmartDashboard.putNumber("IMU_Angle", getAngle());
+    // SmartDashboard.putBoolean("IMU_Connected", m_gyro.isConnected());
+    // SmartDashboard.putBoolean("IMU_IsCalibrating", m_gyro.isCalibrating());
+    // SmartDashboard.putNumber("IMU_Yaw", m_gyro.getYaw());
+    // SmartDashboard.putNumber("IMU_Pitch", m_gyro.getPitch());
+    // SmartDashboard.putNumber("IMU_Roll", m_gyro.getRoll());
+    // SmartDashboard.putNumber("IMU_Angle", getAngle());
     SmartDashboard.putBoolean("Has Targed", LimelightHelpers.getTV(""));
     SmartDashboard.putNumber("tX", LimelightHelpers.getTX(""));
     SmartDashboard.putNumber("tY", LimelightHelpers.getTY(""));
-    SmartDashboard.putNumber("Target Angle To Turn : FR", VisionUtils.calculateAngle(m_gyro));
+    // SmartDashboard.putNumber("Target Angle To Turn : FR",
+    // VisionUtils.calculateAngle(m_gyro));
     SmartDashboard.putNumber("Distance From Target Range", VisionUtils.calculateDistance());
     if ((Math.abs(VisionUtils.calculateDistance()) <= 3) && (Math.abs(LimelightHelpers.getTX("")) <= 1)) {
       SmartDashboard.putBoolean("Ready To Shoot", true);
@@ -181,7 +183,7 @@ public class DriveSubsystem extends SubsystemBase {
    */
   public void resetOdometry(Pose2d pose) {
     m_odometry.resetPosition(
-        Rotation2d.fromDegrees(getAngle()),
+        Rotation2d.fromDegrees(m_gyro.getAngle()),
         new SwerveModulePosition[] {
             m_frontLeft.getPosition(),
             m_frontRight.getPosition(),
@@ -236,7 +238,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Get the target chassis speeds relative to the robot
     final ChassisSpeeds vel = (fieldRelative
-        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getAngle()))
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle()))
         : new ChassisSpeeds(xSpeed, ySpeed, rot));
 
     // Rate limit if applicable
@@ -250,7 +252,9 @@ public class DriveSubsystem extends SubsystemBase {
       m_prevTarget = vel;
     }
   }
-    public void DriveOverride(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit, double kMaxSpeedMetersPerSecond) {
+
+  public void DriveOverride(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit,
+      double kMaxSpeedMetersPerSecond) {
 
     // Convert the commanded speeds into the correct units for the drivetrain
     xSpeed *= kMaxSpeedMetersPerSecond;
@@ -259,7 +263,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     // Get the target chassis speeds relative to the robot
     final ChassisSpeeds vel = (fieldRelative
-        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(getAngle()))
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle()))
         : new ChassisSpeeds(xSpeed, ySpeed, rot));
 
     // Rate limit if applicable
@@ -325,7 +329,7 @@ public class DriveSubsystem extends SubsystemBase {
    * @return the robot's heading in degrees, from -180 to 180
    */
   public double getHeading() {
-    return Rotation2d.fromDegrees(getAngle()).getDegrees();
+    return Rotation2d.fromDegrees(m_gyro.getAngle()).getDegrees();
   }
 
   /**
@@ -333,11 +337,5 @@ public class DriveSubsystem extends SubsystemBase {
    *
    * @return The turn rate of the robot, in degrees per second
    */
-  public double getTurnRate() {
-    return m_gyro.getRate() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-  }
 
-  public double getAngle() {
-    return m_gyro.getAngle() * (DriveConstants.kGyroReversed ? -1.0 : 1.0);
-  }
 }
