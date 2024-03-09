@@ -67,6 +67,8 @@ public class IntakeSubsystem extends SubsystemBase {
     SmartDashboard.putNumber("intake amperage right", m_IntakeRight.getOutputCurrent());
     SmartDashboard.putNumber("Intake Velocity left", m_IntakeLeftEncoder.getVelocity());
     SmartDashboard.putNumber("Intake Velocity right", m_IntakeRightEncoder.getVelocity());
+
+    SmartDashboard.putBoolean("Intake Has Note", hasNote());
   }
 
   @Override
@@ -74,20 +76,21 @@ public class IntakeSubsystem extends SubsystemBase {
     // This method will be called once per scheduler run during simulation
   }
 
-  public void run(double speed) {
-    
-    m_IntakeLeft.setVoltage(speed);
-    m_IntakeRight.setVoltage(speed);
+  public void ingest(double voltage) {
+    m_IntakeLeft.setVoltage(-voltage);
+    m_IntakeRight.setVoltage(-voltage);
+  }
+
+  public void expel(double voltage) {
+    ingest(-voltage);
   }
 
   public void stop() {
     m_IntakeLeft.stopMotor();
     m_IntakeRight.stopMotor();
   }
-  public boolean rightLSGet(){
-    return m_rightLimitSwitch.get();
-  }
-  public boolean leftLSGet(){
-    return m_leftLimitSwitch.get();
+
+  public boolean hasNote() {
+    return m_rightLimitSwitch.get() || m_leftLimitSwitch.get();
   }
 }

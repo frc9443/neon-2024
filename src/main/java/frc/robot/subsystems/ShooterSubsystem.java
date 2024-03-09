@@ -53,19 +53,16 @@ public class ShooterSubsystem extends SubsystemBase {
         });
   }
 
-  public void Shoot(double upperRate, double lowerRate) {
+  public void Shoot(double upperVoltage, double lowerVoltage) {
     
-    m_shooterTopLeft.setVoltage(upperRate);
-    m_shooterTopRight.setVoltage(upperRate);
-    m_shooterBottomLeft.setVoltage(lowerRate);
-    m_shooterBottomRight.setVoltage(lowerRate);
+    m_shooterTopLeft.setVoltage(upperVoltage);
+    m_shooterTopRight.setVoltage(upperVoltage);
+    m_shooterBottomLeft.setVoltage(lowerVoltage);
+    m_shooterBottomRight.setVoltage(lowerVoltage);
   }
 
   public void Stop() {
-    m_shooterTopLeft.setVoltage(0);
-    m_shooterTopRight.setVoltage(0);
-    m_shooterBottomLeft.setVoltage(0);
-    m_shooterBottomRight.setVoltage(0);
+    Shoot(0, 0);
   }
 
   public void doSolonoid(boolean isUp) {

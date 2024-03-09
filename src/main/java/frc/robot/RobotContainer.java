@@ -142,7 +142,7 @@ public class RobotContainer {
                                 new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
 
                 NamedCommands.registerCommand("ActivateIntakeCommand",
-                                new ActivateIntakeCommand(m_IntakeSubsystem, -0.35).withTimeout(.6));
+                                new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(2.5));
 
                 NamedCommands.registerCommand("RaiseShooterAngleCommand",
                                 new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
@@ -206,7 +206,7 @@ public class RobotContainer {
                                 .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
 
                 new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-                                .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.45).withTimeout(3)); // Negative = ingest
+                                .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(3)); // Negative = ingest
                                                                                                  // note
 
                 // Manual Overrides for stick control of intake arm and climber

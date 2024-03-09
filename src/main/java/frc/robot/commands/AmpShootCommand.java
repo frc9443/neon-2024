@@ -33,7 +33,7 @@ public class AmpShootCommand extends Command {
     @Override
     public void initialize() {
         time.restart();
-        m_IntakeSubsystem.run(.85);
+        m_IntakeSubsystem.expel(4.5); // TODO: tune voltage
     }
 
     // Called every time the scheduler runs while the command is scheduled.

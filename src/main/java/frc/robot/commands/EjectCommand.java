@@ -21,7 +21,7 @@ public class EjectCommand extends Command {
     public void initialize() {
         time.restart();
         m_ShooterSubsystem.Shoot(6, 6);
-        m_IntakeSubsystem.run(-6.5);
+        m_IntakeSubsystem.ingest(6.5);
     }
 
     @Override
