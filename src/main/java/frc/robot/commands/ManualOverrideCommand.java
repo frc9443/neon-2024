@@ -50,8 +50,8 @@ public class ManualOverrideCommand extends Command {
     if (Math.abs(climberRate) > 0.05) {
       m_ClimberSubsystem.moveClimber(climberRate);
     } else {
-      double leftClimberRate = m_OperatorController.getLeftTriggerAxis() / 4.5;
-      double rightClimberRate = m_OperatorController.getRightTriggerAxis() / 4;
+      double leftClimberRate = m_OperatorController.getLeftTriggerAxis() / 3.5;
+      double rightClimberRate = m_OperatorController.getRightTriggerAxis() / 3;
       m_ClimberSubsystem.moveClimber(leftClimberRate, rightClimberRate);
     }
     ;

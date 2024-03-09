@@ -90,7 +90,7 @@ public class RobotContainer {
         // The driver's controller
         XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
         XboxController m_OperatorController = new XboxController(OIConstants.kOperatorControllerPort);
-        XboxController m_ColorController = new XboxController(OIConstants.kColorControllerPort);
+        //XboxController m_ColorController = new XboxController(OIConstants.kColorControllerPort);
         private final OffsetGyro m_gyro;
 
         /**
@@ -136,7 +136,7 @@ public class RobotContainer {
                                 new EnsurePressureCommand(m_CompressorSubsystem));
 
                 NamedCommands.registerCommand("IntakeInCommand",
-                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.97));
+                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.980));
 
                 NamedCommands.registerCommand("IntakeOutCommand",
                                 new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
@@ -206,7 +206,7 @@ public class RobotContainer {
                                 .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
 
                 new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-                                .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.45)); // Negative = ingest
+                                .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, -0.45).withTimeout(3)); // Negative = ingest
                                                                                                  // note
 
                 // Manual Overrides for stick control of intake arm and climber
@@ -222,19 +222,19 @@ public class RobotContainer {
                                 .onTrue(new MoveIntakeToAmpPositionCommand(m_IntakeArmSubsystem, 0.71).withTimeout(3));
 
                 new POVButton(m_OperatorController, 90)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.96).withTimeout(3));
+                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.975).withTimeout(3));
 
                 new POVButton(m_OperatorController, 270)
                                 .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34).withTimeout(3));
 
-                new JoystickButton(m_ColorController, Button.kA.value)
-                                .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, .57));
-                new JoystickButton(m_ColorController, Button.kB.value)
-                                .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, .46));
-                new JoystickButton(m_ColorController, Button.kX.value)
-                                .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, -.82));
-                new JoystickButton(m_ColorController, Button.kY.value)
-                                .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
+                // new JoystickButton(m_ColorController, Button.kA.value)
+                //                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, .57));
+                // new JoystickButton(m_ColorController, Button.kB.value)
+                //                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, .46));
+                // new JoystickButton(m_ColorController, Button.kX.value)
+                //                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, -.82));
+                // new JoystickButton(m_ColorController, Button.kY.value)
+                //                 .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
 
         }
 

@@ -18,7 +18,7 @@ public class CompressorSubsystem extends SubsystemBase {
  public final Compressor m_compressor = new Compressor(ShooterConstants.PneumaticHubCanId, PneumaticsModuleType.REVPH);
 
   public CompressorSubsystem() {
-   m_compressor.enableAnalog(75, 90);
+   m_compressor.enableAnalog(35, 90);
   }
 
   public double getPressure() {

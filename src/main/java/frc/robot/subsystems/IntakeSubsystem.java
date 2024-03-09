@@ -10,8 +10,10 @@ import frc.robot.Constants.IntakeConstants;
 // import frc.utils.TCS34725_I2C.TransferAbortedException;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 
+import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
@@ -21,6 +23,11 @@ public class IntakeSubsystem extends SubsystemBase {
   private final CANSparkMax m_IntakeRight = new CANSparkMax(IntakeConstants.kIntakeRightRollerCanId,
       MotorType.kBrushless);
   // private final TCS34725_I2C m_ColorSensor = new TCS34725_I2C(false);
+  private final RelativeEncoder m_IntakeLeftEncoder = m_IntakeLeft.getEncoder();
+  private final RelativeEncoder m_IntakeRightEncoder = m_IntakeRight.getEncoder();
+  DigitalInput m_leftLimitSwitch = new DigitalInput(IntakeConstants.kLeftLimitSwitchId);
+  DigitalInput m_rightLimitSwitch = new DigitalInput(IntakeConstants.kRightLimitSwitchId);
+
 
   public IntakeSubsystem() {
   }
@@ -56,6 +63,10 @@ public class IntakeSubsystem extends SubsystemBase {
     // } catch (TransferAbortedException ex) {
     // // noop
     // }
+    SmartDashboard.putNumber("intake amperage left", m_IntakeLeft.getOutputCurrent());
+    SmartDashboard.putNumber("intake amperage right", m_IntakeRight.getOutputCurrent());
+    SmartDashboard.putNumber("Intake Velocity left", m_IntakeLeftEncoder.getVelocity());
+    SmartDashboard.putNumber("Intake Velocity right", m_IntakeRightEncoder.getVelocity());
   }
 
   @Override
@@ -64,12 +75,19 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void run(double speed) {
-    m_IntakeLeft.set(speed);
-    m_IntakeRight.set(speed);
+    
+    m_IntakeLeft.setVoltage(speed);
+    m_IntakeRight.setVoltage(speed);
   }
 
   public void stop() {
     m_IntakeLeft.stopMotor();
     m_IntakeRight.stopMotor();
+  }
+  public boolean rightLSGet(){
+    return m_rightLimitSwitch.get();
+  }
+  public boolean leftLSGet(){
+    return m_leftLimitSwitch.get();
   }
 }
