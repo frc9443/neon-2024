@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 8.28,
-        "y": 6.91
+        "y": 7.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.031923140569297,
-        "y": 7.376623960009948
+        "x": 7.100484022850999,
+        "y": 7.066857516055999
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 2.879236135585404,
-        "y": 6.992313594510154
+        "x": 3.392722917761358,
+        "y": 7.102190285805508
       },
       "prevControl": {
-        "x": 3.220845349363,
-        "y": 6.949612442787955
+        "x": 3.734332131538954,
+        "y": 7.059489134083309
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,59 +29,36 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
-  "eventMarkers": [
+  "constraintZones": [
     {
-      "name": "Shoot",
-      "waypointRelativePos": 1.0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "ShootCommand"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "DropShooter",
-      "waypointRelativePos": 0.2,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "DropShooterAngleCommand"
-              }
-            }
-          ]
-        }
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.1,
+      "constraints": {
+        "maxVelocity": 0.7,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
       }
     }
   ],
+  "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 4.5,
+    "maxVelocity": 3.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -153.0,
+    "rotation": -160.76932762433873,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Defensive Auto",
   "previewStartingState": {
     "rotation": -90.0,
-    "velocity": 0.3
+    "velocity": 0.5
   },
   "useDefaultConstraints": false
 }

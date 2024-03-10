@@ -14,7 +14,7 @@ public class OffsetGyro {
     }
 
     public OffsetGyro(AHRS gyro) {
-        this(gyro, 0.0);
+        this(gyro, 180.0);
     }
 
     public void setOffset(double offset) {

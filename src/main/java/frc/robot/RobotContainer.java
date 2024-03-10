@@ -136,7 +136,7 @@ public class RobotContainer {
                                 new EnsurePressureCommand(m_CompressorSubsystem));
 
                 NamedCommands.registerCommand("IntakeInCommand",
-                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.980));
+                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.975));
 
                 NamedCommands.registerCommand("IntakeOutCommand",
                                 new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
@@ -194,6 +194,7 @@ public class RobotContainer {
 
                 new JoystickButton(m_driverController, Button.kY.value)
                                 .onTrue(new RestartGyroCommand(m_DriveSubsystem));
+
 
                 // Activates Shooter for 3 seconds.
                 new JoystickButton(m_OperatorController, Button.kY.value)

@@ -33,7 +33,7 @@ public class AmpShootCommand extends Command {
     @Override
     public void initialize() {
         time.restart();
-        m_IntakeSubsystem.expel(4.5); // TODO: tune voltage
+        m_IntakeSubsystem.expel(9); // TODO: tune voltage
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -52,7 +52,7 @@ public class AmpShootCommand extends Command {
     @Override
     public boolean isFinished() {
         SmartDashboard.putNumber("time", time.get());
-        if (time.hasElapsed(1)) {
+        if (time.hasElapsed(.5)) {
             return true;
         }
         return false;

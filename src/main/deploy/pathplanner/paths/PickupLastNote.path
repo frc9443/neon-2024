@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.53,
-        "y": 6.22
+        "x": 9.03269755648926,
+        "y": 5.827973793352168
       },
       "prevControl": null,
       "nextControl": {
-        "x": 8.099451933624284,
-        "y": 6.148965847996716
+        "x": 8.124034975805321,
+        "y": 5.504197471499269
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 8.280931828443629,
-        "y": 6.906911291065755
+        "x": 8.28,
+        "y": 7.0
       },
       "prevControl": {
-        "x": 8.32247852790871,
-        "y": 6.767969566473484
+        "x": 8.321546699465081,
+        "y": 6.861058275407729
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,56 +30,9 @@
   ],
   "rotationTargets": [],
   "constraintZones": [],
-  "eventMarkers": [
-    {
-      "name": "IntakeOut",
-      "waypointRelativePos": 0.0,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "IntakeOutCommand"
-              }
-            }
-          ]
-        }
-      }
-    },
-    {
-      "name": "ActivateIntake",
-      "waypointRelativePos": 0.7,
-      "command": {
-        "type": "sequential",
-        "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "ActivateIntakeCommand"
-              }
-            },
-            {
-              "type": "wait",
-              "data": {
-                "waitTime": 0.5
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "IntakeInCommand"
-              }
-            }
-          ]
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 1.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
@@ -93,7 +46,7 @@
   "folder": "Defensive Auto",
   "previewStartingState": {
     "rotation": -90.0,
-    "velocity": 1.0
+    "velocity": 0.2
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }
