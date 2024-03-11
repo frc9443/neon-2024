@@ -1,0 +1,196 @@
+{
+  "version": 1.0,
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.18,
+        "y": 3.3
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 4.092497548862783,
+        "y": 2.5395450353241666
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.606935183336016,
+        "y": 4.54
+      },
+      "prevControl": {
+        "x": 5.08519463015439,
+        "y": 4.383477834045513
+      },
+      "nextControl": {
+        "x": 5.920267107709789,
+        "y": 4.633999577312132
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.257149985037885,
+        "y": 4.5
+      },
+      "prevControl": {
+        "x": 7.160526491077761,
+        "y": 4.525766265056033
+      },
+      "nextControl": {
+        "x": 7.413815947224771,
+        "y": 4.458222410083498
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.842036243868925,
+        "y": 4.5
+      },
+      "prevControl": {
+        "x": 7.748036666556794,
+        "y": 4.510444397479127
+      },
+      "nextControl": {
+        "x": 7.936035821181057,
+        "y": 4.489555602520873
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 7.246705587558758,
+        "y": 4.5
+      },
+      "prevControl": {
+        "x": 7.557187496970415,
+        "y": 4.474648209296419
+      },
+      "nextControl": {
+        "x": 6.9362236781471,
+        "y": 4.525351790703581
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 5.61,
+        "y": 4.54
+      },
+      "prevControl": {
+        "x": 6.379820596791323,
+        "y": 4.588203389129425
+      },
+      "nextControl": {
+        "x": 4.840179403208678,
+        "y": 4.491796610870575
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 2.18,
+        "y": 3.3
+      },
+      "prevControl": {
+        "x": 4.1342751387792855,
+        "y": 2.5708782277615443
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 1.85,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    },
+    {
+      "waypointRelativePos": 3.75,
+      "rotationDegrees": 180.0,
+      "rotateFast": false
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 2.9499999999999997,
+      "maxWaypointRelativePos": 3.8,
+      "constraints": {
+        "maxVelocity": 1.0,
+        "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
+  "eventMarkers": [
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 0.25,
+      "command": {
+        "type": "sequential",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeOutCommand"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "ActivateIntakeCommand"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 4.3999999999999995,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "IntakeInCommand"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 3.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 125.0,
+    "rotateFast": false
+  },
+  "reversed": false,
+  "folder": "Source Side Mid Auto",
+  "previewStartingState": {
+    "rotation": 125.0,
+    "velocity": 0
+  },
+  "useDefaultConstraints": true
+}

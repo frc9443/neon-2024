@@ -154,7 +154,7 @@ public class RobotContainer {
                 m_chooser.addOption("4 Note Auto", new PathPlannerAuto("4 Note Auto"));
                 m_chooser.addOption("Defensive Auto", new PathPlannerAuto("Defensive Auto"));
                 m_chooser.addOption("Amp Side Auto", new PathPlannerAuto("Amp Side Auto"));
-                m_chooser.addOption("Source Side Auto", new PathPlannerAuto("Source Side Auto"));
+                m_chooser.addOption("Source Side Mid Auto", new PathPlannerAuto("Source Side Mid Auto"));
                 SmartDashboard.putData(m_chooser);
                 // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
         }

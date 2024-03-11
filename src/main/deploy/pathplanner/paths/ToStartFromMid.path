@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 3.392722917761358,
-        "y": 7.102190285805508
+        "x": 3.194279365657968,
+        "y": 7.070857093368131
       },
       "prevControl": {
-        "x": 3.734332131538954,
-        "y": 7.059489134083309
+        "x": 3.5358885794355643,
+        "y": 7.028155941645932
       },
       "nextControl": null,
       "isLocked": false,
@@ -58,7 +58,7 @@
   "folder": "Defensive Auto",
   "previewStartingState": {
     "rotation": -90.0,
-    "velocity": 0.5
+    "velocity": 2.0
   },
   "useDefaultConstraints": false
 }
