@@ -136,13 +136,13 @@ public class RobotContainer {
                                 new EnsurePressureCommand(m_CompressorSubsystem));
 
                 NamedCommands.registerCommand("IntakeInCommand",
-                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.975));
+                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.975, m_BlinkinSubsystem));
 
                 NamedCommands.registerCommand("IntakeOutCommand",
-                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
+                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34, m_BlinkinSubsystem));
 
                 NamedCommands.registerCommand("ActivateIntakeCommand",
-                                new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(2.5));
+                                new ActivateIntakeCommand(m_IntakeSubsystem, m_BlinkinSubsystem).withTimeout(2.5));
 
                 NamedCommands.registerCommand("RaiseShooterAngleCommand",
                                 new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
@@ -207,7 +207,7 @@ public class RobotContainer {
                                 .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
 
                 new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-                                .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(3)); // Negative = ingest
+                                .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, m_BlinkinSubsystem).withTimeout(3)); // Negative = ingest
                                                                                                  // note
 
                 // Manual Overrides for stick control of intake arm and climber
@@ -223,10 +223,10 @@ public class RobotContainer {
                                 .onTrue(new MoveIntakeToAmpPositionCommand(m_IntakeArmSubsystem, 0.71).withTimeout(3));
 
                 new POVButton(m_OperatorController, 90)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.975).withTimeout(3));
+                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.975, m_BlinkinSubsystem).withTimeout(3));
 
                 new POVButton(m_OperatorController, 270)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34).withTimeout(3));
+                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34, m_BlinkinSubsystem).withTimeout(3));
 
                 // new JoystickButton(m_ColorController, Button.kA.value)
                 //                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, .57));

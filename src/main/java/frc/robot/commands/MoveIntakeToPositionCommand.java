@@ -6,15 +6,17 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 import frc.robot.Constants.ArmConstants;
 import frc.robot.Constants.GyroConstants;
 import frc.robot.Constants.IntakeArmConstants;
+import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 
 public class MoveIntakeToPositionCommand extends PIDCommand {
     private double m_speed = .2; // Speed is a _positive_ number, between 0 and 1
     private IntakeArmSubsystem m_IntakeArmSubsystem;
+    private BlinkinSubsystem m_BlinkinSubsystem;
 
     private final double m_tolerance = 1;
 
-    public MoveIntakeToPositionCommand(IntakeArmSubsystem armSubsystem, double targetPosition) {
+    public MoveIntakeToPositionCommand(IntakeArmSubsystem armSubsystem, double targetPosition, BlinkinSubsystem blinkin) {
         super(
                 new PIDController(ArmConstants.kTurnP, ArmConstants.kTurnI, ArmConstants.kTurnD),
                 // Close loop on heading
@@ -30,10 +32,14 @@ public class MoveIntakeToPositionCommand extends PIDCommand {
         // stationary at the
         // setpoint before it is considered as having reached the reference
         getController().setTolerance(0.005);
+        m_BlinkinSubsystem = blinkin;
     }
-
+    
     @Override
     public boolean isFinished() {
+        if(m_IntakeArmSubsystem.getPosition() > .95) {
+            m_BlinkinSubsystem.setColor(.61);
+        }
         // End when the controller is at the reference.
         return getController().atSetpoint();
     }

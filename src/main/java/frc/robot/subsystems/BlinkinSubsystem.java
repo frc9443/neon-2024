@@ -45,15 +45,7 @@ public class BlinkinSubsystem extends SubsystemBase {
       m_blinkin.set(val);
     }
   }
-
-  public void rainbow() {
-    set(-0.99);
-  }
-
-  public void solid_orange() {
-    set(-0.57);
-  }
-  public void setColor(int color)
+  public void setColor(double color)
   {
     m_blinkin.set(color);
   }

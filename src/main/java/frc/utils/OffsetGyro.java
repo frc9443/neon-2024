@@ -1,7 +1,6 @@
 package frc.utils;
 
 import com.kauailabs.navx.frc.AHRS;
-
 import frc.robot.Constants.DriveConstants;
 
 public class OffsetGyro {
