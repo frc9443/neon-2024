@@ -16,11 +16,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class ActivateIntakeCommand extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final IntakeSubsystem m_IntakeSubsystem;
-  private final BlinkinSubsystem m_BlinkinSubsystem;
 
-  public ActivateIntakeCommand(IntakeSubsystem subsystem, BlinkinSubsystem blinkin) {
+  public ActivateIntakeCommand(IntakeSubsystem subsystem) {
     m_IntakeSubsystem = subsystem;
-    m_BlinkinSubsystem = blinkin;
     // Use addRequirements() here to declare subsystem dependencies.
     addRequirements(subsystem);
   }
@@ -29,7 +27,6 @@ public class ActivateIntakeCommand extends Command {
   @Override
   public void initialize() {
       m_IntakeSubsystem.ingest(7);
-      m_BlinkinSubsystem.setColor(.69);
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -47,10 +44,6 @@ public class ActivateIntakeCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if(m_IntakeSubsystem.hasNote()){
-      m_BlinkinSubsystem.setColor(.77);
-      return m_IntakeSubsystem.hasNote();
-    }  
-    return false;
+    return m_IntakeSubsystem.hasNote();
   }
 }

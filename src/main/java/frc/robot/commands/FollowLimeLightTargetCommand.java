@@ -1,22 +1,24 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.utils.LimelightHelpers;
 
-public class FollowAprilTagCommand extends Command {
+public class FollowLimeLightTargetCommand extends Command {
     private final DriveSubsystem m_DriveSubsystem;
+    private final XboxController m_DriverController;
 
-    public FollowAprilTagCommand(DriveSubsystem ds) {
+    public FollowLimeLightTargetCommand(DriveSubsystem ds, XboxController DCont) {
         m_DriveSubsystem = ds;
+        m_DriverController = DCont;
         addRequirements(m_DriveSubsystem);
     }
 
     @Override
     public void execute() {
 
-        double targetingSpeed = 0.4;
         double tx = 0;
         double ty = 0;
         double ta = 0;
@@ -42,25 +44,15 @@ public class FollowAprilTagCommand extends Command {
         SmartDashboard.putNumber("Target Distance", ta);
 
         // Rotate the drivebase to center within +/- 1 degree
-        double rot = 0;
+        double rot = tx * Math.PI/180 * -.8;
+        //double ySpeed = -Math.max(.2, 0.02 * Math.min(ty,15));
+        // double ySpeed = ;
+        SmartDashboard.putNumber("Desired Rotation", rot);
 
-        if (tx > 20) {
-        } else if (tx < -20) {
-        } else if (tx > 10) {
-        } else if (tx < -10) {
-        } else if (tx > 5) {
-        } else if (tx < -5) {
-        } else if (ta > .05 & ta < 10) {
-        } else if (ta < 20 & ta > 30) {
-        }
-
-        if (tx > 1) {
-            rot = -.2;
-        } else if (tx < -1) {
-            rot = 0.2;
-        }
-
-        m_DriveSubsystem.drive(0, 0, rot, false, false);
+        m_DriveSubsystem.drive(
+            m_DriverController.getLeftX(),
+            m_DriverController.getLeftY(),
+            rot, true, false);
     }
 
 }

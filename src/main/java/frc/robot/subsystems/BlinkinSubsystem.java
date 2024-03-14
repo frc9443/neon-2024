@@ -29,7 +29,6 @@ public class BlinkinSubsystem extends SubsystemBase {
    */
   public BlinkinSubsystem() {
     m_blinkin = new Spark(0);
-    solid_orange();
   }
 
   /*

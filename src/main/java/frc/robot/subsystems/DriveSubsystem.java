@@ -251,6 +251,12 @@ public class DriveSubsystem extends SubsystemBase {
       m_prevTime = currentTime;
       m_prevTarget = vel;
     }
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(vel);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
   }
 
   public void DriveOverride(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit,

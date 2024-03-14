@@ -29,11 +29,12 @@ import frc.robot.Constants.OIConstants;
 import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.ActivateIntakeCommand;
 import frc.robot.commands.AmpShootCommand;
+import frc.robot.commands.AutoLimeLightTargetCommand;
 import frc.robot.commands.ChangeColorCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.EjectCommand;
 import frc.robot.commands.EnsurePressureCommand;
-import frc.robot.commands.FollowAprilTagCommand;
+import frc.robot.commands.FollowLimeLightTargetCommand;
 import frc.robot.commands.ManualOverrideCommand;
 import frc.robot.commands.MoveIntakeToAmpPositionCommand;
 import frc.robot.commands.MoveIntakeToPositionCommand;
@@ -136,13 +137,13 @@ public class RobotContainer {
                                 new EnsurePressureCommand(m_CompressorSubsystem));
 
                 NamedCommands.registerCommand("IntakeInCommand",
-                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.975, m_BlinkinSubsystem));
+                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.975));
 
                 NamedCommands.registerCommand("IntakeOutCommand",
-                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34, m_BlinkinSubsystem));
+                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
 
                 NamedCommands.registerCommand("ActivateIntakeCommand",
-                                new ActivateIntakeCommand(m_IntakeSubsystem, m_BlinkinSubsystem).withTimeout(2.5));
+                                new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(2.5));
 
                 NamedCommands.registerCommand("RaiseShooterAngleCommand",
                                 new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
@@ -150,10 +151,14 @@ public class RobotContainer {
                 NamedCommands.registerCommand("DropShooterAngleCommand",
                                 new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
 
+                NamedCommands.registerCommand("DetectNoteCommand",
+                                new AutoLimeLightTargetCommand(m_DriveSubsystem , m_IntakeSubsystem).withTimeout(3));
+
                 m_chooser.setDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
                 m_chooser.addOption("4 Note Auto", new PathPlannerAuto("4 Note Auto"));
                 m_chooser.addOption("Defensive Auto", new PathPlannerAuto("Defensive Auto"));
                 m_chooser.addOption("Amp Side Auto", new PathPlannerAuto("Amp Side Auto"));
+                m_chooser.addOption("5 Note Auto", new PathPlannerAuto("5 Note Auto"));
                 m_chooser.addOption("Source Side Mid Auto", new PathPlannerAuto("Source Side Mid Auto"));
                 SmartDashboard.putData(m_chooser);
                 // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
@@ -176,15 +181,14 @@ public class RobotContainer {
                 new JoystickButton(m_driverController, Button.kX.value)
                                 .onTrue(new TurnToAngleCommand(() -> -135, m_DriveSubsystem).withTimeout(3));
 
-                new JoystickButton(m_driverController, Button.kB.value)
-                                .onTrue(new TurnToAngleCommand(() -> 135, m_DriveSubsystem).withTimeout(3));
+                //new JoystickButton(m_driverController, Button.kB.value)
+                                //.onTrue(new TurnToAngleCommand(() -> 135, m_DriveSubsystem).withTimeout(3));
 
                 new JoystickButton(m_driverController, Button.kA.value)
                                 .onTrue(new EjectCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
 
-                // Turn to 0 degrees when the 'B' button is pressed, with a 3 second timeout
-                // new JoystickButton(m_driverController, Button.kY.value)
-                // .onTrue(new TurnToAngleCommand(() -> 0, m_robotDrive).withTimeout(3));
+                new JoystickButton(m_driverController, Button.kB.value)
+                                .whileTrue(new FollowLimeLightTargetCommand(m_DriveSubsystem, m_driverController).withTimeout(3));
 
                 new JoystickButton(m_driverController, Button.kRightBumper.value)
                                 .onTrue(new speedAdjustCommand(m_DriveSubsystem, true));
@@ -207,7 +211,7 @@ public class RobotContainer {
                                 .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
 
                 new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-                                .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem, m_BlinkinSubsystem).withTimeout(3)); // Negative = ingest
+                                .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(3)); // Negative = ingest
                                                                                                  // note
 
                 // Manual Overrides for stick control of intake arm and climber
@@ -223,10 +227,10 @@ public class RobotContainer {
                                 .onTrue(new MoveIntakeToAmpPositionCommand(m_IntakeArmSubsystem, 0.71).withTimeout(3));
 
                 new POVButton(m_OperatorController, 90)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.975, m_BlinkinSubsystem).withTimeout(3));
+                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.975).withTimeout(3));
 
                 new POVButton(m_OperatorController, 270)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34, m_BlinkinSubsystem).withTimeout(3));
+                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34).withTimeout(3));
 
                 // new JoystickButton(m_ColorController, Button.kA.value)
                 //                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, .57));
