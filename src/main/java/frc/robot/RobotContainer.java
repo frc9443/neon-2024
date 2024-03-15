@@ -155,6 +155,9 @@ public class RobotContainer {
                 NamedCommands.registerCommand("DetectNoteCommand",
                                 new AutoLimeLightTargetCommand(m_DriveSubsystem , m_IntakeSubsystem).withTimeout(3));
 
+                NamedCommands.registerCommand("SpeakerAimCommand",
+                                new TurnToAprilTagCommand(m_DriveSubsystem, m_driverController).withTimeout(.8));
+
                 m_chooser.setDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
                 m_chooser.addOption("4 Note Auto", new PathPlannerAuto("4 Note Auto"));
                 m_chooser.addOption("Defensive Auto", new PathPlannerAuto("Defensive Auto"));

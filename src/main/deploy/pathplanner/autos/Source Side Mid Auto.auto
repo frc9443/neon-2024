@@ -57,6 +57,12 @@
         {
           "type": "named",
           "data": {
+            "name": "SpeakerAimCommand"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ShootCommand"
           }
         },
@@ -94,6 +100,12 @@
         {
           "type": "named",
           "data": {
+            "name": "SpeakerAimCommand"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "ShootCommand"
           }
         },
@@ -126,6 +138,12 @@
           "type": "path",
           "data": {
             "pathName": "From Mid 3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerAimCommand"
           }
         },
         {

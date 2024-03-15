@@ -16,28 +16,28 @@
     },
     {
       "anchor": {
-        "x": 5.335380848878747,
-        "y": 1.7233255840557489
+        "x": 5.471158016107381,
+        "y": 1.96354672607564
       },
       "prevControl": {
-        "x": 4.3321416133519035,
-        "y": 1.6785381181840142
+        "x": 4.467918780580538,
+        "y": 1.9187592602039052
       },
       "nextControl": {
-        "x": 6.5051533665408305,
-        "y": 1.7755475714513784
+        "x": 6.640930533769465,
+        "y": 2.0157687134712696
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.497371127057776,
-        "y": 3.2168744235707303
+        "x": 7.873369436306303,
+        "y": 3.6659835151731373
       },
       "prevControl": {
-        "x": 7.330260767391764,
-        "y": 2.6424325622188136
+        "x": 7.706259076640292,
+        "y": 3.0915416538212206
       },
       "nextControl": null,
       "isLocked": false,
@@ -66,13 +66,13 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 3.0,
+    "maxVelocity": 4.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.5,
     "rotation": -135.0,
     "rotateFast": false
   },
@@ -80,7 +80,7 @@
   "folder": "Camera autos",
   "previewStartingState": {
     "rotation": 130.0,
-    "velocity": 0
+    "velocity": 0.0
   },
   "useDefaultConstraints": true
 }

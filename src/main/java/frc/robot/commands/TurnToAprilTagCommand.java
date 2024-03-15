@@ -29,6 +29,7 @@ public class TurnToAprilTagCommand extends Command {
     public void execute() {
 
         double tx = 0;
+        double ty = 0;
 
         var result = m_Camera.getLatestResult();
         boolean hasTargets = result.hasTargets();
@@ -36,18 +37,20 @@ public class TurnToAprilTagCommand extends Command {
             PhotonTrackedTarget target = result.getTargets().stream().filter(t -> (t.getFiducialId() == 7 || t.getFiducialId() == 4)).findFirst().orElse(null);
             if (target != null) {
                 tx = target.getYaw();
+                ty = target.getPitch() - 2.5;
             } else {
                 tx = 0;
+                ty = 0;
             }
         }
 
         // Publish data for viewing on the dashboard
         SmartDashboard.putNumber("PICam Target yaw", tx);
+        SmartDashboard.putNumber("PICam Target pitch", ty);
 
         // Rotate the drivebase to center within +/- 1 degree
         double rot = tx * Math.PI/180 * -.8;
-        //double ySpeed = -Math.max(.2, 0.02 * Math.min(ty,15));
-        // double ySpeed = ;
+        //double ySpeed = -Math.max(0, 0.05 * Math.min(ty,10));
 
         m_DriveSubsystem.drive(
             0,
