@@ -16,32 +16,32 @@
     },
     {
       "anchor": {
-        "x": 7.037817637976245,
-        "y": 1.1384393252247067
+        "x": 6.3902649942704475,
+        "y": 1.347327274807222
       },
       "prevControl": {
-        "x": 6.452931379145204,
-        "y": 1.2637720949742164
+        "x": 5.805378735439406,
+        "y": 1.4726600445567317
       },
       "nextControl": {
-        "x": 7.2241793164038155,
-        "y": 1.0985046798473699
+        "x": 6.576626672698018,
+        "y": 1.3073926294298852
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.9882578085766855,
-        "y": 0.8459961958091861
+        "x": 7.257149985037885,
+        "y": 1.0862173378290783
       },
       "prevControl": {
-        "x": 7.748036666556796,
-        "y": 0.8459961958091861
+        "x": 7.016928843017996,
+        "y": 1.0862173378290783
       },
       "nextControl": {
-        "x": 8.228478950596578,
-        "y": 0.8459961958091861
+        "x": 7.4973711270577805,
+        "y": 1.0862173378290783
       },
       "isLocked": false,
       "linkedName": null
@@ -98,12 +98,6 @@
               "data": {
                 "name": "IntakeOutCommand"
               }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "ActivateIntakeCommand"
-              }
             }
           ]
         }
@@ -142,10 +136,33 @@
           ]
         }
       }
+    },
+    {
+      "name": "New Event Marker",
+      "waypointRelativePos": 2.0,
+      "command": {
+        "type": "parallel",
+        "data": {
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "DetectNoteCommand"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "ActivateIntakeCommand"
+              }
+            }
+          ]
+        }
+      }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.8,
+    "maxVelocity": 2.0,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0

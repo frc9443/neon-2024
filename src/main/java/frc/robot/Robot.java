@@ -4,8 +4,16 @@
 
 package frc.robot;
 
+import java.lang.annotation.Target;
+import java.util.List;
+
+import org.photonvision.PhotonCamera;
+import org.photonvision.PhotonUtils;
+import org.photonvision.targeting.PhotonTrackedTarget;
+
 import com.kauailabs.navx.frc.AHRS;
 
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -26,6 +34,8 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
+
+  private PhotonCamera camera;
 
   // private final AHRS ahrs = new AHRS(SerialPort.Port.kUSB);
   /**
@@ -102,11 +112,27 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    var result = camera.getLatestResult();
+    boolean hasTargets = result.hasTargets();
+    if (hasTargets) {
+      PhotonTrackedTarget target = result.getTargets().stream().filter(t -> (t.getFiducialId() == 7 || t.getFiducialId() == 4)).findFirst().orElse(null);
+      if (target != null) {
+      double DistanceToTarget = 
+        PhotonUtils.calculateDistanceToTargetMeters(
+        Constants.VisionConstants.heightOfCamera,
+        Constants.VisionConstants.heightOfCenterSpeaker,
+        Constants.VisionConstants.angleOfCamera,
+        Units.degreesToRadians(target.getPitch()));
+      SmartDashboard.putNumber("Distance to Apriltag", DistanceToTarget);
+      SmartDashboard.putNumber("Angle to Apriltag", target.getYaw());
+      }
+    }
   }
 
   @Override

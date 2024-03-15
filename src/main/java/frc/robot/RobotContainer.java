@@ -42,6 +42,7 @@ import frc.robot.commands.ChangeShooterAngleCommand;
 import frc.robot.commands.RestartGyroCommand;
 import frc.robot.commands.ShootCommand;
 import frc.robot.commands.TurnToAngleCommand;
+import frc.robot.commands.TurnToAprilTagCommand;
 import frc.robot.commands.speedAdjustCommand;
 import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
@@ -178,17 +179,20 @@ public class RobotContainer {
                 // new JoystickButton(m_driverController, Button.kA.value)
                 // .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
 
-                new JoystickButton(m_driverController, Button.kX.value)
-                                .onTrue(new TurnToAngleCommand(() -> -135, m_DriveSubsystem).withTimeout(3));
+                //new JoystickButton(m_driverController, Button.kX.value)
+                                //.onTrue(new TurnToAngleCommand(() -> -135, m_DriveSubsystem).withTimeout(3));
 
                 //new JoystickButton(m_driverController, Button.kB.value)
                                 //.onTrue(new TurnToAngleCommand(() -> 135, m_DriveSubsystem).withTimeout(3));
+
+                new JoystickButton(m_driverController, Button.kX.value)
+                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_driverController));
 
                 new JoystickButton(m_driverController, Button.kA.value)
                                 .onTrue(new EjectCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
 
                 new JoystickButton(m_driverController, Button.kB.value)
-                                .whileTrue(new FollowLimeLightTargetCommand(m_DriveSubsystem, m_driverController).withTimeout(3));
+                                .whileTrue(new FollowLimeLightTargetCommand(m_DriveSubsystem, m_driverController));
 
                 new JoystickButton(m_driverController, Button.kRightBumper.value)
                                 .onTrue(new speedAdjustCommand(m_DriveSubsystem, true));

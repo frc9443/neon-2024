@@ -3,10 +3,11 @@
   "robotLength": 0.71,
   "holonomicMode": true,
   "pathFolders": [
+    "4 Note",
     "5 Note Auto",
     "Amp Side Auto",
     "Defensive Auto",
-    "4 Note",
+    "Camera autos",
     "Source Side Mid Auto",
     "iteration 1"
   ],

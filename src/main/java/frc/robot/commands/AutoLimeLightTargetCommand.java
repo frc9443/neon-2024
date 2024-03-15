@@ -22,14 +22,17 @@ public class AutoLimeLightTargetCommand extends Command {
         double ty = 0;
         double ta = 0;
 
+        tx = LimelightHelpers.getTX("");
+        ty = LimelightHelpers.getTY("");
+        ta = LimelightHelpers.getTA("");
         // Publish data for viewing on the dashboard
-        SmartDashboard.putNumber("Target yaw", tx);
-        SmartDashboard.putNumber("Target pitch", ty);
-        SmartDashboard.putNumber("Target Distance", ta);
+
 
         // Rotate the drivebase to center within +/- 1 degree
         double rot = tx * Math.PI/180 * -.8;
         double ySpeed = -Math.max(.2, 0.02 * Math.min(ty,15));
+
+        SmartDashboard.putNumber("Auto Rotation", rot);
 
         m_DriveSubsystem.drive(ySpeed, 0, rot, false, false);
     }

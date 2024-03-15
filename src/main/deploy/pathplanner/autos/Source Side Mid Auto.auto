@@ -3,7 +3,7 @@
   "startingPose": {
     "position": {
       "x": 0.75,
-      "y": 4.48
+      "y": 4.45
     },
     "rotation": 120.0
   },
@@ -18,9 +18,40 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "DropShooterAngleCommand"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Score First Note"
+            "pathName": "To Mid 1"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "DetectNoteCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ActivateIntakeCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "From Mid 1"
           }
         },
         {
@@ -32,7 +63,32 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Score Second Note"
+            "pathName": "To Mid 2"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "DetectNoteCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ActivateIntakeCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "From Mid 2"
           }
         },
         {
@@ -44,7 +100,32 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Score Third Note"
+            "pathName": "To Mid 3"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "DetectNoteCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ActivateIntakeCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "From Mid 3"
           }
         },
         {

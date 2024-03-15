@@ -176,9 +176,9 @@ public final class Constants {
   }
 
   public static final class VisionConstants {
-    public static final double heightOfCamera = 11;
-    public static final double heightOfCenterSpeaker = 56.25;
-    public static final double angleOfCamera = 15;
+    public static final double heightOfCamera = .254;
+    public static final double heightOfCenterSpeaker = 1.45;
+    public static final double angleOfCamera = Math.toRadians(19);
     public static final double targetDistanceToShoot = 97;
   }
 
