@@ -50,8 +50,8 @@ public class TurnToAprilTagCommand extends Command {
         // double ySpeed = ;
 
         m_DriveSubsystem.drive(
-            m_DriverController.getLeftX(),
-            m_DriverController.getLeftY(),
+            0,
+            0,
             rot, true, false);
     }
 
