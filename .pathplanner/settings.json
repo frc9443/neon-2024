@@ -6,15 +6,16 @@
     "4 Note",
     "5 Note Auto",
     "Amp Side Auto",
+    "Camera 4 Note",
+    "Camera Mid autos",
     "Defensive Auto",
-    "Camera autos",
     "Source Side Mid Auto",
     "iteration 1"
   ],
   "autoFolders": [
     "Maybe Working Autos"
   ],
-  "defaultMaxVel": 4.0,
+  "defaultMaxVel": 4.8,
   "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,

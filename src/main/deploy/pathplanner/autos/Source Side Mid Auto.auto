@@ -18,12 +18,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "DropShooterAngleCommand"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "To Mid 1"
@@ -52,12 +46,6 @@
           "type": "path",
           "data": {
             "pathName": "From Mid 1"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "SpeakerAimCommand"
           }
         },
         {
@@ -100,12 +88,6 @@
         {
           "type": "named",
           "data": {
-            "name": "SpeakerAimCommand"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "ShootCommand"
           }
         },
@@ -138,12 +120,6 @@
           "type": "path",
           "data": {
             "pathName": "From Mid 3"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "SpeakerAimCommand"
           }
         },
         {

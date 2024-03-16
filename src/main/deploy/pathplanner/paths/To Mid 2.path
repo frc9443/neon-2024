@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.1,
-        "y": 3.2
+        "x": 0.6667351757095377,
+        "y": 4.47020212106582
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1316129807832143,
-        "y": 1.9531023285965148
+        "x": 2.849614248846819,
+        "y": 1.4099936596819755
       },
       "isLocked": false,
       "linkedName": null
@@ -20,8 +20,8 @@
         "y": 1.9844355210338926
       },
       "prevControl": {
-        "x": 6.327598609395695,
-        "y": 1.5039932369941094
+        "x": 6.191821442167057,
+        "y": 1.2219945050577128
       },
       "nextControl": null,
       "isLocked": false,
@@ -50,20 +50,20 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 4.0,
+    "maxVelocity": 4.8,
     "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.5,
-    "rotation": -146.30993247402031,
+    "velocity": 0.8,
+    "rotation": -149.4702941000659,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Camera autos",
+  "folder": "Camera Mid autos",
   "previewStartingState": {
-    "rotation": 130.0,
+    "rotation": 120.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

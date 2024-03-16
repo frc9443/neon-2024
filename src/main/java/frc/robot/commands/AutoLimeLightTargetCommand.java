@@ -30,7 +30,7 @@ public class AutoLimeLightTargetCommand extends Command {
 
         // Rotate the drivebase to center within +/- 1 degree
         double rot = tx * Math.PI/180 * -.8;
-        double ySpeed = -Math.max(.2, 0.02 * Math.min(ty,15));
+        double ySpeed = -Math.max(.35, 0.02 * Math.min(ty,15));
 
         SmartDashboard.putNumber("Auto Rotation", rot);
 
