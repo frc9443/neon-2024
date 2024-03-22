@@ -112,27 +112,11 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
   }
 
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    var result = camera.getLatestResult();
-    boolean hasTargets = result.hasTargets();
-    if (hasTargets) {
-      PhotonTrackedTarget target = result.getTargets().stream().filter(t -> (t.getFiducialId() == 7 || t.getFiducialId() == 4)).findFirst().orElse(null);
-      if (target != null) {
-      double DistanceToTarget = 
-        PhotonUtils.calculateDistanceToTargetMeters(
-        Constants.VisionConstants.heightOfCamera,
-        Constants.VisionConstants.heightOfCenterSpeaker,
-        Constants.VisionConstants.angleOfCamera,
-        Units.degreesToRadians(target.getPitch()));
-      SmartDashboard.putNumber("Distance to Apriltag", DistanceToTarget);
-      SmartDashboard.putNumber("Angle to Apriltag", target.getYaw());
-      }
-    }
   }
 
   @Override

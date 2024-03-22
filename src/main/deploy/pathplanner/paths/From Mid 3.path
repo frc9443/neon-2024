@@ -8,36 +8,36 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 7.936035821181058,
-        "y": 3.07065285886297
+        "x": 7.163150407725753,
+        "y": 4.031537426942538
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.0324933219840995,
-        "y": 1.5979928143062396
+        "x": 5.063826514421477,
+        "y": 4.229980979045928
       },
       "prevControl": {
-        "x": 6.244043429562685,
-        "y": 1.6188816092644913
+        "x": 5.6904903631690225,
+        "y": 3.780871887443521
       },
       "nextControl": {
-        "x": 3.413818591390294,
-        "y": 1.5700846292960013
+        "x": 4.9534645073645684,
+        "y": 4.309073750770046
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 0.7294015605842922,
-        "y": 4.47020212106582
+        "x": 3.873165201801142,
+        "y": 4.940200007626478
       },
       "prevControl": {
-        "x": 0.9800671000833079,
-        "y": 3.7913162849226474
+        "x": 4.6356062177773225,
+        "y": 4.793978442918718
       },
       "nextControl": null,
       "isLocked": false,
@@ -73,13 +73,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 120.0,
+    "rotation": 172.0,
     "rotateFast": false
   },
   "reversed": false,
   "folder": "Camera Mid autos",
   "previewStartingState": {
-    "rotation": -135.52,
+    "rotation": 180.0,
     "velocity": 0
   },
   "useDefaultConstraints": true

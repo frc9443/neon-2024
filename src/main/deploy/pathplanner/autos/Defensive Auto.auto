@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.71,
-      "y": 4.32
+      "x": 0.6,
+      "y": 4.5
     },
     "rotation": 120.0
   },
@@ -18,80 +18,21 @@
           }
         },
         {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.2
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "DropShooterAngleCommand"
-          }
-        },
-        {
           "type": "path",
           "data": {
             "pathName": "StartToMid"
           }
         },
         {
-          "type": "parallel",
+          "type": "path",
           "data": {
-            "commands": [
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "PushNotes"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "pathName": "PushNotes"
           }
         },
         {
-          "type": "sequential",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "parallel",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "PickupLastNote"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakeOutCommand"
-                      }
-                    }
-                  ]
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "ActivateIntakeCommand"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "name": "IntakeOutCommand"
           }
         },
         {
@@ -99,35 +40,15 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.3
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "ToStartFromMid"
-                      }
-                    }
-                  ]
+                  "name": "DetectNoteCommand"
                 }
               },
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "IntakeInCommand"
-                      }
-                    }
-                  ]
+                  "name": "ActivateIntakeCommand"
                 }
               }
             ]
@@ -136,7 +57,13 @@
         {
           "type": "named",
           "data": {
-            "name": "ShootCommand"
+            "name": "IntakeInCommand"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ToStartFromMid"
           }
         }
       ]

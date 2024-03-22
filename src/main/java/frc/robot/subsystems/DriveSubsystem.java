@@ -32,9 +32,14 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.util.HolonomicPathFollowerConfig;
 import com.pathplanner.lib.util.PIDConstants;
 import com.pathplanner.lib.util.ReplanningConfig;
+import com.revrobotics.CANSparkFlex;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkLowLevel.MotorType;
+import com.revrobotics.RelativeEncoder;
 
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
+import frc.robot.Constants.ShooterConstants;
 import frc.utils.LimelightHelpers;
 import frc.utils.OffsetGyro;
 import frc.utils.SwerveUtils;
@@ -113,7 +118,7 @@ public class DriveSubsystem extends SubsystemBase {
             new PIDConstants(5.0, 0.0, 0.0), // Translation PID constants
             new PIDConstants(5.0, 0.0, 0.0), // Rotation PID constants
             4.5, // Max module speed, in m/s
-            0.4, // Drive base radius in meters. Distance from robot center to furthest module.
+            0.71, // Drive base radius in meters. Distance from robot center to furthest module.
             new ReplanningConfig() // Default path replanning config. See the API for the options here
         ),
         () -> {

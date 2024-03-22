@@ -2,8 +2,8 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.75,
-      "y": 4.45
+      "x": 0.7,
+      "y": 4.47
     },
     "rotation": 120.0
   },
@@ -15,6 +15,12 @@
           "type": "named",
           "data": {
             "name": "ShootCommand"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "DropShooterAngleCommand"
           }
         },
         {
@@ -67,13 +73,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "DetectNoteCommand"
+                  "name": "ActivateIntakeCommand"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "ActivateIntakeCommand"
+                  "name": "DetectNoteCommand"
                 }
               }
             ]
@@ -104,13 +110,13 @@
               {
                 "type": "named",
                 "data": {
-                  "name": "DetectNoteCommand"
+                  "name": "ActivateIntakeCommand"
                 }
               },
               {
                 "type": "named",
                 "data": {
-                  "name": "ActivateIntakeCommand"
+                  "name": "DetectNoteCommand"
                 }
               }
             ]

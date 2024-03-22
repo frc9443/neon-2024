@@ -51,6 +51,7 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.OffsetGyro;
 import frc.utils.VisionUtils;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -85,6 +86,7 @@ public class RobotContainer {
         private IntakeArmSubsystem m_IntakeArmSubsystem;
         private ClimberSubsystem m_ClimberSubsystem;
         private BlinkinSubsystem m_BlinkinSubsystem;
+        private VisionSubsystem m_VisionSubsystem;
 
         // A chooser for autonomous commands
         SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -112,6 +114,7 @@ public class RobotContainer {
                 m_IntakeArmSubsystem = new IntakeArmSubsystem();
                 m_ClimberSubsystem = new ClimberSubsystem();
                 m_BlinkinSubsystem = new BlinkinSubsystem();
+                m_VisionSubsystem = new VisionSubsystem();
                 // Configure the button bindings
                 configureButtonBindings();
 
@@ -144,7 +147,7 @@ public class RobotContainer {
                                 new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
 
                 NamedCommands.registerCommand("ActivateIntakeCommand",
-                                new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(2.5));
+                                new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(2));
 
                 NamedCommands.registerCommand("RaiseShooterAngleCommand",
                                 new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
@@ -153,10 +156,10 @@ public class RobotContainer {
                                 new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
 
                 NamedCommands.registerCommand("DetectNoteCommand",
-                                new AutoLimeLightTargetCommand(m_DriveSubsystem , m_IntakeSubsystem).withTimeout(3));
+                                new AutoLimeLightTargetCommand(m_DriveSubsystem , m_IntakeSubsystem).withTimeout(2));
 
                 NamedCommands.registerCommand("SpeakerAimCommand",
-                                new TurnToAprilTagCommand(m_DriveSubsystem, m_driverController).withTimeout(.8));
+                                new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem,m_driverController).withTimeout(.8));
 
                 m_chooser.setDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
                 m_chooser.addOption("4 Note Auto", new PathPlannerAuto("4 Note Auto"));
@@ -189,7 +192,7 @@ public class RobotContainer {
                                 //.onTrue(new TurnToAngleCommand(() -> 135, m_DriveSubsystem).withTimeout(3));
 
                 new JoystickButton(m_driverController, Button.kX.value)
-                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_driverController));
+                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem,m_driverController));
 
                 new JoystickButton(m_driverController, Button.kA.value)
                                 .onTrue(new EjectCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
