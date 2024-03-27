@@ -70,4 +70,10 @@ public class IntakeArmSubsystem extends SubsystemBase {
   public double getPosition() {
     return m_ArmEncoder.getAbsolutePosition();
   }
+  public boolean isArmOut(){
+    if (getPosition() < .55) {
+      return true;
+    }
+    return false;
+  }
 }

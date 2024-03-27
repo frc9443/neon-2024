@@ -21,6 +21,7 @@ public class VisionSubsystem extends SubsystemBase {
   private double distanceToSpeakerTag;
   private boolean hasSpeakerTag;
   private double angleToSpeaker;
+  private boolean inPositition;
 
   private PhotonCamera camera;
   /** Creates a new ExampleSubsystem. */
@@ -109,5 +110,7 @@ public class VisionSubsystem extends SubsystemBase {
   public double getAngleToSpeakerTag(){
     return angleToSpeaker;
   }
-
+  public boolean isInPositition(){
+    return hasSpeakerTag;
+  }
 }

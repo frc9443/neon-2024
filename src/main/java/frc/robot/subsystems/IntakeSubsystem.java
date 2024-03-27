@@ -28,6 +28,7 @@ public class IntakeSubsystem extends SubsystemBase {
   DigitalInput m_leftLimitSwitch = new DigitalInput(IntakeConstants.kLeftLimitSwitchId);
   DigitalInput m_rightLimitSwitch = new DigitalInput(IntakeConstants.kRightLimitSwitchId);
 
+  private boolean intakeActive = false;
 
   public IntakeSubsystem() {
   }
@@ -77,6 +78,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void ingest(double voltage) {
+    intakeActive = true;
     m_IntakeLeft.setVoltage(-voltage);
     m_IntakeRight.setVoltage(-voltage);
   }
@@ -86,6 +88,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void stop() {
+    intakeActive = false;
     m_IntakeLeft.stopMotor();
     m_IntakeRight.stopMotor();
   }
@@ -93,4 +96,9 @@ public class IntakeSubsystem extends SubsystemBase {
   public boolean hasNote() {
     return !m_rightLimitSwitch.get() || !m_leftLimitSwitch.get();
   }
+
+  public boolean isIntakeActive(){
+    return intakeActive;
+  }
+  
 }

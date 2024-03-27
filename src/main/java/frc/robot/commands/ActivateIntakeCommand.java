@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.Constants;
+import frc.robot.Constants.BlinkinConstants;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
