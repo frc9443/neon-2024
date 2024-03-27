@@ -30,7 +30,6 @@ import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.ActivateIntakeCommand;
 import frc.robot.commands.AmpShootCommand;
 import frc.robot.commands.AutoLimeLightTargetCommand;
-import frc.robot.commands.ChangeColorCommand;
 import frc.robot.commands.DriveCommand;
 import frc.robot.commands.EjectCommand;
 import frc.robot.commands.EnsurePressureCommand;
@@ -113,8 +112,9 @@ public class RobotContainer {
                 m_IntakeSubsystem = new IntakeSubsystem();
                 m_IntakeArmSubsystem = new IntakeArmSubsystem();
                 m_ClimberSubsystem = new ClimberSubsystem();
-                m_BlinkinSubsystem = new BlinkinSubsystem();
                 m_VisionSubsystem = new VisionSubsystem();
+                m_BlinkinSubsystem = new BlinkinSubsystem(m_VisionSubsystem, m_IntakeSubsystem,
+                m_IntakeArmSubsystem);
                 // Configure the button bindings
                 configureButtonBindings();
 

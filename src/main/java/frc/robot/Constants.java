@@ -91,6 +91,14 @@ public final class Constants {
   }
   public static final class BlinkinConstants {
     public static final int kBlinkinPWMId = 0;
+    public static final double cDarkRed = .59;
+    public static final double cDarkGreen = .75;
+    public static final double cDarkBlue = .85;
+    public static final double cGoldStrobe = -.07;
+    public static final double cYellow = .69;
+    public static final double cRainbow = -.99;
+    public static final double cOrange = .65;
+
   }
 
   public static final class IntakeArmConstants {
@@ -223,4 +231,6 @@ public final class Constants {
   public static final class NeoMotorConstants {
     public static final double kFreeSpeedRpm = 5676;
   }
+
+  
 }
