@@ -180,6 +180,10 @@ public final class Constants {
     public static final double heightOfCenterSpeaker = 1.45;
     public static final double angleOfCamera = Math.toRadians(19);
     public static final double targetDistanceToShoot = 97;
+    public static final double idealShootingDistance = 3.0;
+    public static final double shootingDistanceVariance = 0.15;
+    public static final double shootingAngleVariance = 2.0;
+
   }
 
   public static final class GyroConstants {

@@ -103,11 +103,19 @@ public class VisionSubsystem extends SubsystemBase {
   {
     return distanceToSpeakerTag;
   }
+  public double getDistanceToShootingPosition(){
+    return Constants.VisionConstants.idealShootingDistance - distanceToSpeakerTag;
+  }
   public boolean hasSpeakerTag(){
     return hasSpeakerTag;
   }
   public double getAngleToSpeakerTag(){
     return angleToSpeaker;
   }
-
+  public boolean lockedOn(){
+    if (Math.abs(angleToSpeaker) > Constants.VisionConstants.shootingAngleVariance){
+      return false;
+    }
+    return (Math.abs(getDistanceToShootingPosition()) < Constants.VisionConstants.shootingDistanceVariance);
+  }
 }

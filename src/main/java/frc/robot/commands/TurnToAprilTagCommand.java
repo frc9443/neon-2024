@@ -28,37 +28,46 @@ public class TurnToAprilTagCommand extends Command {
     @Override
     public void execute() {
 
-        double tx = 0;
-        double ty = 0;
+        double angleDelta = 0;
+        double distanceDelta = 0;
 
-        
         if (m_VisionSubsystem.hasSpeakerTag()) {
-             
-                tx = m_VisionSubsystem.getAngleToSpeakerTag();
-                ty = m_VisionSubsystem.getDistanceToSpeaker();
-            } else {
-                tx = 0;
-                ty = 0;
-            }
-        
-
+            angleDelta = m_VisionSubsystem.getAngleToSpeakerTag();
+            distanceDelta = m_VisionSubsystem.getDistanceToShootingPosition();
+        } else {
+            m_DriveSubsystem.drive(0 ,0 , 0, false, false);
+            return;
+        }
 
         // Rotate the drivebase to center within +/- 1 degree
-        double rot = tx * Math.PI/180 * -.8;
-        double xSpeed = 0;
+        double rot = angleDelta * Math.PI / 180 * -.8;
+        // double xSpeed = 0;
         // if(ty > 3.1)
         // {
-        //     xSpeed = -1;
+        // xSpeed = -1;
         // }
         // else{
-        //     xSpeed = 0;
+        // xSpeed = 0;
         // }
-        //double ySpeed = -Math.max(0, 0.05 * Math.min(ty,10));
+        double xSpeed = 0;
+        if (Math.abs(rot) < 0.1) {
+        if (distanceDelta > 0) {
+            xSpeed = -Math.max(.05, Math.min(.5, distanceDelta * 0.5));
+        } else {
+            xSpeed = -Math.min(-.05, Math.max(-.5, distanceDelta * 0.5));
+        }
+        }
+        SmartDashboard.putNumber("trying xSpeed", xSpeed);
+        SmartDashboard.putNumber("tryingRot", rot);
 
         m_DriveSubsystem.drive(
-            0,
-            0,
-            rot, true, false);
+                xSpeed,
+                0,
+                rot, false, false);
     }
 
+     @Override
+     public boolean isFinished() {
+         return !m_VisionSubsystem.hasSpeakerTag() || m_VisionSubsystem.lockedOn();
+     }
 }
