@@ -7,8 +7,15 @@
 
 package frc.robot.subsystems;
 
+import java.util.Optional;
+
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.BlinkinConstants;
@@ -26,11 +33,12 @@ public class BlinkinSubsystem extends SubsystemBase {
   private VisionSubsystem m_VisionSubsystem;
   private IntakeSubsystem m_IntakeSubsystem;
   private IntakeArmSubsystem m_IntakeArmSubsystem;
-
   private boolean inPositition = false;
   private boolean hasNote = false;
   private boolean armOut = false;
   private boolean intakeActive = false;
+  private boolean blueAlliance;
+
 
   /**
    * Creates a new Blinkin LED controller.
@@ -43,13 +51,32 @@ public class BlinkinSubsystem extends SubsystemBase {
     m_VisionSubsystem = vSubsystem;
     m_IntakeSubsystem = iSubsystem;
     m_IntakeArmSubsystem = iArmSubsystem;
-    setColor(BlinkinConstants.cDarkGreen);
+    SmartDashboard.setDefaultNumber("blinkin value", 0);
+
+    Optional<Alliance> ally = DriverStation.getAlliance();
+    if (ally.isPresent()) {
+        if (ally.get() == Alliance.Red) {
+            blueAlliance = false;
+        }
+        if (ally.get() == Alliance.Blue) {
+            blueAlliance = true;
+        }
+    }
+    else {
+        blueAlliance = true;
+    }
   }
 
   @Override
   public void periodic() {
     setColor(checkForColor());
   }
+    // @Override
+    // public void periodic() {
+    //   setColor(SmartDashboard.getNumber("blinkin value", 0));
+
+    // }
+
   /*
    * Set the color and blink pattern of the LED strip.
    * 
@@ -64,22 +91,30 @@ public class BlinkinSubsystem extends SubsystemBase {
     m_blinkin.set(color);
   }
 
-  public double checkForColor() {
+  public void updateChecks(){
     inPositition = m_VisionSubsystem.lockedOn();
     hasNote = m_IntakeSubsystem.hasNote();
     intakeActive = m_IntakeSubsystem.isIntakeActive();
     armOut = m_IntakeArmSubsystem.isArmOut();
-
+  }
+  public double checkForColor() {
+    updateChecks();
     if (inPositition && hasNote)
       return BlinkinConstants.cRainbow;
     else if (hasNote)
-      return BlinkinConstants.cDarkBlue;
+      if(blueAlliance)
+        return BlinkinConstants.cStrobeBlue;
+      else
+        return BlinkinConstants.cStrobeRed;
     else if(armOut && intakeActive)
-      return BlinkinConstants.cYellow;
+      return BlinkinConstants.cStrobeGold;
     else if(armOut)
-      return BlinkinConstants.cOrange;
+      return BlinkinConstants.cSolidGold;
     else
-      return BlinkinConstants.cDarkRed;
+      if(blueAlliance)
+        return BlinkinConstants.cBreathBlue;
+      else
+        return BlinkinConstants.cBreathRed;
     
   }
 }

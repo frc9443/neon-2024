@@ -91,13 +91,13 @@ public final class Constants {
   }
   public static final class BlinkinConstants {
     public static final int kBlinkinPWMId = 0;
-    public static final double cDarkRed = .59;
-    public static final double cDarkGreen = .75;
-    public static final double cDarkBlue = .85;
-    public static final double cGoldStrobe = -.07;
-    public static final double cYellow = .69;
-    public static final double cRainbow = -.99;
-    public static final double cOrange = .65;
+    public static final double cBreathRed = -0.17;
+    public static final double cBreathBlue = -0.15;
+    public static final double cStrobeRed = -0.11;
+    public static final double cStrobeBlue = -0.09;
+    public static final double cStrobeGold = -0.07;
+    public static final double cSolidGold = 0.67;
+    public static final double cRainbow = 0.99;
 
   }
 
@@ -188,7 +188,7 @@ public final class Constants {
     public static final double heightOfCenterSpeaker = 1.45;
     public static final double angleOfCamera = Math.toRadians(19);
     public static final double targetDistanceToShoot = 97;
-    public static final double idealShootingDistance = 3.0;
+    public static final double idealShootingDistance = 2.5;
     public static final double shootingDistanceVariance = 0.15;
     public static final double shootingAngleVariance = 2.0;
 
@@ -205,9 +205,9 @@ public final class Constants {
     public static final double kStabilizationD = 0;
   }
   public static final class ArmConstants{
-    public static final double kTurnP = .8;
-    public static final double kTurnI = 0;
-    public static final double kTurnD = 0;
+    public static final double kTurnP = .7;
+    public static final double kTurnI = .8;
+    public static final double kTurnD = .05;
   }
 
   public static final class AutoConstants {

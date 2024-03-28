@@ -113,8 +113,7 @@ public class RobotContainer {
                 m_IntakeArmSubsystem = new IntakeArmSubsystem();
                 m_ClimberSubsystem = new ClimberSubsystem();
                 m_VisionSubsystem = new VisionSubsystem();
-                m_BlinkinSubsystem = new BlinkinSubsystem(m_VisionSubsystem, m_IntakeSubsystem,
-                m_IntakeArmSubsystem);
+                m_BlinkinSubsystem = new BlinkinSubsystem(m_VisionSubsystem, m_IntakeSubsystem, m_IntakeArmSubsystem);
                 // Configure the button bindings
                 configureButtonBindings();
 
