@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.38,
-        "y": 6.64
+        "x": 2.0,
+        "y": 7.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2647279900157775,
-        "y": 6.381526859745832
+        "x": 3.0,
+        "y": 7.0
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.28,
-        "y": 5.55
+        "x": 4.0,
+        "y": 6.0
       },
       "prevControl": {
-        "x": 2.0062844379123876,
-        "y": 5.811109936978143
+        "x": 3.0,
+        "y": 6.0
       },
       "nextControl": null,
       "isLocked": false,
@@ -39,14 +39,14 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0,
+    "rotation": 0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "5 Note Auto",
+  "folder": "Camera 4 Note",
   "previewStartingState": {
-    "rotation": -147.0,
-    "velocity": 0.7
+    "rotation": 0,
+    "velocity": 0
   },
   "useDefaultConstraints": true
 }

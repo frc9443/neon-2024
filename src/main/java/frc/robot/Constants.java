@@ -97,7 +97,7 @@ public final class Constants {
     public static final double cStrobeBlue = -0.09;
     public static final double cStrobeGold = -0.07;
     public static final double cSolidGold = 0.67;
-    public static final double cRainbow = 0.99;
+    public static final double cRainbow = -0.99;
 
   }
 
@@ -188,7 +188,7 @@ public final class Constants {
     public static final double heightOfCenterSpeaker = 1.45;
     public static final double angleOfCamera = Math.toRadians(19);
     public static final double targetDistanceToShoot = 97;
-    public static final double idealShootingDistance = 2.5;
+    // public static final double idealShootingDistance = 2.5;
     public static final double shootingDistanceVariance = 0.15;
     public static final double shootingAngleVariance = 2.0;
 

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.38,
-        "y": 6.64
+        "x": 2.4840603370774184,
+        "y": 5.504197471499269
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.2647279900157775,
-        "y": 6.381526859745832
+        "x": 2.584060337077419,
+        "y": 5.504197471499269
       },
       "isLocked": false,
       "linkedName": null
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 1.28,
-        "y": 5.55
+        "y": 5.504197471499269
       },
       "prevControl": {
-        "x": 2.0062844379123876,
-        "y": 5.811109936978143
+        "x": 1.6076197437891067,
+        "y": 5.535530663936646
       },
       "nextControl": null,
       "isLocked": false,
@@ -29,7 +29,19 @@
     }
   ],
   "rotationTargets": [],
-  "constraintZones": [],
+  "constraintZones": [
+    {
+      "name": "New Constraints Zone",
+      "minWaypointRelativePos": 0.0,
+      "maxWaypointRelativePos": 0.2,
+      "constraints": {
+        "maxVelocity": 4.8,
+        "maxAcceleration": 1.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0
+      }
+    }
+  ],
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.5,
@@ -43,10 +55,10 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "5 Note Auto",
+  "folder": "Camera 4 Note",
   "previewStartingState": {
-    "rotation": -147.0,
-    "velocity": 0.7
+    "rotation": 180.0,
+    "velocity": 0.0
   },
   "useDefaultConstraints": true
 }

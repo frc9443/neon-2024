@@ -10,64 +10,56 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.LimelightHelpers;
 
 public class TurnToAprilTagCommand extends Command {
     private final DriveSubsystem m_DriveSubsystem;
-    private final XboxController m_DriverController;
     private final VisionSubsystem m_VisionSubsystem;
+    private final ShooterSubsystem m_ShooterSubsystem;
 
-    public TurnToAprilTagCommand(DriveSubsystem ds, VisionSubsystem vs, XboxController DCont) {
+    public TurnToAprilTagCommand(DriveSubsystem ds, VisionSubsystem vs, ShooterSubsystem ss) {
         m_DriveSubsystem = ds;
-        m_DriverController = DCont;
         m_VisionSubsystem = vs;
+        m_ShooterSubsystem = ss;
         addRequirements(m_DriveSubsystem);
     }
 
     @Override
     public void execute() {
-
+        SmartDashboard.getBoolean("Locked On", m_VisionSubsystem.lockedOn());
         double angleDelta = 0;
         double distanceDelta = 0;
-
+        
         if (m_VisionSubsystem.hasSpeakerTag()) {
             angleDelta = m_VisionSubsystem.getAngleToSpeakerTag();
             distanceDelta = m_VisionSubsystem.getDistanceToShootingPosition();
+            double rot = angleDelta * Math.PI / 180 * -.8;
+            double xSpeed = 0;
+            if (Math.abs(rot) < 0.1) {
+                if (distanceDelta > 0) {
+                    xSpeed = -Math.max(.05, Math.min(.5, distanceDelta * 0.5));
+                } else {
+                    xSpeed = -Math.min(-.05, Math.max(-.5, distanceDelta * 0.5));
+                }
+            }
+            SmartDashboard.putNumber("trying xSpeed", xSpeed);
+            SmartDashboard.putNumber("tryingRot", rot);
+            
+            m_DriveSubsystem.drive(
+                    xSpeed,
+                    0,
+                    rot, false, false);
         } else {
-            m_DriveSubsystem.drive(0 ,0 , 0, false, false);
+            m_DriveSubsystem.drive(0, 0, 0, true, false);
             return;
         }
-
-        // Rotate the drivebase to center within +/- 1 degree
-        double rot = angleDelta * Math.PI / 180 * -.8;
-        // double xSpeed = 0;
-        // if(ty > 3.1)
-        // {
-        // xSpeed = -1;
-        // }
-        // else{
-        // xSpeed = 0;
-        // }
-        double xSpeed = 0;
-        if (Math.abs(rot) < 0.1) {
-        if (distanceDelta > 0) {
-            xSpeed = -Math.max(.05, Math.min(.5, distanceDelta * 0.5));
-        } else {
-            xSpeed = -Math.min(-.05, Math.max(-.5, distanceDelta * 0.5));
-        }
-        }
-        SmartDashboard.putNumber("trying xSpeed", xSpeed);
-        SmartDashboard.putNumber("tryingRot", rot);
-
-        m_DriveSubsystem.drive(
-                xSpeed,
-                0,
-                rot, false, false);
     }
+    
 
-     @Override
-     public boolean isFinished() {
-         return !m_VisionSubsystem.hasSpeakerTag() || m_VisionSubsystem.lockedOn();
-     }
+    @Override
+    public boolean isFinished() {
+        return !m_VisionSubsystem.hasSpeakerTag() || m_VisionSubsystem.lockedOn();
+    }
 }

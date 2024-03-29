@@ -51,7 +51,7 @@ public class BlinkinSubsystem extends SubsystemBase {
     m_VisionSubsystem = vSubsystem;
     m_IntakeSubsystem = iSubsystem;
     m_IntakeArmSubsystem = iArmSubsystem;
-    SmartDashboard.setDefaultNumber("blinkin value", 0);
+    //SmartDashboard.setDefaultNumber("blinkin value", 0);
 
     Optional<Alliance> ally = DriverStation.getAlliance();
     if (ally.isPresent()) {
@@ -96,6 +96,7 @@ public class BlinkinSubsystem extends SubsystemBase {
     hasNote = m_IntakeSubsystem.hasNote();
     intakeActive = m_IntakeSubsystem.isIntakeActive();
     armOut = m_IntakeArmSubsystem.isArmOut();
+    
   }
   public double checkForColor() {
     updateChecks();

@@ -21,11 +21,15 @@ public class VisionSubsystem extends SubsystemBase {
   private double distanceToSpeakerTag;
   private boolean hasSpeakerTag;
   private double angleToSpeaker;
+  private double idealShootingDistance; // Tuning with input from dashboard
 
   private PhotonCamera camera;
   /** Creates a new ExampleSubsystem. */
   public VisionSubsystem() {
     camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
+
+    // Tuning with input from dashboard
+    SmartDashboard.setDefaultNumber("Ideal Shooting Distance", 2.5);
   }
 
   /**
@@ -71,6 +75,8 @@ public class VisionSubsystem extends SubsystemBase {
 
   @Override
   public void periodic() {
+    // Tuning with input from dashboard 
+    idealShootingDistance = SmartDashboard.getNumber("Ideal Shooting Distance", 0);
 
     var result = camera.getLatestResult();
     boolean hasTargets = result.hasTargets();
@@ -104,7 +110,8 @@ public class VisionSubsystem extends SubsystemBase {
     return distanceToSpeakerTag;
   }
   public double getDistanceToShootingPosition(){
-    return Constants.VisionConstants.idealShootingDistance - distanceToSpeakerTag;
+    // return Constants.VisionConstants.idealShootingDistance - distanceToSpeakerTag;
+    return idealShootingDistance - distanceToSpeakerTag; // Tuning with input from dashboard
   }
   public boolean hasSpeakerTag(){
     return hasSpeakerTag;

@@ -20,13 +20,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ToSecond"
+            "pathName": null
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "ToStart"
+            "pathName": null
           }
         },
         {
@@ -38,7 +38,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ToStart"
+            "pathName": null
           }
         },
         {

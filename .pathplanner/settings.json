@@ -9,14 +9,13 @@
     "Camera 4 Note",
     "Camera Mid autos",
     "Defensive Auto",
-    "Source Side Mid Auto",
-    "iteration 1"
+    "Source Side Mid Auto"
   ],
   "autoFolders": [
     "Maybe Working Autos"
   ],
-  "defaultMaxVel": 4.8,
-  "defaultMaxAccel": 3.0,
+  "defaultMaxVel": 4.5,
+  "defaultMaxAccel": 2.5,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 4.8

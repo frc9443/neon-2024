@@ -158,7 +158,7 @@ public class RobotContainer {
                                 new AutoLimeLightTargetCommand(m_DriveSubsystem , m_IntakeSubsystem).withTimeout(2));
 
                 NamedCommands.registerCommand("SpeakerAimCommand",
-                                new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem,m_driverController).withTimeout(.8));
+                                new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem, m_ShooterSubsystem).withTimeout(.8));
 
                 m_chooser.setDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
                 m_chooser.addOption("4 Note Auto", new PathPlannerAuto("4 Note Auto"));
@@ -191,7 +191,7 @@ public class RobotContainer {
                                 //.onTrue(new TurnToAngleCommand(() -> 135, m_DriveSubsystem).withTimeout(3));
 
                 new JoystickButton(m_driverController, Button.kX.value)
-                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem,m_driverController));
+                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem, m_ShooterSubsystem));
 
                 new JoystickButton(m_driverController, Button.kA.value)
                                 .onTrue(new EjectCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
