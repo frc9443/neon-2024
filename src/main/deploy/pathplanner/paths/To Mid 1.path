@@ -8,20 +8,20 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.2433990244570825,
-        "y": 3.2782076160081077
+        "x": 1.5440645639561004,
+        "y": 3.425762373153246
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 6.891596073268484,
-        "y": 1.0235509529543236
+        "x": 6.8602628808311055,
+        "y": 1.0757729403499519
       },
       "prevControl": {
-        "x": 5.9620446976262915,
-        "y": 1.0966617353082024
+        "x": 5.982933492584542,
+        "y": 1.2951052874115927
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,7 +33,7 @@
   "eventMarkers": [
     {
       "name": "New Event Marker",
-      "waypointRelativePos": 0.35,
+      "waypointRelativePos": 0.55,
       "command": {
         "type": "parallel",
         "data": {
@@ -51,7 +51,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -61,7 +61,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Camera Mid autos",
+  "folder": "Source Side Mid Auto",
   "previewStartingState": {
     "rotation": 120.0,
     "velocity": 0

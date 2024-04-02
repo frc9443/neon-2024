@@ -2,7 +2,7 @@
   "version": 1.0,
   "startingPose": {
     "position": {
-      "x": 0.6,
+      "x": 0.7,
       "y": 4.5
     },
     "rotation": 120.0
@@ -30,15 +30,15 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "IntakeOutCommand"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeOutCommand"
+                }
+              },
               {
                 "type": "named",
                 "data": {
@@ -55,15 +55,64 @@
           }
         },
         {
-          "type": "named",
+          "type": "parallel",
           "data": {
-            "name": "IntakeInCommand"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "ToStartFromMid"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeInCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "DropShooterAngleCommand"
+                }
+              }
+            ]
           }
         },
         {
-          "type": "path",
+          "type": "wait",
           "data": {
-            "pathName": "ToStartFromMid"
+            "waitTime": 0.5
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerAimCommand"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.2
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerAimCommand"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.3
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootCommand"
           }
         }
       ]

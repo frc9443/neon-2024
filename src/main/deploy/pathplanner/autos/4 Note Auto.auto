@@ -67,22 +67,9 @@
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "path",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.4
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "First"
-                      }
-                    }
-                  ]
+                  "pathName": "First"
                 }
               },
               {
@@ -231,6 +218,74 @@
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "ShootCommand"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "To Mid"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeOutCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "DetectNoteCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "ActivateIntakeCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "From Mid"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "IntakeInCommand"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "DropShooterAngleCommand"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "SpeakerAimCommand"
           }
         },
         {

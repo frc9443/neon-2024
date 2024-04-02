@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3,
-        "y": 5.53
+        "x": 8.291145335471334,
+        "y": 4.094203811817293
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0389508227871427,
-        "y": 1.96354672607564
+        "x": 7.758481064035921,
+        "y": 3.864427067276527
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 5.544268798461261,
-        "y": 1.389104864723724
+        "x": 5.930711505188914,
+        "y": 3.9584266445886582
       },
       "prevControl": {
-        "x": 4.343163088361801,
-        "y": 1.535326429431485
+        "x": 6.425277293452564,
+        "y": 3.884910108495413
+      },
+      "nextControl": {
+        "x": 5.157826091733609,
+        "y": 4.073315016859041
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.5598332774273693,
+        "y": 5.263976329479377
+      },
+      "prevControl": {
+        "x": 4.4162738707156795,
+        "y": 4.585090493336204
       },
       "nextControl": null,
       "isLocked": false,
@@ -33,17 +49,17 @@
   "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 0.3,
     "rotation": 180.0,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "5 Note Auto",
+  "folder": "Camera 4 Note",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

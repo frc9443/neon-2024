@@ -67,7 +67,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 4.5,
-    "maxAcceleration": 2.5,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0
   },
@@ -77,7 +77,7 @@
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "Camera Mid autos",
+  "folder": "Source Side Mid Auto",
   "previewStartingState": {
     "rotation": 180.0,
     "velocity": 0

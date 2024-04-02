@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.3,
-        "y": 5.53
+        "x": 1.12,
+        "y": 5.5
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3,
-        "y": 5.53
+        "x": 2.12,
+        "y": 5.5
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 7.405558218138543,
-        "y": 7.462026263454348
+        "x": 4.928049347192843,
+        "y": 4.626868083252706
       },
       "prevControl": {
-        "x": 6.405558218138543,
-        "y": 7.462026263454348
+        "x": 4.322274293403549,
+        "y": 4.877533622751724
+      },
+      "nextControl": {
+        "x": 5.446863954604491,
+        "y": 4.412186176737542
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 6.473820174103453,
+        "y": 4.115092606775545
+      },
+      "prevControl": {
+        "x": 6.1187106598131775,
+        "y": 4.041981824421664
       },
       "nextControl": null,
       "isLocked": false,
@@ -32,10 +48,10 @@
   "constraintZones": [],
   "eventMarkers": [
     {
-      "name": "IntakeOut",
-      "waypointRelativePos": 0.2,
+      "name": "New Event Marker",
+      "waypointRelativePos": 1.15,
       "command": {
-        "type": "sequential",
+        "type": "parallel",
         "data": {
           "commands": [
             {
@@ -56,15 +72,15 @@
     "maxAngularAcceleration": 720.0
   },
   "goalEndState": {
-    "velocity": 0.7,
-    "rotation": 180.0,
+    "velocity": 0.8,
+    "rotation": -179.53419091723498,
     "rotateFast": false
   },
   "reversed": false,
-  "folder": "5 Note Auto",
+  "folder": "Camera 4 Note",
   "previewStartingState": {
     "rotation": 180.0,
-    "velocity": 0.0
+    "velocity": 0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

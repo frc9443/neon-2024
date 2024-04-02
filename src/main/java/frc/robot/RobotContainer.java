@@ -140,10 +140,10 @@ public class RobotContainer {
                                 new EnsurePressureCommand(m_CompressorSubsystem));
 
                 NamedCommands.registerCommand("IntakeInCommand",
-                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.975));
+                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.97));
 
                 NamedCommands.registerCommand("IntakeOutCommand",
-                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34));
+                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.345));
 
                 NamedCommands.registerCommand("ActivateIntakeCommand",
                                 new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(2));
@@ -164,7 +164,6 @@ public class RobotContainer {
                 m_chooser.addOption("4 Note Auto", new PathPlannerAuto("4 Note Auto"));
                 m_chooser.addOption("Defensive Auto", new PathPlannerAuto("Defensive Auto"));
                 m_chooser.addOption("Amp Side Auto", new PathPlannerAuto("Amp Side Auto"));
-                m_chooser.addOption("5 Note Auto", new PathPlannerAuto("5 Note Auto"));
                 m_chooser.addOption("Source Side Mid Auto", new PathPlannerAuto("Source Side Mid Auto"));
                 SmartDashboard.putData(m_chooser);
                 // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
@@ -233,13 +232,13 @@ public class RobotContainer {
                                 .onTrue(new AmpShootCommand(m_IntakeSubsystem, m_IntakeArmSubsystem));
 
                 new JoystickButton(m_OperatorController, Button.kA.value)
-                                .onTrue(new MoveIntakeToAmpPositionCommand(m_IntakeArmSubsystem, 0.71).withTimeout(3));
+                                .onTrue(new MoveIntakeToAmpPositionCommand(m_IntakeArmSubsystem, 0.715).withTimeout(1));
 
                 new POVButton(m_OperatorController, 90)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.975).withTimeout(3));
+                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.97).withTimeout(1));
 
                 new POVButton(m_OperatorController, 270)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.34).withTimeout(3));
+                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.345).withTimeout(1));
 
                 // new JoystickButton(m_ColorController, Button.kA.value)
                 //                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, .57));

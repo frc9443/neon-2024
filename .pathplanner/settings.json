@@ -4,18 +4,17 @@
   "holonomicMode": true,
   "pathFolders": [
     "4 Note",
-    "5 Note Auto",
     "Amp Side Auto",
     "Camera 4 Note",
-    "Camera Mid autos",
+    "Source Side Mid Auto",
     "Defensive Auto",
-    "Source Side Mid Auto"
+    "Source Side Mid Auto OLD"
   ],
   "autoFolders": [
     "Maybe Working Autos"
   ],
   "defaultMaxVel": 4.5,
-  "defaultMaxAccel": 2.5,
+  "defaultMaxAccel": 3.0,
   "defaultMaxAngVel": 540.0,
   "defaultMaxAngAccel": 720.0,
   "maxModuleSpeed": 4.8

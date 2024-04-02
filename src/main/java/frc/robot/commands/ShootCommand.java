@@ -34,7 +34,7 @@ public class ShootCommand extends Command {
     @Override
     public boolean isFinished() {
         SmartDashboard.putNumber("time", time.get());
-        if (time.hasElapsed(.8)) {
+        if (time.hasElapsed(.4)) {
             return true;
         }
         return false;
