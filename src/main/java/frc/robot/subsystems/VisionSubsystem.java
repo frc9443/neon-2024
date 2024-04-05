@@ -29,7 +29,7 @@ public class VisionSubsystem extends SubsystemBase {
     camera = new PhotonCamera("Microsoft_LifeCam_HD-3000");
 
     // Tuning with input from dashboard
-    SmartDashboard.setDefaultNumber("Ideal Shooting Distance", 2.5);
+    SmartDashboard.setDefaultNumber("Ideal Shooting Distance", 2.8);
   }
 
   /**

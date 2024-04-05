@@ -20,9 +20,11 @@ public class ShootCommand extends Command {
     @Override
     public void initialize() {
         time.restart();
-        m_IntakeSubsystem.expel(8);
-        m_ShooterSubsystem.Shoot(6, 6);
-        
+        if(m_ShooterSubsystem.getIsShooterUp())
+            m_IntakeSubsystem.expel(8);
+        else
+            m_IntakeSubsystem.expel(8.5);
+        m_ShooterSubsystem.Shoot(6.5, 6.5);
     }
 
     // @Override
@@ -34,7 +36,7 @@ public class ShootCommand extends Command {
     @Override
     public boolean isFinished() {
         SmartDashboard.putNumber("time", time.get());
-        if (time.hasElapsed(.4)) {
+        if (time.hasElapsed(.525)) {
             return true;
         }
         return false;

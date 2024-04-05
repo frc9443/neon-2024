@@ -69,6 +69,10 @@ public class ShooterSubsystem extends SubsystemBase {
     m_solenoid.set(isUp);
   }
 
+  public boolean getIsShooterUp(){
+    return m_solenoid.get();
+  }
+
   /**
    * An example method querying a boolean state of the subsystem (for example, a
    * digital sensor).

@@ -165,6 +165,7 @@ public class RobotContainer {
                 m_chooser.addOption("Defensive Auto", new PathPlannerAuto("Defensive Auto"));
                 m_chooser.addOption("Amp Side Auto", new PathPlannerAuto("Amp Side Auto"));
                 m_chooser.addOption("Source Side Mid Auto", new PathPlannerAuto("Source Side Mid Auto"));
+                m_chooser.addOption("4 Note, No Amp Note", new PathPlannerAuto("4 Note Auto No Amp"));
                 SmartDashboard.putData(m_chooser);
                 // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
         }
@@ -196,7 +197,7 @@ public class RobotContainer {
                                 .onTrue(new EjectCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
 
                 new JoystickButton(m_driverController, Button.kB.value)
-                                .whileTrue(new FollowLimeLightTargetCommand(m_DriveSubsystem, m_driverController));
+                                .whileTrue(new AutoLimeLightTargetCommand(m_DriveSubsystem, m_IntakeSubsystem));
 
                 new JoystickButton(m_driverController, Button.kRightBumper.value)
                                 .onTrue(new speedAdjustCommand(m_DriveSubsystem, true));
