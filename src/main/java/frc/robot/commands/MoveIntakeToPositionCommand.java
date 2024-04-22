@@ -10,12 +10,12 @@ import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.IntakeArmSubsystem;
 
 public class MoveIntakeToPositionCommand extends PIDCommand {
-    private double m_speed = .2; // Speed is a _positive_ number, between 0 and 1
-    private IntakeArmSubsystem m_IntakeArmSubsystem;
-
-    private final double m_tolerance = 1;
 
     public MoveIntakeToPositionCommand(IntakeArmSubsystem armSubsystem, double targetPosition) {
+        this(armSubsystem, targetPosition, 0.1);
+    }
+
+    public MoveIntakeToPositionCommand(IntakeArmSubsystem armSubsystem, double targetPosition, double ff) {
         super(
                 new PIDController(ArmConstants.kTurnP, ArmConstants.kTurnI, ArmConstants.kTurnD),
                 // Close loop on heading
@@ -23,7 +23,7 @@ public class MoveIntakeToPositionCommand extends PIDCommand {
                 // Set reference to target
                 targetPosition,
                 // Pipe output to turn robot
-                output -> armSubsystem.moveArm((0.9 * output) + (Math.signum(output) * 0.1)),
+                output -> armSubsystem.moveArm(((1.0 - ff) * output) + (Math.signum(output) * ff)),
                 // Require the drive
                 armSubsystem);
  

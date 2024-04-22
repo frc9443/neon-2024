@@ -5,42 +5,22 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.trajectory.Trajectory;
-import edu.wpi.first.math.trajectory.TrajectoryConfig;
-import edu.wpi.first.math.trajectory.TrajectoryGenerator;
-import edu.wpi.first.wpilibj.Joystick;
-import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants.AutoConstants;
-import frc.robot.Constants.DriveConstants;
-import frc.robot.Constants.GyroConstants;
 import frc.robot.Constants.OIConstants;
-import frc.robot.Constants.ShooterConstants;
 import frc.robot.commands.ActivateIntakeCommand;
 import frc.robot.commands.AmpShootCommand;
 import frc.robot.commands.AutoLimeLightTargetCommand;
-import frc.robot.commands.DriveCommand;
 import frc.robot.commands.EjectCommand;
 import frc.robot.commands.EnsurePressureCommand;
-import frc.robot.commands.FollowLimeLightTargetCommand;
 import frc.robot.commands.ManualOverrideCommand;
-import frc.robot.commands.MoveIntakeToAmpPositionCommand;
 import frc.robot.commands.MoveIntakeToPositionCommand;
 import frc.robot.commands.ChangeShooterAngleCommand;
 import frc.robot.commands.RestartGyroCommand;
 import frc.robot.commands.ShootCommand;
-import frc.robot.commands.TurnToAngleCommand;
 import frc.robot.commands.TurnToAprilTagCommand;
 import frc.robot.commands.speedAdjustCommand;
 import frc.robot.subsystems.BlinkinSubsystem;
@@ -52,19 +32,10 @@ import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.OffsetGyro;
-import frc.utils.VisionUtils;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
-import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
-import edu.wpi.first.wpilibj2.command.button.Trigger;
-import java.util.List;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -122,7 +93,7 @@ public class RobotContainer {
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
                                 new RunCommand(
-                                                () -> m_DriveSubsystem.DriveOverride(
+                                                () -> m_DriveSubsystem.drive(
                                                                 -MathUtil.applyDeadband(m_driverController.getLeftY(),
                                                                                 OIConstants.kDriveDeadband),
                                                                 -MathUtil.applyDeadband(m_driverController.getLeftX(),
@@ -180,15 +151,6 @@ public class RobotContainer {
          * {@link JoystickButton}.
          */
         private void configureButtonBindings() {
-                // Turn to 180 degrees when the 'X' button is pressed, with a 5 second timeout
-                // new JoystickButton(m_driverController, Button.kA.value)
-                // .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
-
-                //new JoystickButton(m_driverController, Button.kX.value)
-                                //.onTrue(new TurnToAngleCommand(() -> -135, m_DriveSubsystem).withTimeout(3));
-
-                //new JoystickButton(m_driverController, Button.kB.value)
-                                //.onTrue(new TurnToAngleCommand(() -> 135, m_DriveSubsystem).withTimeout(3));
 
                 new JoystickButton(m_driverController, Button.kX.value)
                                 .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem, m_ShooterSubsystem));
@@ -201,9 +163,6 @@ public class RobotContainer {
 
                 new JoystickButton(m_driverController, Button.kRightBumper.value)
                                 .onTrue(new speedAdjustCommand(m_DriveSubsystem, true));
-
-                // new JoystickButton(m_driverController, Button.kLeftBumper.value)
-                // .onTrue(new speedAdjustCommand(m_robotDrive, false));
 
                 new JoystickButton(m_driverController, Button.kY.value)
                                 .onTrue(new RestartGyroCommand(m_DriveSubsystem));
@@ -233,22 +192,13 @@ public class RobotContainer {
                                 .onTrue(new AmpShootCommand(m_IntakeSubsystem, m_IntakeArmSubsystem));
 
                 new JoystickButton(m_OperatorController, Button.kA.value)
-                                .onTrue(new MoveIntakeToAmpPositionCommand(m_IntakeArmSubsystem, 0.715).withTimeout(1));
+                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.715, 0.05).withTimeout(1));
 
                 new POVButton(m_OperatorController, 90)
                                 .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.97).withTimeout(1));
 
                 new POVButton(m_OperatorController, 270)
                                 .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.345).withTimeout(1));
-
-                // new JoystickButton(m_ColorController, Button.kA.value)
-                //                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, .57));
-                // new JoystickButton(m_ColorController, Button.kB.value)
-                //                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, .46));
-                // new JoystickButton(m_ColorController, Button.kX.value)
-                //                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, -.82));
-                // new JoystickButton(m_ColorController, Button.kY.value)
-                //                 .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
 
         }
 

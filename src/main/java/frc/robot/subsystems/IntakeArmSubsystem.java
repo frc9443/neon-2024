@@ -25,17 +25,6 @@ public class IntakeArmSubsystem extends SubsystemBase {
   public IntakeArmSubsystem() {
   }
 
-  /**
-   * An example method querying a boolean state of the subsystem (for example, a
-   * digital sensor).
-   *
-   * @return value of some boolean subsystem state, such as a digital sensor.
-   */
-  public boolean exampleCondition() {
-    // Query some boolean state, such as a digital sensor.
-    return false;
-  }
-
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
@@ -52,16 +41,6 @@ public class IntakeArmSubsystem extends SubsystemBase {
   public void moveArm(double rate) {
     SmartDashboard.putNumber("Rate of Arm Movement", rate);
     m_IntakeArm.set(rate);
-  }
-
-  public Command loadPosition() {
-    return new PIDCommand(new PIDController(1, 0, 0),
-        this::getPosition, 0.02, this::moveArm, this);
-  }
-
-  public Command shootPosition() {
-    return new PIDCommand(new PIDController(1, 0, 0),
-        this::getPosition, 0.6, this::moveArm, this);
   }
 
   public void stopArm() {
