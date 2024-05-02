@@ -9,13 +9,14 @@ import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 /** An example command that uses an example subsystem. */
 public class ManualOverrideCommand extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final IntakeArmSubsystem m_IntakeArmSubsystem;
   private final ClimberSubsystem m_ClimberSubsystem;
-  private final XboxController m_OperatorController;
+  private final CommandXboxController m_OperatorController;
   private final IntakeSubsystem m_IntakeSubsystem;
 
   /**
@@ -24,7 +25,7 @@ public class ManualOverrideCommand extends Command {
    * @param subsystem The subsystem used by this command.
    */
   public ManualOverrideCommand(IntakeArmSubsystem armSubsystem, ClimberSubsystem climberSubsystem,
-      XboxController controller, IntakeSubsystem intakeSubsystem) {
+      CommandXboxController controller, IntakeSubsystem intakeSubsystem) {
     m_IntakeArmSubsystem = armSubsystem;
     m_ClimberSubsystem = climberSubsystem;
     m_OperatorController = controller;
@@ -69,7 +70,7 @@ public class ManualOverrideCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    if (m_OperatorController.getLeftBumper() == false) {
+    if (m_OperatorController.leftBumper().getAsBoolean() == false) {
       m_ClimberSubsystem.stopClimber();
       m_IntakeArmSubsystem.stopArm();
       m_IntakeSubsystem.stop();

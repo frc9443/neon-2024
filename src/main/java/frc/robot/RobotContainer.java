@@ -61,6 +61,7 @@ import edu.wpi.first.wpilibj2.command.PIDCommand;
 import edu.wpi.first.wpilibj2.command.RunCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.SwerveControllerCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 import edu.wpi.first.wpilibj2.command.button.POVButton;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -91,8 +92,8 @@ public class RobotContainer {
         SendableChooser<Command> m_chooser = new SendableChooser<>();
 
         // The driver's controller
-        XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-        XboxController m_OperatorController = new XboxController(OIConstants.kOperatorControllerPort);
+        CommandXboxController m_driverController = new CommandXboxController(OIConstants.kDriverControllerPort);
+        CommandXboxController m_OperatorController = new CommandXboxController(OIConstants.kOperatorControllerPort);
         //XboxController m_ColorController = new XboxController(OIConstants.kColorControllerPort);
         private final OffsetGyro m_gyro;
 
@@ -129,7 +130,7 @@ public class RobotContainer {
                                                                                 OIConstants.kDriveDeadband),
                                                                 -MathUtil.applyDeadband(m_driverController.getRightX(),
                                                                                 OIConstants.kDriveDeadband),
-                                                                true, true,m_driverController.getLeftBumper() ? 4.8 : 3.0),
+                                                                true, true,m_OperatorController.leftTrigger(.8).getAsBoolean() ? 1.5 : 0),
                                                 m_DriveSubsystem));
 
                 // Register Named Commands
@@ -180,78 +181,23 @@ public class RobotContainer {
          * {@link JoystickButton}.
          */
         private void configureButtonBindings() {
-                // Turn to 180 degrees when the 'X' button is pressed, with a 5 second timeout
-                // new JoystickButton(m_driverController, Button.kA.value)
-                // .onTrue(new TurnToAngleCommand(() -> 180, m_robotDrive).withTimeout(3));
-
-                //new JoystickButton(m_driverController, Button.kX.value)
-                                //.onTrue(new TurnToAngleCommand(() -> -135, m_DriveSubsystem).withTimeout(3));
-
-                //new JoystickButton(m_driverController, Button.kB.value)
-                                //.onTrue(new TurnToAngleCommand(() -> 135, m_DriveSubsystem).withTimeout(3));
-
-                new JoystickButton(m_driverController, Button.kX.value)
-                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem, m_ShooterSubsystem));
-
-                new JoystickButton(m_driverController, Button.kA.value)
-                                .onTrue(new EjectCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
-
-                new JoystickButton(m_driverController, Button.kB.value)
-                                .whileTrue(new AutoLimeLightTargetCommand(m_DriveSubsystem, m_IntakeSubsystem));
-
-                new JoystickButton(m_driverController, Button.kRightBumper.value)
-                                .onTrue(new speedAdjustCommand(m_DriveSubsystem, true));
-
-                // new JoystickButton(m_driverController, Button.kLeftBumper.value)
-                // .onTrue(new speedAdjustCommand(m_robotDrive, false));
-
-                new JoystickButton(m_driverController, Button.kY.value)
-                                .onTrue(new RestartGyroCommand(m_DriveSubsystem));
-
-
-                // Activates Shooter for 3 seconds.
-                new JoystickButton(m_OperatorController, Button.kY.value)
-                                .onTrue(new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
-
-                new POVButton(m_OperatorController, 0)
-                                .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
-
-                new POVButton(m_OperatorController, 180)
-                                .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
-
-                new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-                                .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(3)); // Negative = ingest
-                                                                                                 // note
-
-                // Manual Overrides for stick control of intake arm and climber
-                new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
-                                .whileTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem,
-                                                m_OperatorController,
-                                                m_IntakeSubsystem));
-
-                new JoystickButton(m_OperatorController, Button.kB.value)
-                                .onTrue(new AmpShootCommand(m_IntakeSubsystem, m_IntakeArmSubsystem));
-
-                new JoystickButton(m_OperatorController, Button.kA.value)
-                                .onTrue(new MoveIntakeToAmpPositionCommand(m_IntakeArmSubsystem, 0.715).withTimeout(1));
-
-                new POVButton(m_OperatorController, 90)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.97).withTimeout(1));
-
-                new POVButton(m_OperatorController, 270)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.345).withTimeout(1));
-
-                // new JoystickButton(m_ColorController, Button.kA.value)
-                //                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, .57));
-                // new JoystickButton(m_ColorController, Button.kB.value)
-                //                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, .46));
-                // new JoystickButton(m_ColorController, Button.kX.value)
-                //                 .onTrue(new ChangeColorCommand(m_BlinkinSubsystem, -.82));
-                // new JoystickButton(m_ColorController, Button.kY.value)
-                //                 .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
-
+               
+                m_driverController.x().whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem, m_ShooterSubsystem));
+                m_driverController.a().onTrue(new EjectCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
+                m_driverController.b().whileTrue(new AutoLimeLightTargetCommand(m_DriveSubsystem, m_IntakeSubsystem));
+                m_driverController.y().onTrue(new RestartGyroCommand(m_DriveSubsystem));
+                                
+                m_OperatorController.a().onTrue(new MoveIntakeToAmpPositionCommand(m_IntakeArmSubsystem, 0.715).withTimeout(1));
+                m_OperatorController.b().onTrue(new AmpShootCommand(m_IntakeSubsystem, m_IntakeArmSubsystem));
+                m_OperatorController.y().onTrue(new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
+                m_OperatorController.rightBumper().whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(3));
+                m_OperatorController.leftBumper().whileTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem, m_OperatorController,m_IntakeSubsystem));
+                m_OperatorController.povUp().onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
+                m_OperatorController.povDown().onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
+                m_OperatorController.povLeft().onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.345).withTimeout(1));
+                m_OperatorController.povRight().onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.97).withTimeout(1));
         }
-
+        
         /**
          * Use this to pass the autonomous command to the main {@link Robot} class.
          *
