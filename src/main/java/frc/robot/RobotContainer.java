@@ -123,15 +123,16 @@ public class RobotContainer {
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
                                 new RunCommand(
-                                                () -> m_DriveSubsystem.DriveOverride(
+                                                () -> m_DriveSubsystem.DriveDemo(
                                                                 -MathUtil.applyDeadband(m_driverController.getLeftY(),
                                                                                 OIConstants.kDriveDeadband),
                                                                 -MathUtil.applyDeadband(m_driverController.getLeftX(),
                                                                                 OIConstants.kDriveDeadband),
-                                                                -MathUtil.applyDeadband(m_driverController.getRightX(),
+                                                                -MathUtil.applyDeadband(m_driverController.getRightX() / 4,
                                                                                 OIConstants.kDriveDeadband),
-                                                                true, true,m_OperatorController.leftTrigger(.8).getAsBoolean() ? 1.5 : 0),
-                                                m_DriveSubsystem));
+                                                                true, true,m_OperatorController.leftTrigger(.8).getAsBoolean() ? 1 : 0,
+                                                                m_OperatorController.leftTrigger(.8).getAsBoolean()),
+                                                                m_DriveSubsystem));
 
                 // Register Named Commands
                 NamedCommands.registerCommand("ShootCommand",

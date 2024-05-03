@@ -295,6 +295,39 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.setDesiredState(swerveModuleStates[3]);
 
   }
+  public void DriveDemo(double xSpeed, double ySpeed, double rot, boolean fieldRelative, boolean rateLimit,
+      double kMaxSpeedMetersPerSecond, boolean rota) {
+
+    // Convert the commanded speeds into the correct units for the drivetrain
+    xSpeed *= kMaxSpeedMetersPerSecond;
+    ySpeed *= kMaxSpeedMetersPerSecond;
+    if(rota)
+      rot *= DriveConstants.kMaxAngularSpeed;
+    else
+      rot = 0;
+    // Get the target chassis speeds relative to the robot
+    final ChassisSpeeds vel = (fieldRelative
+        ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeed, ySpeed, rot, Rotation2d.fromDegrees(m_gyro.getAngle()))
+        : new ChassisSpeeds(xSpeed, ySpeed, rot));
+
+    // Rate limit if applicable
+    if (rateLimit) {
+      final double currentTime = WPIUtilJNI.now() * 1e-6,
+          elapsedTime = currentTime - m_prevTime;
+      SwerveUtils.RateLimitVelocity(
+          vel, m_prevTarget, elapsedTime,
+          DriveConstants.kMagnitudeSlewRate, DriveConstants.kRotationalSlewRate);
+      m_prevTime = currentTime;
+      m_prevTarget = vel;
+    }
+    var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(vel);
+    SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
+    m_frontLeft.setDesiredState(swerveModuleStates[0]);
+    m_frontRight.setDesiredState(swerveModuleStates[1]);
+    m_rearLeft.setDesiredState(swerveModuleStates[2]);
+    m_rearRight.setDesiredState(swerveModuleStates[3]);
+
+  }
 
   /**
    * Sets the wheels into an X formation to prevent movement.
