@@ -5,15 +5,15 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.intake_arm.IntakeArm;
 
 /** An example command that uses an example subsystem. */
 public class ManualOverrideCommand extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final IntakeArmSubsystem m_IntakeArmSubsystem;
+  private final IntakeArm intakeArm;
   private final ClimberSubsystem m_ClimberSubsystem;
   private final XboxController m_OperatorController;
   private final IntakeSubsystem m_IntakeSubsystem;
@@ -21,15 +21,17 @@ public class ManualOverrideCommand extends Command {
   /**
    * Creates a new ExampleCommand.
    *
-   * @param subsystem The subsystem used by this command.
+   * @param intakeArm The IntakeArm subsystem used by this command.
+   * @param climberSubsystem The Climber subsystem used by this command.
+   * @param controller The XBox controller used by this command.
+   * @param intakeSubsystem Intake subsystem used by this command.
    */
-  public ManualOverrideCommand(IntakeArmSubsystem armSubsystem, ClimberSubsystem climberSubsystem,
-      XboxController controller, IntakeSubsystem intakeSubsystem) {
-    m_IntakeArmSubsystem = armSubsystem;
+  public ManualOverrideCommand(IntakeArm intakeArm, ClimberSubsystem climberSubsystem,
+                               XboxController controller, IntakeSubsystem intakeSubsystem) {
+    this.intakeArm = intakeArm;
     m_ClimberSubsystem = climberSubsystem;
     m_OperatorController = controller;
     m_IntakeSubsystem = intakeSubsystem;
-
   }
 
   // Called when the command is initially scheduled.
@@ -42,7 +44,7 @@ public class ManualOverrideCommand extends Command {
   public void execute() {
 
     double intakeArmRate = m_OperatorController.getRightY() / 3;
-    m_IntakeArmSubsystem.moveArm(intakeArmRate);
+    intakeArm.acceptTeleopInput(intakeArmRate);
     // double intakeRate = m_OperatorController.getRightX() / 2;
     // m_IntakeSubsystem.run(intakeRate);
 
@@ -62,7 +64,7 @@ public class ManualOverrideCommand extends Command {
   @Override
   public void end(boolean interrupted) {
     m_ClimberSubsystem.stopClimber();
-    m_IntakeArmSubsystem.stopArm();
+    intakeArm.stop();
     m_IntakeSubsystem.stop();
   }
 
@@ -71,7 +73,7 @@ public class ManualOverrideCommand extends Command {
   public boolean isFinished() {
     if (m_OperatorController.getLeftBumper() == false) {
       m_ClimberSubsystem.stopClimber();
-      m_IntakeArmSubsystem.stopArm();
+      intakeArm.stop();
       m_IntakeSubsystem.stop();
 
       return true;

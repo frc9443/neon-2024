@@ -11,10 +11,7 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.math.util.Units;
-import edu.wpi.first.wpilibj.Compressor;
-import edu.wpi.first.wpilibj.DutyCycleEncoder;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.*;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide
@@ -29,6 +26,43 @@ import edu.wpi.first.wpilibj.Solenoid;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+  public static final double loopPeriodSeconds = 0.02; // 20ms loop
+
+  private static RobotType robotType = RobotType.NEON;
+  public static final boolean tuningMode = false;
+
+  public static RobotType getRobot() {
+    if (RobotBase.isReal() && robotType == RobotType.SIM) {
+      robotType = RobotType.NEON;
+    }
+    return robotType;
+  }
+
+  public static Mode getMode() {
+    if (getRobot() == RobotType.SIM) {
+      return Mode.SIM;
+    }
+    return RobotBase.isReal() ? Mode.REAL : Mode.REPLAY;
+  }
+
+  public static enum RobotType {
+    NEON,
+    HELIUM,
+    DEV,
+    SIM
+  }
+
+  public static enum Mode {
+    /** Running on a real robot. */
+    REAL,
+
+    /** Running a physics simulator. */
+    SIM,
+
+    /** Replaying from a log file. */
+    REPLAY
+  }
+
   public static final class DriveConstants {
     // Driving Parameters - Note that these are not the maximum capable speeds of
     // the robot, rather the allowed maximum speeds
@@ -99,11 +133,6 @@ public final class Constants {
     public static final double cSolidGold = 0.67;
     public static final double cRainbow = -0.99;
 
-  }
-
-  public static final class IntakeArmConstants {
-    public static final int kIntakeLiftMotorCanId = 30;
-    public static final int kIntakeArmEncoderDioId = 9;
   }
 
   public static final class ClimberConstants {
@@ -232,5 +261,13 @@ public final class Constants {
     public static final double kFreeSpeedRpm = 5676;
   }
 
-  
+
+  // Entrypoint for gradle to sanity-check robot type before deploying
+  public static void main(String... args) {
+    if (robotType == RobotType.SIM) {
+      System.err.println("Cannot deploy, SIM robot selected!");
+      System.exit(1);
+    }
+  }
+
 }

@@ -17,7 +17,6 @@ import frc.robot.commands.AutoLimeLightTargetCommand;
 import frc.robot.commands.EjectCommand;
 import frc.robot.commands.EnsurePressureCommand;
 import frc.robot.commands.ManualOverrideCommand;
-import frc.robot.commands.MoveIntakeToPositionCommand;
 import frc.robot.commands.ChangeShooterAngleCommand;
 import frc.robot.commands.RestartGyroCommand;
 import frc.robot.commands.ShootCommand;
@@ -27,10 +26,12 @@ import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CompressorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.IntakeArmSubsystem;
+import frc.robot.subsystems.intake_arm.IntakeArm;
 import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.intake_arm.IntakeArmIOSim;
+import frc.robot.subsystems.intake_arm.IntakeArmIOSparkMax;
 import frc.utils.OffsetGyro;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -53,7 +54,7 @@ public class RobotContainer {
         private ShooterSubsystem m_ShooterSubsystem;
         private CompressorSubsystem m_CompressorSubsystem;
         private IntakeSubsystem m_IntakeSubsystem;
-        private IntakeArmSubsystem m_IntakeArmSubsystem;
+        private IntakeArm intakeArm;
         private ClimberSubsystem m_ClimberSubsystem;
         private BlinkinSubsystem m_BlinkinSubsystem;
         private VisionSubsystem m_VisionSubsystem;
@@ -77,14 +78,24 @@ public class RobotContainer {
                 // For MXP gyro card (Helium)
                 // m_gyro = new AHRS(SPI.Port.kMXP);
 
+
+                switch (Constants.getRobot()) {
+                        case NEON -> {
+                                intakeArm = new IntakeArm(new IntakeArmIOSparkMax());
+                        }
+                        case SIM -> {
+                                intakeArm = new IntakeArm(new IntakeArmIOSim());
+                        }
+                        default -> throw new RuntimeException("I don't know how to configure " + Constants.getRobot().toString());
+                }
+
                 m_DriveSubsystem = new DriveSubsystem(m_gyro);
                 m_ShooterSubsystem = new ShooterSubsystem();
                 m_CompressorSubsystem = new CompressorSubsystem();
                 m_IntakeSubsystem = new IntakeSubsystem();
-                m_IntakeArmSubsystem = new IntakeArmSubsystem();
                 m_ClimberSubsystem = new ClimberSubsystem();
                 m_VisionSubsystem = new VisionSubsystem();
-                m_BlinkinSubsystem = new BlinkinSubsystem(m_VisionSubsystem, m_IntakeSubsystem, m_IntakeArmSubsystem);
+                m_BlinkinSubsystem = new BlinkinSubsystem(m_VisionSubsystem, m_IntakeSubsystem, intakeArm);
                 // Configure the button bindings
                 configureButtonBindings();
 
@@ -111,10 +122,14 @@ public class RobotContainer {
                                 new EnsurePressureCommand(m_CompressorSubsystem));
 
                 NamedCommands.registerCommand("IntakeInCommand",
-                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.97));
+                                intakeArm.runOnce( () -> {
+                                        intakeArm.setGoal(IntakeArm.Goal.LOAD);
+                                }));
 
                 NamedCommands.registerCommand("IntakeOutCommand",
-                                new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.345));
+                                intakeArm.runOnce(() -> {
+                                        intakeArm.setGoal(IntakeArm.Goal.INTAKE);
+                                }));
 
                 NamedCommands.registerCommand("ActivateIntakeCommand",
                                 new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(2));
@@ -184,21 +199,27 @@ public class RobotContainer {
 
                 // Manual Overrides for stick control of intake arm and climber
                 new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
-                                .whileTrue(new ManualOverrideCommand(m_IntakeArmSubsystem, m_ClimberSubsystem,
+                                .whileTrue(new ManualOverrideCommand(intakeArm, m_ClimberSubsystem,
                                                 m_OperatorController,
                                                 m_IntakeSubsystem));
 
                 new JoystickButton(m_OperatorController, Button.kB.value)
-                                .onTrue(new AmpShootCommand(m_IntakeSubsystem, m_IntakeArmSubsystem));
+                        .onTrue(new AmpShootCommand(m_IntakeSubsystem));
 
                 new JoystickButton(m_OperatorController, Button.kA.value)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.715, 0.05).withTimeout(1));
+                        .onTrue(intakeArm.runOnce(() -> {
+                                intakeArm.setGoal(IntakeArm.Goal.AMP);
+                        }));
 
                 new POVButton(m_OperatorController, 90)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.97).withTimeout(1));
+                        .onTrue(intakeArm.runOnce(() -> {
+                                intakeArm.setGoal(IntakeArm.Goal.LOAD);
+                        }));
 
                 new POVButton(m_OperatorController, 270)
-                                .onTrue(new MoveIntakeToPositionCommand(m_IntakeArmSubsystem, 0.345).withTimeout(1));
+                        .onTrue(intakeArm.runOnce(() -> {
+                                intakeArm.setGoal(IntakeArm.Goal.INTAKE);
+                        }));
 
         }
 

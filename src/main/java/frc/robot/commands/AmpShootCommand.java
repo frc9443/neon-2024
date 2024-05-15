@@ -4,8 +4,6 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants.IntakeArmConstants;
-import frc.robot.subsystems.IntakeArmSubsystem;
 import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -15,18 +13,16 @@ import edu.wpi.first.wpilibj2.command.Command;
 public class AmpShootCommand extends Command {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
     private final IntakeSubsystem m_IntakeSubsystem;
-    private final IntakeArmSubsystem m_IntakeArmSubsystem;
     private final Timer time = new Timer();
     
 
     /**
      * Creates a new ExampleCommand.
      *
-     * @param subsystem The subsystem used by this command.
+     * @param intakeSubsystem The subsystem used by this command.
      */
-    public AmpShootCommand(IntakeSubsystem intakeSubsystem, IntakeArmSubsystem armSubsystem) {
+    public AmpShootCommand(IntakeSubsystem intakeSubsystem) {
         m_IntakeSubsystem = intakeSubsystem;
-        m_IntakeArmSubsystem = armSubsystem;
     }
 
     // Called when the command is initially scheduled.
