@@ -29,6 +29,7 @@ public final class Constants {
   public static final double loopPeriodSeconds = 0.02; // 20ms loop
 
   private static RobotType robotType = RobotType.NEON;
+  public static ControlMode controlMode = ControlMode.Neon_2024_PostSeason;
   public static final boolean tuningMode = false;
 
   public static RobotType getRobot() {
@@ -50,6 +51,12 @@ public final class Constants {
     HELIUM,
     DEV,
     SIM
+  }
+
+  public static enum ControlMode {
+    Neon_2024_Competition,
+    Neon_2024_PostSeason,
+    Neon_2024_Demo,
   }
 
   public static enum Mode {
@@ -122,6 +129,7 @@ public final class Constants {
     public static final int kIntakeLeftRollerCanId = 31;
     public static final int kLeftLimitSwitchId = 8;
     public static final int kRightLimitSwitchId = 0;
+    public static final double kIntakeVoltage = 8.0;
   }
   public static final class BlinkinConstants {
     public static final int kBlinkinPWMId = 0;

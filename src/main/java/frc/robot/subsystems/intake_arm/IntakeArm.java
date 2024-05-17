@@ -4,6 +4,8 @@ package frc.robot.subsystems.intake_arm;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import org.littletonrobotics.junction.AutoLogOutput;
@@ -70,23 +72,33 @@ public class IntakeArm extends SubsystemBase {
         switch(mode) {
             case TELEOP -> {
                 if (MathUtil.isNear(0.0, teleopInput, 0.01)) {
+                    // Stop moving if input in dead zone
                     io.stopArm();
                 } else {
                     io.moveArm(teleopInput * 12.0);
                 }
             }
             case GOAL -> {
-                double output = pid.calculate(inputs.position);
-                double voltage = (12.0 - ff.getAsDouble()) * output + Math.signum(output) * ff.getAsDouble();
-                io.moveArm(MathUtil.clamp(voltage, -12.0, 12.0));
+                if (atGoal()) {
+                    io.stopArm();
+                } else {
+                    double output = pid.calculate(inputs.position);
+                    double voltage = (12.0 - ff.getAsDouble()) * output + Math.signum(output) * ff.getAsDouble();
+                    io.moveArm(MathUtil.clamp(voltage, -12.0, 12.0));
+                }
             }
             default -> io.stopArm();
         }
     }
 
     @AutoLogOutput
-    public boolean isArmOut() {
+    public boolean isOut() {
         return (inputs.position > outThreshold.getAsDouble());
+    }
+
+    @AutoLogOutput
+    public boolean atGoal() {
+        return pid.atSetpoint();
     }
 
     public void setGoal(Goal newGoal) {
@@ -105,6 +117,27 @@ public class IntakeArm extends SubsystemBase {
     public void stop() {
         mode = Mode.TELEOP;
         teleopInput = 0.0;
+    }
+
+    public Command intake() {
+       return doGoal(Goal.INTAKE);
+    }
+
+    public Command load() {
+        return doGoal(Goal.LOAD);
+    }
+
+    public Command amp() {
+        return doGoal(Goal.AMP);
+    }
+
+    private Command doGoal(Goal goal) {
+        return new FunctionalCommand(
+                () -> setGoal(goal),
+                () -> {},
+                (interrupted) -> stop(),
+                this::atGoal,
+                this);
     }
 
     private void resetPID() {

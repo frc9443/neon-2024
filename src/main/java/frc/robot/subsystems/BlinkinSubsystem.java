@@ -9,15 +9,10 @@ package frc.robot.subsystems;
 
 import java.util.Optional;
 
-import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.BlinkinConstants;
 import frc.robot.subsystems.intake_arm.IntakeArm;
 
@@ -90,7 +85,7 @@ public class BlinkinSubsystem extends SubsystemBase {
         inPositition = m_VisionSubsystem.lockedOn();
         hasNote = m_IntakeSubsystem.hasNote();
         intakeActive = m_IntakeSubsystem.isIntakeActive();
-        armOut = m_IntakeArmSubsystem.isArmOut();
+        armOut = m_IntakeArmSubsystem.isOut();
     }
 
     public double checkForColor() {

@@ -5,23 +5,14 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
-import frc.robot.commands.ActivateIntakeCommand;
-import frc.robot.commands.AmpShootCommand;
-import frc.robot.commands.AutoLimeLightTargetCommand;
-import frc.robot.commands.EjectCommand;
-import frc.robot.commands.EnsurePressureCommand;
-import frc.robot.commands.ManualOverrideCommand;
-import frc.robot.commands.ChangeShooterAngleCommand;
-import frc.robot.commands.RestartGyroCommand;
-import frc.robot.commands.ShootCommand;
-import frc.robot.commands.TurnToAprilTagCommand;
-import frc.robot.commands.speedAdjustCommand;
+import frc.robot.commands.*;
 import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CompressorSubsystem;
@@ -73,18 +64,17 @@ public class RobotContainer {
          */
         public RobotContainer() {
 
-                // For USB gyro (Neon)
-                m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
-                // For MXP gyro card (Helium)
-                // m_gyro = new AHRS(SPI.Port.kMXP);
-
-
                 switch (Constants.getRobot()) {
                         case NEON -> {
                                 intakeArm = new IntakeArm(new IntakeArmIOSparkMax());
+                                m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
+                        }
+                        case HELIUM -> {
+                                m_gyro = new OffsetGyro(new AHRS(SPI.Port.kMXP));
                         }
                         case SIM -> {
                                 intakeArm = new IntakeArm(new IntakeArmIOSim());
+                                m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
                         }
                         default -> throw new RuntimeException("I don't know how to configure " + Constants.getRobot().toString());
                 }
@@ -121,15 +111,9 @@ public class RobotContainer {
                 NamedCommands.registerCommand("EnsurePressureCommand",
                                 new EnsurePressureCommand(m_CompressorSubsystem));
 
-                NamedCommands.registerCommand("IntakeInCommand",
-                                intakeArm.runOnce( () -> {
-                                        intakeArm.setGoal(IntakeArm.Goal.LOAD);
-                                }));
+                NamedCommands.registerCommand("IntakeInCommand", intakeArm.load());
 
-                NamedCommands.registerCommand("IntakeOutCommand",
-                                intakeArm.runOnce(() -> {
-                                        intakeArm.setGoal(IntakeArm.Goal.INTAKE);
-                                }));
+                NamedCommands.registerCommand("IntakeOutCommand", intakeArm.intake());
 
                 NamedCommands.registerCommand("ActivateIntakeCommand",
                                 new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(2));
@@ -153,7 +137,7 @@ public class RobotContainer {
                 m_chooser.addOption("Source Side Mid Auto", new PathPlannerAuto("Source Side Mid Auto"));
                 m_chooser.addOption("4 Note, No Amp Note", new PathPlannerAuto("4 Note Auto No Amp"));
                 SmartDashboard.putData(m_chooser);
-                // m_IntakeArmSubsystem.setDefaultCommand(m_IntakeArmSubsystem.loadPosition());
+                intakeArm.setDefaultCommand(intakeArm.load());
         }
 
         /**
@@ -193,9 +177,16 @@ public class RobotContainer {
                 new POVButton(m_OperatorController, 180)
                                 .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
 
-                new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-                                .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(3)); // Negative = ingest
-                                                                                                 // note
+                switch (Constants.controlMode) {
+                        case Neon_2024_PostSeason -> {
+                                new JoystickButton(m_OperatorController, Button.kRightBumper.value)
+                                        .whileTrue(new DoIntakeCommand(m_IntakeSubsystem, intakeArm));
+                        }
+                        default -> {
+                                new JoystickButton(m_OperatorController, Button.kRightBumper.value)
+                                        .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(3));
+                        }
+                }
 
                 // Manual Overrides for stick control of intake arm and climber
                 new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
@@ -207,19 +198,15 @@ public class RobotContainer {
                         .onTrue(new AmpShootCommand(m_IntakeSubsystem));
 
                 new JoystickButton(m_OperatorController, Button.kA.value)
-                        .onTrue(intakeArm.runOnce(() -> {
-                                intakeArm.setGoal(IntakeArm.Goal.AMP);
-                        }));
+                        .onTrue(intakeArm.amp());
 
-                new POVButton(m_OperatorController, 90)
-                        .onTrue(intakeArm.runOnce(() -> {
-                                intakeArm.setGoal(IntakeArm.Goal.LOAD);
-                        }));
+                if (Constants.controlMode == Constants.ControlMode.Neon_2024_Competition) {
+                        new POVButton(m_OperatorController, 90)
+                                .onTrue(intakeArm.load());
 
-                new POVButton(m_OperatorController, 270)
-                        .onTrue(intakeArm.runOnce(() -> {
-                                intakeArm.setGoal(IntakeArm.Goal.INTAKE);
-                        }));
+                        new POVButton(m_OperatorController, 270)
+                                .onTrue(intakeArm.intake());
+                }
 
         }
 

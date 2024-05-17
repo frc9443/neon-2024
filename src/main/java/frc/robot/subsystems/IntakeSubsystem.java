@@ -39,6 +39,10 @@ public class IntakeSubsystem extends SubsystemBase {
     SmartDashboard.putBoolean("Intake Has Note", hasNote());
   }
 
+  public void ingest() {
+    ingest(IntakeConstants.kIntakeVoltage);
+  }
+
   public void ingest(double voltage) {
     intakeActive = true;
     m_IntakeLeft.setVoltage(-voltage);
