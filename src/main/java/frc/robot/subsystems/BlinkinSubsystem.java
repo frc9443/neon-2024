@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.BlinkinConstants;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake_arm.IntakeArm;
 
 public class BlinkinSubsystem extends SubsystemBase {
@@ -27,7 +28,7 @@ public class BlinkinSubsystem extends SubsystemBase {
      */
     private static Spark m_blinkin = null;
     private VisionSubsystem m_VisionSubsystem;
-    private IntakeSubsystem m_IntakeSubsystem;
+    private Intake m_IntakeSubsystem;
     private IntakeArm m_IntakeArmSubsystem;
     private boolean inPositition = false;
     private boolean hasNote = false;
@@ -41,7 +42,7 @@ public class BlinkinSubsystem extends SubsystemBase {
      *
      * @param pwmPort The PWM port the Blinkin is connected to.
      */
-    public BlinkinSubsystem(VisionSubsystem vSubsystem, IntakeSubsystem iSubsystem,
+    public BlinkinSubsystem(VisionSubsystem vSubsystem, Intake iSubsystem,
                             IntakeArm iArmSubsystem) {
         m_blinkin = new Spark(0);
         m_VisionSubsystem = vSubsystem;

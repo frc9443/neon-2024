@@ -1,16 +1,16 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.intake.Intake;
 import frc.robot.subsystems.intake_arm.IntakeArm;
 
 /**
  * See constructor for details:
- * {@link DoIntakeCommand#DoIntakeCommand(IntakeSubsystem intake, IntakeArm arm)}
+ * {@link DoIntakeCommand#DoIntakeCommand(Intake intake, IntakeArm arm)}
  */
 public class DoIntakeCommand extends Command {
 
-    IntakeSubsystem intake;
+    Intake intake;
     IntakeArm arm;
 
     /**
@@ -19,7 +19,7 @@ public class DoIntakeCommand extends Command {
      * If interrupted, the intake is stopped and the arm will retract to the load position.
      *
      */
-    public DoIntakeCommand(IntakeSubsystem intake, IntakeArm arm) {
+    public DoIntakeCommand(Intake intake, IntakeArm arm) {
         this.intake = intake;
         this.arm = arm;
         addRequirements(intake, arm);

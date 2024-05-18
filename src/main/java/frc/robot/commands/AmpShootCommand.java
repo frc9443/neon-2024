@@ -4,32 +4,31 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.IntakeSubsystem;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+
+import frc.robot.subsystems.intake.Intake;
 
 /** An example command that uses an example subsystem. */
 public class AmpShootCommand extends Command {
     @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-    private final IntakeSubsystem m_IntakeSubsystem;
+    private final Intake intake;
     private final Timer time = new Timer();
-    
 
     /**
      * Creates a new ExampleCommand.
      *
      * @param intakeSubsystem The subsystem used by this command.
      */
-    public AmpShootCommand(IntakeSubsystem intakeSubsystem) {
-        m_IntakeSubsystem = intakeSubsystem;
+    public AmpShootCommand(Intake intake) {
+        this.intake = intake;
     }
 
     // Called when the command is initially scheduled.
     @Override
     public void initialize() {
         time.restart();
-        m_IntakeSubsystem.expel(10.5); // TODO: tune voltage
+        intake.expel(10.5); // TODO: tune voltage
     }
 
     // Called every time the scheduler runs while the command is scheduled.
@@ -40,17 +39,13 @@ public class AmpShootCommand extends Command {
     // Called once the command ends or is interrupted.
     @Override
     public void end(boolean interrupted) {
-        m_IntakeSubsystem.stop();
+        intake.stop();
 
     }
 
     // Returns true when the command should end.
     @Override
     public boolean isFinished() {
-        SmartDashboard.putNumber("time", time.get());
-        if (time.hasElapsed(.3)) {
-            return true;
-        }
-        return false;
+        return time.hasElapsed(.3);
     }
 }

@@ -17,12 +17,10 @@ import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CompressorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.intake_arm.IntakeArm;
-import frc.robot.subsystems.IntakeSubsystem;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
-import frc.robot.subsystems.intake_arm.IntakeArmIOSim;
-import frc.robot.subsystems.intake_arm.IntakeArmIOSparkMax;
+import frc.robot.subsystems.intake.*;
+import frc.robot.subsystems.intake_arm.*;
 import frc.utils.OffsetGyro;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -44,7 +42,7 @@ public class RobotContainer {
         private DriveSubsystem m_DriveSubsystem;
         private ShooterSubsystem m_ShooterSubsystem;
         private CompressorSubsystem m_CompressorSubsystem;
-        private IntakeSubsystem m_IntakeSubsystem;
+        private Intake intake;
         private IntakeArm intakeArm;
         private ClimberSubsystem m_ClimberSubsystem;
         private BlinkinSubsystem m_BlinkinSubsystem;
@@ -56,7 +54,8 @@ public class RobotContainer {
         // The driver's controller
         XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
         XboxController m_OperatorController = new XboxController(OIConstants.kOperatorControllerPort);
-        //XboxController m_ColorController = new XboxController(OIConstants.kColorControllerPort);
+        // XboxController m_ColorController = new
+        // XboxController(OIConstants.kColorControllerPort);
         private final OffsetGyro m_gyro;
 
         /**
@@ -66,6 +65,7 @@ public class RobotContainer {
 
                 switch (Constants.getRobot()) {
                         case NEON -> {
+                                intake = new Intake(new IntakeIOSparkMax());
                                 intakeArm = new IntakeArm(new IntakeArmIOSparkMax());
                                 m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
                         }
@@ -73,19 +73,20 @@ public class RobotContainer {
                                 m_gyro = new OffsetGyro(new AHRS(SPI.Port.kMXP));
                         }
                         case SIM -> {
+                                intake = new Intake(new IntakeIOSim());
                                 intakeArm = new IntakeArm(new IntakeArmIOSim());
                                 m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
                         }
-                        default -> throw new RuntimeException("I don't know how to configure " + Constants.getRobot().toString());
+                        default -> throw new RuntimeException(
+                                        "I don't know how to configure " + Constants.getRobot().toString());
                 }
 
                 m_DriveSubsystem = new DriveSubsystem(m_gyro);
                 m_ShooterSubsystem = new ShooterSubsystem();
                 m_CompressorSubsystem = new CompressorSubsystem();
-                m_IntakeSubsystem = new IntakeSubsystem();
                 m_ClimberSubsystem = new ClimberSubsystem();
                 m_VisionSubsystem = new VisionSubsystem();
-                m_BlinkinSubsystem = new BlinkinSubsystem(m_VisionSubsystem, m_IntakeSubsystem, intakeArm);
+                m_BlinkinSubsystem = new BlinkinSubsystem(m_VisionSubsystem, intake, intakeArm);
                 // Configure the button bindings
                 configureButtonBindings();
 
@@ -101,13 +102,14 @@ public class RobotContainer {
                                                                                 OIConstants.kDriveDeadband),
                                                                 -MathUtil.applyDeadband(m_driverController.getRightX(),
                                                                                 OIConstants.kDriveDeadband),
-                                                                true, true,m_driverController.getLeftBumper() ? 4.8 : 3.0),
+                                                                true, true,
+                                                                m_driverController.getLeftBumper() ? 4.8 : 3.0),
                                                 m_DriveSubsystem));
 
                 // Register Named Commands
                 NamedCommands.registerCommand("ShootCommand",
-                                new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem));
-               
+                                new ShootCommand(m_ShooterSubsystem, intake));
+
                 NamedCommands.registerCommand("EnsurePressureCommand",
                                 new EnsurePressureCommand(m_CompressorSubsystem));
 
@@ -116,7 +118,7 @@ public class RobotContainer {
                 NamedCommands.registerCommand("IntakeOutCommand", intakeArm.intake());
 
                 NamedCommands.registerCommand("ActivateIntakeCommand",
-                                new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(2));
+                                new ActivateIntakeCommand(intake).withTimeout(2));
 
                 NamedCommands.registerCommand("RaiseShooterAngleCommand",
                                 new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
@@ -125,10 +127,11 @@ public class RobotContainer {
                                 new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
 
                 NamedCommands.registerCommand("DetectNoteCommand",
-                                new AutoLimeLightTargetCommand(m_DriveSubsystem , m_IntakeSubsystem).withTimeout(2));
+                                new AutoLimeLightTargetCommand(m_DriveSubsystem, intake).withTimeout(2));
 
                 NamedCommands.registerCommand("SpeakerAimCommand",
-                                new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem, m_ShooterSubsystem).withTimeout(.8));
+                                new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem, m_ShooterSubsystem)
+                                                .withTimeout(.8));
 
                 m_chooser.setDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
                 m_chooser.addOption("4 Note Auto", new PathPlannerAuto("4 Note Auto"));
@@ -152,13 +155,14 @@ public class RobotContainer {
         private void configureButtonBindings() {
 
                 new JoystickButton(m_driverController, Button.kX.value)
-                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem, m_ShooterSubsystem));
+                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem,
+                                                m_ShooterSubsystem));
 
                 new JoystickButton(m_driverController, Button.kA.value)
-                                .onTrue(new EjectCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
+                                .onTrue(new EjectCommand(m_ShooterSubsystem, intake).withTimeout(1));
 
                 new JoystickButton(m_driverController, Button.kB.value)
-                                .whileTrue(new AutoLimeLightTargetCommand(m_DriveSubsystem, m_IntakeSubsystem));
+                                .whileTrue(new AutoLimeLightTargetCommand(m_DriveSubsystem, intake));
 
                 new JoystickButton(m_driverController, Button.kRightBumper.value)
                                 .onTrue(new speedAdjustCommand(m_DriveSubsystem, true));
@@ -166,10 +170,9 @@ public class RobotContainer {
                 new JoystickButton(m_driverController, Button.kY.value)
                                 .onTrue(new RestartGyroCommand(m_DriveSubsystem));
 
-
                 // Activates Shooter for 3 seconds.
                 new JoystickButton(m_OperatorController, Button.kY.value)
-                                .onTrue(new ShootCommand(m_ShooterSubsystem, m_IntakeSubsystem).withTimeout(1));
+                                .onTrue(new ShootCommand(m_ShooterSubsystem, intake).withTimeout(1));
 
                 new POVButton(m_OperatorController, 0)
                                 .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
@@ -180,11 +183,11 @@ public class RobotContainer {
                 switch (Constants.controlMode) {
                         case Neon_2024_PostSeason -> {
                                 new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-                                        .whileTrue(new DoIntakeCommand(m_IntakeSubsystem, intakeArm));
+                                                .whileTrue(new DoIntakeCommand(intake, intakeArm));
                         }
                         default -> {
                                 new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-                                        .whileTrue(new ActivateIntakeCommand(m_IntakeSubsystem).withTimeout(3));
+                                                .whileTrue(new ActivateIntakeCommand(intake).withTimeout(3));
                         }
                 }
 
@@ -192,20 +195,20 @@ public class RobotContainer {
                 new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
                                 .whileTrue(new ManualOverrideCommand(intakeArm, m_ClimberSubsystem,
                                                 m_OperatorController,
-                                                m_IntakeSubsystem));
+                                                intake));
 
                 new JoystickButton(m_OperatorController, Button.kB.value)
-                        .onTrue(new AmpShootCommand(m_IntakeSubsystem));
+                                .onTrue(new AmpShootCommand(intake));
 
                 new JoystickButton(m_OperatorController, Button.kA.value)
-                        .onTrue(intakeArm.amp());
+                                .onTrue(intakeArm.amp());
 
                 if (Constants.controlMode == Constants.ControlMode.Neon_2024_Competition) {
                         new POVButton(m_OperatorController, 90)
-                                .onTrue(intakeArm.load());
+                                        .onTrue(intakeArm.load());
 
                         new POVButton(m_OperatorController, 270)
-                                .onTrue(intakeArm.intake());
+                                        .onTrue(intakeArm.intake());
                 }
 
         }

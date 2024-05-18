@@ -4,30 +4,24 @@
 
 package frc.robot.commands;
 
-import frc.robot.Constants;
-import frc.robot.Constants.BlinkinConstants;
-import frc.robot.Constants.IntakeConstants;
-import frc.robot.subsystems.BlinkinSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
-import edu.wpi.first.wpilibj.DigitalInput;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import frc.robot.subsystems.intake.Intake;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class ActivateIntakeCommand extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final IntakeSubsystem m_IntakeSubsystem;
+  private final Intake intake;
 
-  public ActivateIntakeCommand(IntakeSubsystem subsystem) {
-    m_IntakeSubsystem = subsystem;
+  public ActivateIntakeCommand(Intake intake) {
+    this.intake = intake;
     // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+    addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-      m_IntakeSubsystem.ingest(8);
+      intake.ingest();
   }
 
   // Called every time the scheduler runs while the command is scheduled.
@@ -39,12 +33,12 @@ public class ActivateIntakeCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_IntakeSubsystem.stop();
+    intake.stop();
   }
 
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_IntakeSubsystem.hasNote();
+    return intake.hasNote();
   }
 }

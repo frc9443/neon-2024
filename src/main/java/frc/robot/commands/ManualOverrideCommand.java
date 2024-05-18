@@ -5,7 +5,7 @@
 package frc.robot.commands;
 
 import frc.robot.subsystems.ClimberSubsystem;
-import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.intake.Intake;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake_arm.IntakeArm;
@@ -16,7 +16,7 @@ public class ManualOverrideCommand extends Command {
   private final IntakeArm intakeArm;
   private final ClimberSubsystem m_ClimberSubsystem;
   private final XboxController m_OperatorController;
-  private final IntakeSubsystem m_IntakeSubsystem;
+  private final Intake intake;
 
   /**
    * Creates a new ExampleCommand.
@@ -27,11 +27,11 @@ public class ManualOverrideCommand extends Command {
    * @param intakeSubsystem Intake subsystem used by this command.
    */
   public ManualOverrideCommand(IntakeArm intakeArm, ClimberSubsystem climberSubsystem,
-                               XboxController controller, IntakeSubsystem intakeSubsystem) {
+                               XboxController controller, Intake intakeSubsystem) {
     this.intakeArm = intakeArm;
     m_ClimberSubsystem = climberSubsystem;
     m_OperatorController = controller;
-    m_IntakeSubsystem = intakeSubsystem;
+    intake = intakeSubsystem;
   }
 
   // Called when the command is initially scheduled.
@@ -46,7 +46,7 @@ public class ManualOverrideCommand extends Command {
     double intakeArmRate = m_OperatorController.getRightY() / 3;
     intakeArm.acceptTeleopInput(intakeArmRate);
     // double intakeRate = m_OperatorController.getRightX() / 2;
-    // m_IntakeSubsystem.run(intakeRate);
+    // intake.run(intakeRate);
 
     double climberRate = m_OperatorController.getLeftY() * 0.75;
     if (Math.abs(climberRate) > 0.05) {
@@ -65,7 +65,7 @@ public class ManualOverrideCommand extends Command {
   public void end(boolean interrupted) {
     m_ClimberSubsystem.stopClimber();
     intakeArm.stop();
-    m_IntakeSubsystem.stop();
+    intake.stop();
   }
 
   // Returns true when the command should end.
@@ -74,7 +74,7 @@ public class ManualOverrideCommand extends Command {
     if (m_OperatorController.getLeftBumper() == false) {
       m_ClimberSubsystem.stopClimber();
       intakeArm.stop();
-      m_IntakeSubsystem.stop();
+      intake.stop();
 
       return true;
     }
