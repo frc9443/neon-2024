@@ -3,6 +3,8 @@ package frc.robot.subsystems.intake;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.wpilibj.DigitalInput;
+import edu.wpi.first.wpilibj.DigitalGlitchFilter;
+import java.time.Duration;
 
 public class IntakeIOSparkMax implements IntakeIO {
     private final CANSparkMax leftRoller;
@@ -13,6 +15,7 @@ public class IntakeIOSparkMax implements IntakeIO {
 
     DigitalInput leftSwitch;
     DigitalInput rightSwitch;
+    DigitalGlitchFilter glitchFilter;
 
     public IntakeIOSparkMax() {
         leftRoller = new CANSparkMax(IntakeConstants.kIntakeLeftRollerCanId, CANSparkMax.MotorType.kBrushless);
@@ -23,6 +26,11 @@ public class IntakeIOSparkMax implements IntakeIO {
 
         leftSwitch = new DigitalInput(IntakeConstants.kLeftLimitSwitchId);
         rightSwitch = new DigitalInput(IntakeConstants.kRightLimitSwitchId);
+
+        glitchFilter = new DigitalGlitchFilter();
+        glitchFilter.setPeriodNanoSeconds(Duration.ofMillis(1).toNanos());
+        glitchFilter.add(leftSwitch);
+        glitchFilter.add(rightSwitch);
 
         leftRoller.restoreFactoryDefaults();
         rightRoller.restoreFactoryDefaults();
