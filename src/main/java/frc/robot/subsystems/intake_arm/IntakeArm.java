@@ -93,7 +93,7 @@ public class IntakeArm extends SubsystemBase {
 
     @AutoLogOutput
     public boolean isOut() {
-        return (inputs.position > outThreshold.getAsDouble());
+        return (inputs.position < outThreshold.getAsDouble());
     }
 
     @AutoLogOutput

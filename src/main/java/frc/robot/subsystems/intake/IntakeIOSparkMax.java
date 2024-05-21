@@ -30,7 +30,7 @@ public class IntakeIOSparkMax implements IntakeIO {
         leftRoller.setCANTimeout(250);
         rightRoller.setCANTimeout(250);
 
-        leftRoller.setInverted(true);
+        leftRoller.setInverted(false);
         rightRoller.setInverted(false);
 
         leftRoller.setSmartCurrentLimit(30);

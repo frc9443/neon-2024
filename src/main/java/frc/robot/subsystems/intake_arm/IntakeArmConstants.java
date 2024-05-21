@@ -5,8 +5,8 @@ public class IntakeArmConstants {
 
     public static final double ff = 0.1;
 
-    public static final double loadPosition = 0.345;
-    public static final double intakePosition = 0.97;
+    public static final double loadPosition = 0.97;
+    public static final double intakePosition = 0.345;
     public static final double ampPosition = 0.715;
 
     public static final double outThreshold = 0.55;
