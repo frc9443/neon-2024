@@ -4,20 +4,21 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.shooter.Shooter;
+import frc.robot.subsystems.shooter.ShooterIO.ShooterAngle;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class ChangeShooterAngleCommand extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final ShooterSubsystem m_ShooterSubsystem;
+  private final Shooter shooter;
   private boolean solonoidOpen = false;
   private boolean isFinished = false;
 
-  public ChangeShooterAngleCommand(ShooterSubsystem ss, boolean isUp) {
-    m_ShooterSubsystem = ss;
+  public ChangeShooterAngleCommand(Shooter shooter, boolean isUp) {
+    this.shooter = shooter;
     solonoidOpen = isUp;
-    addRequirements(m_ShooterSubsystem);
+    addRequirements(shooter);
   }
 
   // Called when the command is initially scheduled.
@@ -29,7 +30,11 @@ public class ChangeShooterAngleCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    m_ShooterSubsystem.doSolonoid(solonoidOpen);
+    if (solonoidOpen) {
+      shooter.setAngle(ShooterAngle.HIGH);
+    } else {
+      shooter.setAngle(ShooterAngle.LOW);
+    }
     isFinished = true;
   }
 

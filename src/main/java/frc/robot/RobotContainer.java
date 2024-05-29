@@ -17,10 +17,10 @@ import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CompressorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.intake_arm.*;
+import frc.robot.subsystems.shooter.*;
 import frc.utils.OffsetGyro;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -40,7 +40,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
 public class RobotContainer {
         // The robot's subsystems
         private DriveSubsystem m_DriveSubsystem;
-        private ShooterSubsystem m_ShooterSubsystem;
+        private Shooter shooter;
         private CompressorSubsystem m_CompressorSubsystem;
         private Intake intake;
         private IntakeArm intakeArm;
@@ -67,6 +67,7 @@ public class RobotContainer {
                         case NEON -> {
                                 intake = new Intake(new IntakeIOSparkMax());
                                 intakeArm = new IntakeArm(new IntakeArmIOSparkMax());
+                                shooter = new Shooter(new ShooterIOSparkFlex());
                                 m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
                         }
                         case HELIUM -> {
@@ -75,6 +76,7 @@ public class RobotContainer {
                         case SIM -> {
                                 intake = new Intake(new IntakeIOSim());
                                 intakeArm = new IntakeArm(new IntakeArmIOSim());
+                                shooter = new Shooter(new ShooterIOSim());
                                 m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
                         }
                         default -> throw new RuntimeException(
@@ -82,7 +84,6 @@ public class RobotContainer {
                 }
 
                 m_DriveSubsystem = new DriveSubsystem(m_gyro);
-                m_ShooterSubsystem = new ShooterSubsystem();
                 m_CompressorSubsystem = new CompressorSubsystem();
                 m_ClimberSubsystem = new ClimberSubsystem();
                 m_VisionSubsystem = new VisionSubsystem();
@@ -108,7 +109,7 @@ public class RobotContainer {
 
                 // Register Named Commands
                 NamedCommands.registerCommand("ShootCommand",
-                                new ShootCommand(m_ShooterSubsystem, intake));
+                                new ShootCommand(shooter, intake));
 
                 NamedCommands.registerCommand("EnsurePressureCommand",
                                 new EnsurePressureCommand(m_CompressorSubsystem));
@@ -121,16 +122,16 @@ public class RobotContainer {
                                 new ActivateIntakeCommand(intake).withTimeout(2));
 
                 NamedCommands.registerCommand("RaiseShooterAngleCommand",
-                                new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
+                                new ChangeShooterAngleCommand(shooter, false));
 
                 NamedCommands.registerCommand("DropShooterAngleCommand",
-                                new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
+                                new ChangeShooterAngleCommand(shooter, true));
 
                 NamedCommands.registerCommand("DetectNoteCommand",
                                 new AutoLimeLightTargetCommand(m_DriveSubsystem, intake).withTimeout(2));
 
                 NamedCommands.registerCommand("SpeakerAimCommand",
-                                new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem, m_ShooterSubsystem)
+                                new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem)
                                                 .withTimeout(.8));
 
                 m_chooser.setDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
@@ -155,11 +156,10 @@ public class RobotContainer {
         private void configureButtonBindings() {
 
                 new JoystickButton(m_driverController, Button.kX.value)
-                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem,
-                                                m_ShooterSubsystem));
+                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem));
 
                 new JoystickButton(m_driverController, Button.kA.value)
-                                .onTrue(new EjectCommand(m_ShooterSubsystem, intake).withTimeout(1));
+                                .onTrue(new EjectCommand(shooter, intake).withTimeout(1));
 
                 new JoystickButton(m_driverController, Button.kB.value)
                                 .whileTrue(new AutoLimeLightTargetCommand(m_DriveSubsystem, intake));
@@ -172,13 +172,13 @@ public class RobotContainer {
 
                 // Activates Shooter for 3 seconds.
                 new JoystickButton(m_OperatorController, Button.kY.value)
-                                .onTrue(new ShootCommand(m_ShooterSubsystem, intake).withTimeout(1));
+                                .onTrue(new ShootCommand(shooter, intake).withTimeout(1));
 
                 new POVButton(m_OperatorController, 0)
-                                .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, false));
+                                .onTrue(new ChangeShooterAngleCommand(shooter, false));
 
                 new POVButton(m_OperatorController, 180)
-                                .onTrue(new ChangeShooterAngleCommand(m_ShooterSubsystem, true));
+                                .onTrue(new ChangeShooterAngleCommand(shooter, true));
 
                 switch (Constants.controlMode) {
                         case Neon_2024_PostSeason -> {

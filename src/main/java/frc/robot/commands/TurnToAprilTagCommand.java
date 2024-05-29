@@ -10,19 +10,16 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.utils.LimelightHelpers;
 
 public class TurnToAprilTagCommand extends Command {
     private final DriveSubsystem m_DriveSubsystem;
     private final VisionSubsystem m_VisionSubsystem;
-    private final ShooterSubsystem m_ShooterSubsystem;
 
-    public TurnToAprilTagCommand(DriveSubsystem ds, VisionSubsystem vs, ShooterSubsystem ss) {
+    public TurnToAprilTagCommand(DriveSubsystem ds, VisionSubsystem vs) {
         m_DriveSubsystem = ds;
         m_VisionSubsystem = vs;
-        m_ShooterSubsystem = ss;
         addRequirements(m_DriveSubsystem);
     }
 

@@ -2,25 +2,24 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.intake.Intake;
-import frc.robot.subsystems.ShooterSubsystem;
+import frc.robot.subsystems.shooter.Shooter;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class EjectCommand extends Command {
-    private final ShooterSubsystem m_ShooterSubsystem;
+    private final Shooter shooter;
     private final Intake intake;
     private final Timer time = new Timer();
 
-    public EjectCommand(ShooterSubsystem shooterSubsystem, Intake intakeSubsystem) {
-        m_ShooterSubsystem = shooterSubsystem;
-        intake = intakeSubsystem;
-        addRequirements(m_ShooterSubsystem, intake);
+    public EjectCommand(Shooter shooter, Intake intake) {
+        this.shooter = shooter;
+        this.intake = intake;
+        addRequirements(shooter, intake);
     }
 
     @Override
     public void initialize() {
         time.restart();
-        m_ShooterSubsystem.Shoot(6, 6);
+        shooter.shoot(6, 6);
         intake.ingest(6.5);
     }
 
@@ -32,7 +31,7 @@ public class EjectCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         time.stop();
-        m_ShooterSubsystem.Stop();
+        shooter.stop();
         intake.stop();
     }
 }

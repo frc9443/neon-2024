@@ -8,7 +8,7 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.ShooterConstants;
+import frc.robot.subsystems.shooter.ShooterConstants;
 
 public class CompressorSubsystem extends SubsystemBase {
     public final Compressor m_compressor = new Compressor(ShooterConstants.PneumaticHubCanId, PneumaticsModuleType.REVPH);

@@ -142,15 +142,6 @@ public final class Constants {
     public static final int kRightClimberMotorCanId = 42;
   }
 
-  public static final class ShooterConstants {
-    public static final int PneumaticHubCanId = 20;
-    public static final DutyCycleEncoder m_encoder = new DutyCycleEncoder(9);
-    public static final int kTopLeftShooterMotorCanId = 21;
-    public static final int kTopRightShooterMotorCanId = 22;
-    public static final int kBottomLeftShooterMotorCanId = 23;
-    public static final int kBottomRightShooterMotorCanId = 24;
-    public static final int SolenoidId = 1;
-  }
 
   public static final class ModuleConstants {
     // The MAXSwerve module can be configured with one of three pinion gears: 12T,
