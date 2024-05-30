@@ -4,7 +4,7 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.ClimberSubsystem;
+import frc.robot.subsystems.climber.Climber;
 import frc.robot.subsystems.intake.Intake;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,22 +14,22 @@ import frc.robot.subsystems.intake_arm.IntakeArm;
 public class ManualOverrideCommand extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
   private final IntakeArm intakeArm;
-  private final ClimberSubsystem m_ClimberSubsystem;
+  private final Climber climber;
   private final XboxController m_OperatorController;
   private final Intake intake;
 
   /**
    * Creates a new ExampleCommand.
    *
-   * @param intakeArm The IntakeArm subsystem used by this command.
+   * @param intakeArm        The IntakeArm subsystem used by this command.
    * @param climberSubsystem The Climber subsystem used by this command.
-   * @param controller The XBox controller used by this command.
-   * @param intakeSubsystem Intake subsystem used by this command.
+   * @param controller       The XBox controller used by this command.
+   * @param intakeSubsystem  Intake subsystem used by this command.
    */
-  public ManualOverrideCommand(IntakeArm intakeArm, ClimberSubsystem climberSubsystem,
-                               XboxController controller, Intake intakeSubsystem) {
+  public ManualOverrideCommand(IntakeArm intakeArm, Climber climber,
+      XboxController controller, Intake intakeSubsystem) {
     this.intakeArm = intakeArm;
-    m_ClimberSubsystem = climberSubsystem;
+    this.climber = climber;
     m_OperatorController = controller;
     intake = intakeSubsystem;
   }
@@ -50,11 +50,11 @@ public class ManualOverrideCommand extends Command {
 
     double climberRate = m_OperatorController.getLeftY() * 0.75;
     if (Math.abs(climberRate) > 0.05) {
-      m_ClimberSubsystem.moveClimber(climberRate);
+      climber.climb(climberRate);
     } else {
       double leftClimberRate = m_OperatorController.getLeftTriggerAxis() / 3.5;
       double rightClimberRate = m_OperatorController.getRightTriggerAxis() / 3.5;
-      m_ClimberSubsystem.moveClimber(leftClimberRate, rightClimberRate);
+      climber.climb(leftClimberRate, rightClimberRate);
     }
     ;
 
@@ -63,7 +63,7 @@ public class ManualOverrideCommand extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    m_ClimberSubsystem.stopClimber();
+    climber.stop();
     intakeArm.stop();
     intake.stop();
   }
@@ -72,7 +72,7 @@ public class ManualOverrideCommand extends Command {
   @Override
   public boolean isFinished() {
     if (m_OperatorController.getLeftBumper() == false) {
-      m_ClimberSubsystem.stopClimber();
+      climber.stop();
       intakeArm.stop();
       intake.stop();
 

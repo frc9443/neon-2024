@@ -14,10 +14,10 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.BlinkinSubsystem;
-import frc.robot.subsystems.ClimberSubsystem;
 import frc.robot.subsystems.CompressorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.intake_arm.*;
 import frc.robot.subsystems.shooter.*;
@@ -44,7 +44,7 @@ public class RobotContainer {
         private CompressorSubsystem m_CompressorSubsystem;
         private Intake intake;
         private IntakeArm intakeArm;
-        private ClimberSubsystem m_ClimberSubsystem;
+        private Climber climber;
         private BlinkinSubsystem m_BlinkinSubsystem;
         private VisionSubsystem m_VisionSubsystem;
 
@@ -65,6 +65,7 @@ public class RobotContainer {
 
                 switch (Constants.getRobot()) {
                         case NEON -> {
+                                climber = new Climber(new ClimberIOSparkMax());
                                 intake = new Intake(new IntakeIOSparkMax());
                                 intakeArm = new IntakeArm(new IntakeArmIOSparkMax());
                                 shooter = new Shooter(new ShooterIOSparkFlex());
@@ -74,6 +75,7 @@ public class RobotContainer {
                                 m_gyro = new OffsetGyro(new AHRS(SPI.Port.kMXP));
                         }
                         case SIM -> {
+                                climber = new Climber(new ClimberIOSim());
                                 intake = new Intake(new IntakeIOSim());
                                 intakeArm = new IntakeArm(new IntakeArmIOSim());
                                 shooter = new Shooter(new ShooterIOSim());
@@ -85,7 +87,6 @@ public class RobotContainer {
 
                 m_DriveSubsystem = new DriveSubsystem(m_gyro);
                 m_CompressorSubsystem = new CompressorSubsystem();
-                m_ClimberSubsystem = new ClimberSubsystem();
                 m_VisionSubsystem = new VisionSubsystem();
                 m_BlinkinSubsystem = new BlinkinSubsystem(m_VisionSubsystem, intake, intakeArm);
                 // Configure the button bindings
@@ -193,7 +194,7 @@ public class RobotContainer {
 
                 // Manual Overrides for stick control of intake arm and climber
                 new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
-                                .whileTrue(new ManualOverrideCommand(intakeArm, m_ClimberSubsystem,
+                                .whileTrue(new ManualOverrideCommand(intakeArm, climber,
                                                 m_OperatorController,
                                                 intake));
 
