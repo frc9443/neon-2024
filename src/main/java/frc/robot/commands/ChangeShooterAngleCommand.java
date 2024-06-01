@@ -4,21 +4,21 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.shooter.Shooter;
-import frc.robot.subsystems.shooter.ShooterIO.ShooterAngle;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.pneumatics.Pneumatics;
+import frc.robot.subsystems.pneumatics.PneumaticsIO.ShooterAngle;
 
 /** An example command that uses an example subsystem. */
 public class ChangeShooterAngleCommand extends Command {
   @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final Shooter shooter;
+  private final Pneumatics pneumatics;
   private boolean solonoidOpen = false;
   private boolean isFinished = false;
 
-  public ChangeShooterAngleCommand(Shooter shooter, boolean isUp) {
-    this.shooter = shooter;
+  public ChangeShooterAngleCommand(Pneumatics pneumatics, boolean isUp) {
+    this.pneumatics = pneumatics;
     solonoidOpen = isUp;
-    addRequirements(shooter);
+    addRequirements(pneumatics);
   }
 
   // Called when the command is initially scheduled.
@@ -31,9 +31,9 @@ public class ChangeShooterAngleCommand extends Command {
   @Override
   public void execute() {
     if (solonoidOpen) {
-      shooter.setAngle(ShooterAngle.HIGH);
+      pneumatics.setShooterAngle(ShooterAngle.HIGH);
     } else {
-      shooter.setAngle(ShooterAngle.LOW);
+      pneumatics.setShooterAngle(ShooterAngle.LOW);
     }
     isFinished = true;
   }

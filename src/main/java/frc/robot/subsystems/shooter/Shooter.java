@@ -26,13 +26,4 @@ public class Shooter extends SubsystemBase {
     public void stop() {
         io.stop();
     }
-
-    public void setAngle(ShooterIO.ShooterAngle position) {
-        io.setAngle(position);
-    }
-
-    @AutoLogOutput
-    public boolean isShooterUp() {
-        return inputs.angle == ShooterIO.ShooterAngle.HIGH;
-    }
 }

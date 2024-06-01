@@ -4,11 +4,6 @@ import org.littletonrobotics.junction.AutoLog;
 
 public interface ShooterIO {
 
-    enum ShooterAngle {
-        HIGH,
-        LOW
-    }
-
     @AutoLog
     class ShooterIOInputs {
         public double velocityTopLeft = 0.0;
@@ -23,12 +18,9 @@ public interface ShooterIO {
         public double velocityBottomRight = 0.0;
         public double appliedVoltsBottomRight = 0.0;
         public double currentAmpsBottomRight = 0.0;
-
-        public ShooterAngle angle = ShooterAngle.HIGH;
     }
     
     default void updateInputs(ShooterIOInputs inputs) {}
     default void shoot(double upperVoltage, double lowerVoltage) {}
     default void stop() {}
-    default void setAngle(ShooterAngle position) {}
 }

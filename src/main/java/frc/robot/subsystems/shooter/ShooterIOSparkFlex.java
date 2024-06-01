@@ -22,8 +22,6 @@ public class ShooterIOSparkFlex implements ShooterIO {
     private final RelativeEncoder bottomRightEncoder;
     private final RelativeEncoder topRightEncoder;
 
-    private final Solenoid shootingAngleSolenoid;
-
     public ShooterIOSparkFlex() {
         topLeftMotor = new CANSparkFlex(ShooterConstants.topLeftCANId, MotorType.kBrushless);
         topRightMotor = new CANSparkFlex(ShooterConstants.topRightCANId, MotorType.kBrushless);
@@ -57,11 +55,6 @@ public class ShooterIOSparkFlex implements ShooterIO {
         });
 
         motors.forEach(motor -> motor.burnFlash());
-
-        shootingAngleSolenoid = new Solenoid(
-            ShooterConstants.PneumaticHubCanId,
-            PneumaticsModuleType.REVPH,
-            ShooterConstants.SolenoidId);
     }
 
     public void updateInputs(ShooterIOInputs inputs) {
@@ -91,9 +84,5 @@ public class ShooterIOSparkFlex implements ShooterIO {
 
     public void stop() {
         shoot(0, 0);
-    }
-
-    public void setAngle(ShooterAngle position) {
-        shootingAngleSolenoid.set(position == ShooterAngle.HIGH);
     }
 }

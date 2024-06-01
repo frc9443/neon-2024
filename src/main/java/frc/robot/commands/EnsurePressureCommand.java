@@ -4,24 +4,20 @@
 
 package frc.robot.commands;
 
-import frc.robot.subsystems.CompressorSubsystem;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.pneumatics.Pneumatics;
 import edu.wpi.first.wpilibj2.command.Command;
 
 /** An example command that uses an example subsystem. */
 public class EnsurePressureCommand extends Command {
-  @SuppressWarnings({ "PMD.UnusedPrivateField", "PMD.SingularField" })
-  private final CompressorSubsystem m_CompressorSubsystem;
+  private final Pneumatics pneumatics;
 
   /**
    * Creates a new ExampleCommand.
    *
    * @param subsystem The subsystem used by this command.
    */
-  public EnsurePressureCommand(CompressorSubsystem subsystem) {
-    m_CompressorSubsystem = subsystem;
-    // Use addRequirements() here to declare subsystem dependencies.
-    addRequirements(subsystem);
+  public EnsurePressureCommand(Pneumatics pneumatics) {
+    this.pneumatics = pneumatics; // read-only so we don't need to add it to use addRequirements()
   }
 
   // Called when the command is initially scheduled.
@@ -32,7 +28,6 @@ public class EnsurePressureCommand extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
   }
 
   // Called once the command ends or is interrupted.
@@ -43,6 +38,6 @@ public class EnsurePressureCommand extends Command {
   // Returns true when the command should end.
   @Override
   public boolean isFinished() {
-    return m_CompressorSubsystem.getPressure() > 45;
+    return pneumatics.getPressure() > 45;
   }
 }

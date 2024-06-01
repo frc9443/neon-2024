@@ -13,8 +13,6 @@ public class ShooterIOSim implements ShooterIO {
     private double appliedTopVoltage = 0.0;
     private double appliedBottomVoltage = 0.0;
 
-    private ShooterAngle angle = ShooterAngle.HIGH;
-
     public ShooterIOSim() {
         DCMotor topMotor = DCMotor.getNeo550(2);
         DCMotor bottomMotor = DCMotor.getNeo550(2);
@@ -38,8 +36,6 @@ public class ShooterIOSim implements ShooterIO {
         inputs.appliedVoltsBottomLeft = inputs.appliedVoltsBottomRight = appliedBottomVoltage;
         inputs.currentAmpsBottomLeft = inputs.currentAmpsBottomRight = bottomSim.getCurrentDrawAmps();
         inputs.velocityBottomLeft = inputs.velocityBottomRight = bottomSim.getAngularVelocityRadPerSec();
-
-        inputs.angle = angle;
     }
 
     @Override
@@ -53,10 +49,5 @@ public class ShooterIOSim implements ShooterIO {
     @Override
     public void stop() {
         shoot(0.0, 0.0);
-    }
-
-    @Override
-    public void setAngle(ShooterAngle angle) {
-        this.angle = angle;
     }
 }

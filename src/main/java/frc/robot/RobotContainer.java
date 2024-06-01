@@ -14,12 +14,12 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.BlinkinSubsystem;
-import frc.robot.subsystems.CompressorSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.intake_arm.*;
+import frc.robot.subsystems.pneumatics.*;
 import frc.robot.subsystems.shooter.*;
 import frc.utils.OffsetGyro;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -41,7 +41,7 @@ public class RobotContainer {
         // The robot's subsystems
         private DriveSubsystem m_DriveSubsystem;
         private Shooter shooter;
-        private CompressorSubsystem m_CompressorSubsystem;
+        private Pneumatics pneumatics;
         private Intake intake;
         private IntakeArm intakeArm;
         private Climber climber;
@@ -56,12 +56,12 @@ public class RobotContainer {
         XboxController m_OperatorController = new XboxController(OIConstants.kOperatorControllerPort);
         // XboxController m_ColorController = new
         // XboxController(OIConstants.kColorControllerPort);
-        private final OffsetGyro m_gyro;
 
         /**
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
         public RobotContainer() {
+                OffsetGyro m_gyro;
 
                 switch (Constants.getRobot()) {
                         case NEON -> {
@@ -70,6 +70,7 @@ public class RobotContainer {
                                 intakeArm = new IntakeArm(new IntakeArmIOSparkMax());
                                 shooter = new Shooter(new ShooterIOSparkFlex());
                                 m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
+                                pneumatics = new Pneumatics(new PneumaticsIORev());
                         }
                         case HELIUM -> {
                                 m_gyro = new OffsetGyro(new AHRS(SPI.Port.kMXP));
@@ -80,13 +81,30 @@ public class RobotContainer {
                                 intakeArm = new IntakeArm(new IntakeArmIOSim());
                                 shooter = new Shooter(new ShooterIOSim());
                                 m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
+                                pneumatics = new Pneumatics(new PneumaticsIOSim());
                         }
                         default -> throw new RuntimeException(
                                         "I don't know how to configure " + Constants.getRobot().toString());
                 }
 
+                // No-op subsystem implementations (if not configured above)
+                if (climber == null) {
+                        climber = new Climber(new ClimberIO() {});
+                }
+                if (intake == null) {
+                        intake = new Intake(new IntakeIO() {});
+                }
+                if (intakeArm == null) {
+                        intakeArm = new IntakeArm(new IntakeArmIO() {});
+                }
+                if (shooter == null) {
+                        shooter = new Shooter(new ShooterIO() {});
+                }
+                if (pneumatics == null) {
+                        pneumatics = new Pneumatics(new PneumaticsIO() {});
+                }
+
                 m_DriveSubsystem = new DriveSubsystem(m_gyro);
-                m_CompressorSubsystem = new CompressorSubsystem();
                 m_VisionSubsystem = new VisionSubsystem();
                 m_BlinkinSubsystem = new BlinkinSubsystem(m_VisionSubsystem, intake, intakeArm);
                 // Configure the button bindings
@@ -110,10 +128,10 @@ public class RobotContainer {
 
                 // Register Named Commands
                 NamedCommands.registerCommand("ShootCommand",
-                                new ShootCommand(shooter, intake));
+                                new ShootCommand(shooter, intake, pneumatics));
 
                 NamedCommands.registerCommand("EnsurePressureCommand",
-                                new EnsurePressureCommand(m_CompressorSubsystem));
+                                new EnsurePressureCommand(pneumatics));
 
                 NamedCommands.registerCommand("IntakeInCommand", intakeArm.load());
 
@@ -123,10 +141,10 @@ public class RobotContainer {
                                 new ActivateIntakeCommand(intake).withTimeout(2));
 
                 NamedCommands.registerCommand("RaiseShooterAngleCommand",
-                                new ChangeShooterAngleCommand(shooter, false));
+                                new ChangeShooterAngleCommand(pneumatics, false));
 
                 NamedCommands.registerCommand("DropShooterAngleCommand",
-                                new ChangeShooterAngleCommand(shooter, true));
+                                new ChangeShooterAngleCommand(pneumatics, true));
 
                 NamedCommands.registerCommand("DetectNoteCommand",
                                 new AutoLimeLightTargetCommand(m_DriveSubsystem, intake).withTimeout(2));
@@ -173,13 +191,13 @@ public class RobotContainer {
 
                 // Activates Shooter for 3 seconds.
                 new JoystickButton(m_OperatorController, Button.kY.value)
-                                .onTrue(new ShootCommand(shooter, intake).withTimeout(1));
+                                .onTrue(new ShootCommand(shooter, intake, pneumatics).withTimeout(1));
 
                 new POVButton(m_OperatorController, 0)
-                                .onTrue(new ChangeShooterAngleCommand(shooter, false));
+                                .onTrue(new ChangeShooterAngleCommand(pneumatics, false));
 
                 new POVButton(m_OperatorController, 180)
-                                .onTrue(new ChangeShooterAngleCommand(shooter, true));
+                                .onTrue(new ChangeShooterAngleCommand(pneumatics, true));
 
                 switch (Constants.controlMode) {
                         case Neon_2024_PostSeason -> {
