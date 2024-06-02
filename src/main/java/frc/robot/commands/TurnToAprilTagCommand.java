@@ -10,28 +10,28 @@ import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
+import frc.robot.subsystems.vision.Vision;
 import frc.utils.LimelightHelpers;
 
 public class TurnToAprilTagCommand extends Command {
     private final DriveSubsystem m_DriveSubsystem;
-    private final VisionSubsystem m_VisionSubsystem;
+    private final Vision vision;
 
-    public TurnToAprilTagCommand(DriveSubsystem ds, VisionSubsystem vs) {
+    public TurnToAprilTagCommand(DriveSubsystem ds, Vision vs) {
         m_DriveSubsystem = ds;
-        m_VisionSubsystem = vs;
+        vision = vs;
         addRequirements(m_DriveSubsystem);
     }
 
     @Override
     public void execute() {
-        SmartDashboard.getBoolean("Locked On", m_VisionSubsystem.lockedOn());
+        SmartDashboard.getBoolean("Locked On", vision.lockedOn());
         double angleDelta = 0;
         double distanceDelta = 0;
         
-        if (m_VisionSubsystem.hasSpeakerTag()) {
-            angleDelta = m_VisionSubsystem.getAngleToSpeakerTag();
-            distanceDelta = m_VisionSubsystem.getDistanceToShootingPosition();
+        if (vision.hasSpeakerTag()) {
+            angleDelta = vision.getAngleToSpeaker();
+            distanceDelta = vision.getDistanceToShootingPosition();
             double rot = angleDelta * Math.PI / 180 * -.8;
             double xSpeed = 0;
             if (Math.abs(rot) < 0.1) {
@@ -57,6 +57,6 @@ public class TurnToAprilTagCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return !m_VisionSubsystem.hasSpeakerTag() || m_VisionSubsystem.lockedOn();
+        return !vision.hasSpeakerTag() || vision.lockedOn();
     }
 }

@@ -13,14 +13,14 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
-import frc.robot.subsystems.BlinkinSubsystem;
 import frc.robot.subsystems.DriveSubsystem;
-import frc.robot.subsystems.VisionSubsystem;
 import frc.robot.subsystems.climber.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.intake_arm.*;
+import frc.robot.subsystems.leds.*;
 import frc.robot.subsystems.pneumatics.*;
 import frc.robot.subsystems.shooter.*;
+import frc.robot.subsystems.vision.*;
 import frc.utils.OffsetGyro;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -45,8 +45,8 @@ public class RobotContainer {
         private Intake intake;
         private IntakeArm intakeArm;
         private Climber climber;
-        private BlinkinSubsystem m_BlinkinSubsystem;
-        private VisionSubsystem m_VisionSubsystem;
+        private Leds leds;
+        private Vision vision;
 
         // A chooser for autonomous commands
         SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -71,6 +71,8 @@ public class RobotContainer {
                                 shooter = new Shooter(new ShooterIOSparkFlex());
                                 m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
                                 pneumatics = new Pneumatics(new PneumaticsIORev());
+                                leds = new Leds(new LedsIOBlinkin());
+                                vision = new Vision(new VisionIOPhoton());
                         }
                         case HELIUM -> {
                                 m_gyro = new OffsetGyro(new AHRS(SPI.Port.kMXP));
@@ -103,10 +105,20 @@ public class RobotContainer {
                 if (pneumatics == null) {
                         pneumatics = new Pneumatics(new PneumaticsIO() {});
                 }
+                if (leds == null) {
+                        leds = new Leds(new LedsIO() {});
+                }
+                if (vision == null) {
+                        vision = new Vision(new VisionIO() {});
+                }
 
                 m_DriveSubsystem = new DriveSubsystem(m_gyro);
-                m_VisionSubsystem = new VisionSubsystem();
-                m_BlinkinSubsystem = new BlinkinSubsystem(m_VisionSubsystem, intake, intakeArm);
+
+                // IoC
+                leds.setIntake(intake);
+                leds.setIntakeArm(intakeArm);
+                leds.setVision(vision);
+
                 // Configure the button bindings
                 configureButtonBindings();
 
@@ -150,7 +162,7 @@ public class RobotContainer {
                                 new AutoLimeLightTargetCommand(m_DriveSubsystem, intake).withTimeout(2));
 
                 NamedCommands.registerCommand("SpeakerAimCommand",
-                                new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem)
+                                new TurnToAprilTagCommand(m_DriveSubsystem, vision)
                                                 .withTimeout(.8));
 
                 m_chooser.setDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
@@ -175,7 +187,7 @@ public class RobotContainer {
         private void configureButtonBindings() {
 
                 new JoystickButton(m_driverController, Button.kX.value)
-                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, m_VisionSubsystem));
+                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, vision));
 
                 new JoystickButton(m_driverController, Button.kA.value)
                                 .onTrue(new EjectCommand(shooter, intake).withTimeout(1));

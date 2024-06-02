@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.utils.VirtualSubsystem;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -130,6 +131,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void robotPeriodic() {
     Threads.setCurrentThreadPriority(true, 99);
+    VirtualSubsystem.periodicAll();
     CommandScheduler.getInstance().run();
   }
 

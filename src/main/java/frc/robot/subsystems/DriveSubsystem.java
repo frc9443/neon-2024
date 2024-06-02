@@ -24,7 +24,6 @@ import frc.robot.Constants.DriveConstants;
 import frc.utils.LimelightHelpers;
 import frc.utils.OffsetGyro;
 import frc.utils.SwerveUtils;
-import frc.utils.VisionUtils;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
@@ -131,21 +130,8 @@ public class DriveSubsystem extends SubsystemBase {
         // SmartDashboard.putNumber("IMU_Pitch", m_gyro.getPitch());
         // SmartDashboard.putNumber("IMU_Roll", m_gyro.getRoll());
         // SmartDashboard.putNumber("IMU_Angle", getAngle());
-        SmartDashboard.putBoolean("Has Targed", LimelightHelpers.getTV(""));
-        SmartDashboard.putNumber("tX", LimelightHelpers.getTX(""));
-        SmartDashboard.putNumber("tY", LimelightHelpers.getTY(""));
-        // SmartDashboard.putNumber("Target Angle To Turn : FR",
-        // VisionUtils.calculateAngle(m_gyro));
-        SmartDashboard.putNumber("Distance From Target Range", VisionUtils.calculateDistance());
-        if ((Math.abs(VisionUtils.calculateDistance()) <= 3) && (Math.abs(LimelightHelpers.getTX("")) <= 1)) {
-            SmartDashboard.putBoolean("Ready To Shoot", true);
-        } else {
-            SmartDashboard.putBoolean("Ready To Shoot", false);
-        }
 
-        SmartDashboard.putBoolean("In Range", (Math.abs(VisionUtils.calculateDistance()) <= 3));
         SmartDashboard.putString("Robot Location", getPose().getTranslation().toString());
-
     }
 
     /**

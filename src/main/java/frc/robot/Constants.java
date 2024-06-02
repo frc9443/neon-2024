@@ -124,19 +124,6 @@ public final class Constants {
     }
   }
 
-
-  public static final class BlinkinConstants {
-    public static final int kBlinkinPWMId = 0;
-    public static final double cBreathRed = -0.17;
-    public static final double cBreathBlue = -0.15;
-    public static final double cStrobeRed = -0.11;
-    public static final double cStrobeBlue = -0.09;
-    public static final double cStrobeGold = -0.07;
-    public static final double cSolidGold = 0.67;
-    public static final double cRainbow = -0.99;
-
-  }
-
   public static final class ModuleConstants {
     // The MAXSwerve module can be configured with one of three pinion gears: 12T,
     // 13T, or 14T.
@@ -199,16 +186,6 @@ public final class Constants {
     public static final double kDriveDeadband = 0.05;
   }
 
-  public static final class VisionConstants {
-    public static final double heightOfCamera = .254;
-    public static final double heightOfCenterSpeaker = 1.45;
-    public static final double angleOfCamera = Math.toRadians(19);
-    public static final double targetDistanceToShoot = 97;
-    // public static final double idealShootingDistance = 2.5;
-    public static final double shootingDistanceVariance = 0.1;
-    public static final double shootingAngleVariance = 1.5;
-
-  }
 
   public static final class GyroConstants {
     public static final double kTurnP = 1;
