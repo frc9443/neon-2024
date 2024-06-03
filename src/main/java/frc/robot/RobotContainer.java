@@ -20,7 +20,6 @@ import frc.robot.subsystems.vision.*;
 import frc.utils.OffsetGyro;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import edu.wpi.first.wpilibj2.command.button.JoystickButton;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
@@ -134,24 +133,18 @@ public class RobotContainer {
 
         private void configureAutos() {
                 // Register Named Commands
-                NamedCommands.registerCommand("ShootCommand",
-                                new ShootCommand(shooter, intake, pneumatics));
+                NamedCommands.registerCommand("ShootCommand", new ShootCommand(shooter, intake, pneumatics));
 
-                NamedCommands.registerCommand("EnsurePressureCommand",
-                                new EnsurePressureCommand(pneumatics));
+                NamedCommands.registerCommand("EnsurePressureCommand", pneumatics.ensurePressureCommand());
 
                 NamedCommands.registerCommand("IntakeInCommand", intakeArm.load());
 
                 NamedCommands.registerCommand("IntakeOutCommand", intakeArm.intake());
 
-                NamedCommands.registerCommand("ActivateIntakeCommand",
-                                new ActivateIntakeCommand(intake).withTimeout(2));
+                NamedCommands.registerCommand("ActivateIntakeCommand", intake.ingestCommand().withTimeout(2));
 
-                NamedCommands.registerCommand("RaiseShooterAngleCommand",
-                                new ChangeShooterAngleCommand(pneumatics, false));
-
-                NamedCommands.registerCommand("DropShooterAngleCommand",
-                                new ChangeShooterAngleCommand(pneumatics, true));
+                NamedCommands.registerCommand("RaiseShooterAngleCommand", pneumatics.setShooterAngleCommand(PneumaticsIO.ShooterAngle.HIGH));
+                NamedCommands.registerCommand("DropShooterAngleCommand", pneumatics.setShooterAngleCommand(PneumaticsIO.ShooterAngle.LOW));
 
                 NamedCommands.registerCommand("DetectNoteCommand",
                                 new AutoLimeLightTargetCommand(m_DriveSubsystem, intake).withTimeout(2));
@@ -176,7 +169,7 @@ public class RobotContainer {
                 driver.x().whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, vision));
                 driver.a().onTrue(new EjectCommand(shooter, intake).withTimeout(1));
                 driver.b().whileTrue(new AutoLimeLightTargetCommand(m_DriveSubsystem, intake));
-                driver.y().onTrue(new RestartGyroCommand(m_DriveSubsystem));
+                driver.y().onTrue(m_DriveSubsystem.runOnce(m_DriveSubsystem::zeroHeading));
                 driver.rightBumper().onTrue(new speedAdjustCommand(m_DriveSubsystem, true));
 
                 m_DriveSubsystem.setDefaultCommand(
@@ -196,10 +189,10 @@ public class RobotContainer {
 
                 // Operator Controls
                 operator.a().onTrue(intakeArm.amp());
-                operator.b().onTrue(new AmpShootCommand(intake));
+                operator.b().onTrue(intake.shootAmp());
                 operator.y().onTrue(new ShootCommand(shooter, intake, pneumatics).withTimeout(1));
-                operator.povUp().onTrue(new ChangeShooterAngleCommand(pneumatics, false));
-                operator.povDown().onTrue(new ChangeShooterAngleCommand(pneumatics, true));
+                operator.povUp().onTrue(pneumatics.setShooterAngleCommand(PneumaticsIO.ShooterAngle.HIGH));
+                operator.povDown().onTrue(pneumatics.setShooterAngleCommand(PneumaticsIO.ShooterAngle.LOW));
 
                 // Manual Overrides for stick control of intake arm and climber
                 operator.leftBumper().whileTrue(new ManualOverrideCommand(intake, intakeArm, climber, operator));
@@ -209,7 +202,7 @@ public class RobotContainer {
                                 operator.rightBumper().whileTrue(new DoIntakeCommand(intake, intakeArm));
                         }
                         default -> {
-                                operator.rightBumper().whileTrue(new ActivateIntakeCommand(intake).withTimeout(3));
+                                operator.rightBumper().whileTrue(intake.ingestCommand());
                         }
                 }
 

@@ -5,11 +5,13 @@ import frc.utils.LoggedTunableNumber;
 import org.littletonrobotics.junction.AutoLogOutput;
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class Intake extends SubsystemBase {
 
-  private static final LoggedTunableNumber intakeVoltage = new LoggedTunableNumber("Intake/IntakeVoltage", IntakeConstants.kIntakeVoltage);
+  private static final LoggedTunableNumber intakeVoltage = new LoggedTunableNumber("Intake/IntakeVoltage",
+      IntakeConstants.kIntakeVoltage);
 
   private final IntakeIO io;
   private final IntakeIOInputsAutoLogged inputs = new IntakeIOInputsAutoLogged();
@@ -46,8 +48,16 @@ public class Intake extends SubsystemBase {
   }
 
   @AutoLogOutput
-  public boolean isIntakeActive(){
+  public boolean isIntakeActive() {
     return !(inputs.appliedVoltsLeft == 0 && inputs.appliedVoltsRight == 0);
   }
-  
+
+  public Command shootAmp() {
+    return run(() -> expel(10.5)).withTimeout(0.3);
+  }
+
+  public Command ingestCommand() {
+    return run(() -> ingest()).until(this::hasNote);
+  }
+
 }
