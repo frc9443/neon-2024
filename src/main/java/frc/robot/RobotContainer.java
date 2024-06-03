@@ -7,10 +7,6 @@ package frc.robot;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.SerialPort;
-import edu.wpi.first.wpilibj.XboxController;
-import edu.wpi.first.wpilibj.XboxController.Button;
-import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
 import frc.robot.subsystems.DriveSubsystem;
@@ -23,9 +19,10 @@ import frc.robot.subsystems.shooter.*;
 import frc.robot.subsystems.vision.*;
 import frc.utils.OffsetGyro;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.RunCommand;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
-import edu.wpi.first.wpilibj2.command.button.POVButton;
+
+import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
 import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.NamedCommands;
@@ -49,11 +46,11 @@ public class RobotContainer {
         private Vision vision;
 
         // A chooser for autonomous commands
-        SendableChooser<Command> m_chooser = new SendableChooser<>();
+        LoggedDashboardChooser<Command> autoChooser = new LoggedDashboardChooser<>("Auto Routine");
 
         // The driver's controller
-        XboxController m_driverController = new XboxController(OIConstants.kDriverControllerPort);
-        XboxController m_OperatorController = new XboxController(OIConstants.kOperatorControllerPort);
+        CommandXboxController driver = new CommandXboxController(OIConstants.kDriverControllerPort);
+        CommandXboxController operator = new CommandXboxController(OIConstants.kOperatorControllerPort);
         // XboxController m_ColorController = new
         // XboxController(OIConstants.kColorControllerPort);
 
@@ -61,7 +58,7 @@ public class RobotContainer {
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
         public RobotContainer() {
-                OffsetGyro m_gyro;
+                OffsetGyro m_gyro = null;
 
                 switch (Constants.getRobot()) {
                         case NEON -> {
@@ -85,31 +82,39 @@ public class RobotContainer {
                                 m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
                                 pneumatics = new Pneumatics(new PneumaticsIOSim());
                         }
-                        default -> throw new RuntimeException(
-                                        "I don't know how to configure " + Constants.getRobot().toString());
+                        default -> {
+                                // Just use the No-op implementations
+                        }
                 }
 
                 // No-op subsystem implementations (if not configured above)
                 if (climber == null) {
-                        climber = new Climber(new ClimberIO() {});
+                        climber = new Climber(new ClimberIO() {
+                        });
                 }
                 if (intake == null) {
-                        intake = new Intake(new IntakeIO() {});
+                        intake = new Intake(new IntakeIO() {
+                        });
                 }
                 if (intakeArm == null) {
-                        intakeArm = new IntakeArm(new IntakeArmIO() {});
+                        intakeArm = new IntakeArm(new IntakeArmIO() {
+                        });
                 }
                 if (shooter == null) {
-                        shooter = new Shooter(new ShooterIO() {});
+                        shooter = new Shooter(new ShooterIO() {
+                        });
                 }
                 if (pneumatics == null) {
-                        pneumatics = new Pneumatics(new PneumaticsIO() {});
+                        pneumatics = new Pneumatics(new PneumaticsIO() {
+                        });
                 }
                 if (leds == null) {
-                        leds = new Leds(new LedsIO() {});
+                        leds = new Leds(new LedsIO() {
+                        });
                 }
                 if (vision == null) {
-                        vision = new Vision(new VisionIO() {});
+                        vision = new Vision(new VisionIO() {
+                        });
                 }
 
                 m_DriveSubsystem = new DriveSubsystem(m_gyro);
@@ -119,25 +124,15 @@ public class RobotContainer {
                 leds.setIntakeArm(intakeArm);
                 leds.setVision(vision);
 
-                // Configure the button bindings
                 configureButtonBindings();
+                configureAutos();
 
-                // Configure default commands
-                m_DriveSubsystem.setDefaultCommand(
-                                // The left stick controls translation of the robot.
-                                // Turning is controlled by the X axis of the right stick.
-                                new RunCommand(
-                                                () -> m_DriveSubsystem.drive(
-                                                                -MathUtil.applyDeadband(m_driverController.getLeftY(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                -MathUtil.applyDeadband(m_driverController.getLeftX(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                -MathUtil.applyDeadband(m_driverController.getRightX(),
-                                                                                OIConstants.kDriveDeadband),
-                                                                true, true,
-                                                                m_driverController.getLeftBumper() ? 4.8 : 3.0),
-                                                m_DriveSubsystem));
+                // Initialize intakeArm to the loaded position
+                intakeArm.setDefaultCommand(intakeArm.load());
+                intake.setDefaultCommand(intake.run(() -> intake.stop()));
+        }
 
+        private void configureAutos() {
                 // Register Named Commands
                 NamedCommands.registerCommand("ShootCommand",
                                 new ShootCommand(shooter, intake, pneumatics));
@@ -165,81 +160,62 @@ public class RobotContainer {
                                 new TurnToAprilTagCommand(m_DriveSubsystem, vision)
                                                 .withTimeout(.8));
 
-                m_chooser.setDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
-                m_chooser.addOption("4 Note Auto", new PathPlannerAuto("4 Note Auto"));
-                m_chooser.addOption("Defensive Auto", new PathPlannerAuto("Defensive Auto"));
-                m_chooser.addOption("Amp Side Auto", new PathPlannerAuto("Amp Side Auto"));
-                m_chooser.addOption("Source Side Mid Auto", new PathPlannerAuto("Source Side Mid Auto"));
-                m_chooser.addOption("4 Note, No Amp Note", new PathPlannerAuto("4 Note Auto No Amp"));
-                SmartDashboard.putData(m_chooser);
-                intakeArm.setDefaultCommand(intakeArm.load());
+                // Configure the auto command chooser
+                // TODO: consider using AutoBuilder.buildAutoChooser() instead of manual setup
+                autoChooser.addDefaultOption("Shoot Auto", new PathPlannerAuto("Shoot Auto"));
+                autoChooser.addOption("4 Note Auto", new PathPlannerAuto("4 Note Auto"));
+                autoChooser.addOption("Defensive Auto", new PathPlannerAuto("Defensive Auto"));
+                autoChooser.addOption("Amp Side Auto", new PathPlannerAuto("Amp Side Auto"));
+                autoChooser.addOption("Source Side Mid Auto", new PathPlannerAuto("Source Side Mid Auto"));
+                autoChooser.addOption("4 Note, No Amp Note", new PathPlannerAuto("4 Note Auto No Amp"));
         }
 
-        /**
-         * Use this method to define your button->command mappings. Buttons can be
-         * created by
-         * instantiating a {@link edu.wpi.first.wpilibj.GenericHID} or one of its
-         * subclasses ({@link
-         * edu.wpi.first.wpilibj.Joystick} or {@link XboxController}), and then calling
-         * passing it to a
-         * {@link JoystickButton}.
-         */
         private void configureButtonBindings() {
 
-                new JoystickButton(m_driverController, Button.kX.value)
-                                .whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, vision));
+                // Driver Controls
+                driver.x().whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, vision));
+                driver.a().onTrue(new EjectCommand(shooter, intake).withTimeout(1));
+                driver.b().whileTrue(new AutoLimeLightTargetCommand(m_DriveSubsystem, intake));
+                driver.y().onTrue(new RestartGyroCommand(m_DriveSubsystem));
+                driver.rightBumper().onTrue(new speedAdjustCommand(m_DriveSubsystem, true));
 
-                new JoystickButton(m_driverController, Button.kA.value)
-                                .onTrue(new EjectCommand(shooter, intake).withTimeout(1));
+                m_DriveSubsystem.setDefaultCommand(
+                                // The left stick controls translation of the robot.
+                                // Turning is controlled by the X axis of the right stick.
+                                m_DriveSubsystem.run(
+                                                () -> m_DriveSubsystem.drive(
+                                                                -MathUtil.applyDeadband(driver.getLeftY(),
+                                                                                OIConstants.kDriveDeadband),
+                                                                -MathUtil.applyDeadband(driver.getLeftX(),
+                                                                                OIConstants.kDriveDeadband),
+                                                                -MathUtil.applyDeadband(driver.getRightX(),
+                                                                                OIConstants.kDriveDeadband),
+                                                                true, true,
+                                                                driver.getHID().getLeftBumper() ? 4.8 : 3.0))
+                                                .withName("Drive Teleop"));
 
-                new JoystickButton(m_driverController, Button.kB.value)
-                                .whileTrue(new AutoLimeLightTargetCommand(m_DriveSubsystem, intake));
+                // Operator Controls
+                operator.a().onTrue(intakeArm.amp());
+                operator.b().onTrue(new AmpShootCommand(intake));
+                operator.y().onTrue(new ShootCommand(shooter, intake, pneumatics).withTimeout(1));
+                operator.povUp().onTrue(new ChangeShooterAngleCommand(pneumatics, false));
+                operator.povDown().onTrue(new ChangeShooterAngleCommand(pneumatics, true));
 
-                new JoystickButton(m_driverController, Button.kRightBumper.value)
-                                .onTrue(new speedAdjustCommand(m_DriveSubsystem, true));
-
-                new JoystickButton(m_driverController, Button.kY.value)
-                                .onTrue(new RestartGyroCommand(m_DriveSubsystem));
-
-                // Activates Shooter for 3 seconds.
-                new JoystickButton(m_OperatorController, Button.kY.value)
-                                .onTrue(new ShootCommand(shooter, intake, pneumatics).withTimeout(1));
-
-                new POVButton(m_OperatorController, 0)
-                                .onTrue(new ChangeShooterAngleCommand(pneumatics, false));
-
-                new POVButton(m_OperatorController, 180)
-                                .onTrue(new ChangeShooterAngleCommand(pneumatics, true));
+                // Manual Overrides for stick control of intake arm and climber
+                operator.leftBumper().whileTrue(new ManualOverrideCommand(intake, intakeArm, climber, operator));
 
                 switch (Constants.controlMode) {
                         case Neon_2024_PostSeason -> {
-                                new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-                                                .whileTrue(new DoIntakeCommand(intake, intakeArm));
+                                operator.rightBumper().whileTrue(new DoIntakeCommand(intake, intakeArm));
                         }
                         default -> {
-                                new JoystickButton(m_OperatorController, Button.kRightBumper.value)
-                                                .whileTrue(new ActivateIntakeCommand(intake).withTimeout(3));
+                                operator.rightBumper().whileTrue(new ActivateIntakeCommand(intake).withTimeout(3));
                         }
                 }
 
-                // Manual Overrides for stick control of intake arm and climber
-                new JoystickButton(m_OperatorController, Button.kLeftBumper.value)
-                                .whileTrue(new ManualOverrideCommand(intakeArm, climber,
-                                                m_OperatorController,
-                                                intake));
-
-                new JoystickButton(m_OperatorController, Button.kB.value)
-                                .onTrue(new AmpShootCommand(intake));
-
-                new JoystickButton(m_OperatorController, Button.kA.value)
-                                .onTrue(intakeArm.amp());
-
                 if (Constants.controlMode == Constants.ControlMode.Neon_2024_Competition) {
-                        new POVButton(m_OperatorController, 90)
-                                        .onTrue(intakeArm.load());
-
-                        new POVButton(m_OperatorController, 270)
-                                        .onTrue(intakeArm.intake());
+                        operator.povLeft().onTrue(intakeArm.load());
+                        operator.povRight().onTrue(intakeArm.intake());
                 }
 
         }
@@ -250,6 +226,6 @@ public class RobotContainer {
          * @return the command to run in autonomous
          */
         public Command getAutonomousCommand() {
-                return m_chooser.getSelected();
+                return autoChooser.get();
         }
 }
