@@ -8,7 +8,7 @@ import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.controller.PIDController;
 import frc.robot.Constants.GyroConstants;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.drive.Drive;
 import edu.wpi.first.wpilibj2.command.PIDCommand;
 
 /** A command that will turn the robot to the specified angle. */
@@ -19,16 +19,15 @@ public class TurnToAngleCommand extends PIDCommand {
    * @param targetAngleDegrees The angle to turn to
    * @param drive              The drive subsystem to use
    */
-  public TurnToAngleCommand(DoubleSupplier targetAngleFunction, DriveSubsystem drive) {
+  public TurnToAngleCommand(DoubleSupplier targetAngleFunction, Drive drive) {
     super(
         new PIDController(GyroConstants.kTurnP, GyroConstants.kTurnI, GyroConstants.kTurnD),
         // Close loop on heading
-        drive::getHeading,
+        () -> drive.getRotation().getDegrees(),
         // Set reference to target
         targetAngleFunction,
         // Pipe output to turn robot
-
-        output -> drive.drive(0, 0, (0.97 * output / 90) + (Math.signum(output) * 0.03), false, true),
+        output -> drive.drive(0, 0, (0.97 * output / 90) + (Math.signum(output) * 0.03), false),
         // Require the drive
         drive);
 

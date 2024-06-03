@@ -5,25 +5,21 @@
 package frc.robot;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.Constants.OIConstants;
 import frc.robot.commands.*;
-import frc.robot.subsystems.DriveSubsystem;
 import frc.robot.subsystems.climber.*;
+import frc.robot.subsystems.drive.*;
 import frc.robot.subsystems.intake.*;
 import frc.robot.subsystems.intake_arm.*;
 import frc.robot.subsystems.leds.*;
 import frc.robot.subsystems.pneumatics.*;
 import frc.robot.subsystems.shooter.*;
 import frc.robot.subsystems.vision.*;
-import frc.utils.OffsetGyro;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 
 import org.littletonrobotics.junction.networktables.LoggedDashboardChooser;
 
-import com.kauailabs.navx.frc.AHRS;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.pathplanner.lib.commands.PathPlannerAuto;
 
@@ -35,7 +31,7 @@ import com.pathplanner.lib.commands.PathPlannerAuto;
  */
 public class RobotContainer {
         // The robot's subsystems
-        private DriveSubsystem m_DriveSubsystem;
+        private Drive drive;
         private Shooter shooter;
         private Pneumatics pneumatics;
         private Intake intake;
@@ -57,28 +53,40 @@ public class RobotContainer {
          * The container for the robot. Contains subsystems, OI devices, and commands.
          */
         public RobotContainer() {
-                OffsetGyro m_gyro = null;
 
                 switch (Constants.getRobot()) {
                         case NEON -> {
+                                drive = new Drive(new GyroIONavX(),
+                                                new ModuleIOSparkMax(0),
+                                                new ModuleIOSparkMax(1),
+                                                new ModuleIOSparkMax(2),
+                                                new ModuleIOSparkMax(3));
                                 climber = new Climber(new ClimberIOSparkMax());
                                 intake = new Intake(new IntakeIOSparkMax());
                                 intakeArm = new IntakeArm(new IntakeArmIOSparkMax());
                                 shooter = new Shooter(new ShooterIOSparkFlex());
-                                m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
                                 pneumatics = new Pneumatics(new PneumaticsIORev());
                                 leds = new Leds(new LedsIOBlinkin());
                                 vision = new Vision(new VisionIOPhoton());
                         }
                         case HELIUM -> {
-                                m_gyro = new OffsetGyro(new AHRS(SPI.Port.kMXP));
+                                drive = new Drive(new GyroIONavX(),
+                                                new ModuleIOSparkMax(0),
+                                                new ModuleIOSparkMax(1),
+                                                new ModuleIOSparkMax(2),
+                                                new ModuleIOSparkMax(3));
                         }
                         case SIM -> {
+                                drive = new Drive(new GyroIO() {
+                                },
+                                                new ModuleIOSim(),
+                                                new ModuleIOSim(),
+                                                new ModuleIOSim(),
+                                                new ModuleIOSim());
                                 climber = new Climber(new ClimberIOSim());
                                 intake = new Intake(new IntakeIOSim());
                                 intakeArm = new IntakeArm(new IntakeArmIOSim());
                                 shooter = new Shooter(new ShooterIOSim());
-                                m_gyro = new OffsetGyro(new AHRS(SerialPort.Port.kUSB));
                                 pneumatics = new Pneumatics(new PneumaticsIOSim());
                         }
                         default -> {
@@ -87,6 +95,14 @@ public class RobotContainer {
                 }
 
                 // No-op subsystem implementations (if not configured above)
+                if (drive == null) {
+                        drive = new Drive(new GyroIO() {
+                        }, new ModuleIO() {
+                        }, new ModuleIO() {
+                        }, new ModuleIO() {
+                        }, new ModuleIO() {
+                        });
+                }
                 if (climber == null) {
                         climber = new Climber(new ClimberIO() {
                         });
@@ -116,8 +132,6 @@ public class RobotContainer {
                         });
                 }
 
-                m_DriveSubsystem = new DriveSubsystem(m_gyro);
-
                 // IoC
                 leds.setIntake(intake);
                 leds.setIntakeArm(intakeArm);
@@ -143,14 +157,16 @@ public class RobotContainer {
 
                 NamedCommands.registerCommand("ActivateIntakeCommand", intake.ingestCommand().withTimeout(2));
 
-                NamedCommands.registerCommand("RaiseShooterAngleCommand", pneumatics.setShooterAngleCommand(PneumaticsIO.ShooterAngle.HIGH));
-                NamedCommands.registerCommand("DropShooterAngleCommand", pneumatics.setShooterAngleCommand(PneumaticsIO.ShooterAngle.LOW));
+                NamedCommands.registerCommand("RaiseShooterAngleCommand",
+                                pneumatics.setShooterAngleCommand(PneumaticsIO.ShooterAngle.HIGH));
+                NamedCommands.registerCommand("DropShooterAngleCommand",
+                                pneumatics.setShooterAngleCommand(PneumaticsIO.ShooterAngle.LOW));
 
                 NamedCommands.registerCommand("DetectNoteCommand",
-                                new AutoLimeLightTargetCommand(m_DriveSubsystem, intake).withTimeout(2));
+                                new AutoLimeLightTargetCommand(drive, intake).withTimeout(2));
 
                 NamedCommands.registerCommand("SpeakerAimCommand",
-                                new TurnToAprilTagCommand(m_DriveSubsystem, vision)
+                                new TurnToAprilTagCommand(drive, vision)
                                                 .withTimeout(.8));
 
                 // Configure the auto command chooser
@@ -166,24 +182,23 @@ public class RobotContainer {
         private void configureButtonBindings() {
 
                 // Driver Controls
-                driver.x().whileTrue(new TurnToAprilTagCommand(m_DriveSubsystem, vision));
+                driver.x().whileTrue(new TurnToAprilTagCommand(drive, vision));
                 driver.a().onTrue(new EjectCommand(shooter, intake).withTimeout(1));
-                driver.b().whileTrue(new AutoLimeLightTargetCommand(m_DriveSubsystem, intake));
-                driver.y().onTrue(m_DriveSubsystem.runOnce(m_DriveSubsystem::zeroHeading));
-                driver.rightBumper().onTrue(new speedAdjustCommand(m_DriveSubsystem, true));
+                driver.b().whileTrue(new AutoLimeLightTargetCommand(drive, intake));
+                driver.y().onTrue(drive.runOnce(drive::zeroHeading));
 
-                m_DriveSubsystem.setDefaultCommand(
+                drive.setDefaultCommand(
                                 // The left stick controls translation of the robot.
                                 // Turning is controlled by the X axis of the right stick.
-                                m_DriveSubsystem.run(
-                                                () -> m_DriveSubsystem.drive(
+                                drive.run(
+                                                () -> drive.drive(
                                                                 -MathUtil.applyDeadband(driver.getLeftY(),
                                                                                 OIConstants.kDriveDeadband),
                                                                 -MathUtil.applyDeadband(driver.getLeftX(),
                                                                                 OIConstants.kDriveDeadband),
                                                                 -MathUtil.applyDeadband(driver.getRightX(),
                                                                                 OIConstants.kDriveDeadband),
-                                                                true, true,
+                                                                true,
                                                                 driver.getHID().getLeftBumper() ? 4.8 : 3.0))
                                                 .withName("Drive Teleop"));
 

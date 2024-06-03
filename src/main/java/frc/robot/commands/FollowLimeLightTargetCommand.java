@@ -3,14 +3,14 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.drive.Drive;
 import frc.utils.LimelightHelpers;
 
 public class FollowLimeLightTargetCommand extends Command {
-    private final DriveSubsystem m_DriveSubsystem;
+    private final Drive m_DriveSubsystem;
     private final XboxController m_DriverController;
 
-    public FollowLimeLightTargetCommand(DriveSubsystem ds, XboxController DCont) {
+    public FollowLimeLightTargetCommand(Drive ds, XboxController DCont) {
         m_DriveSubsystem = ds;
         m_DriverController = DCont;
         addRequirements(m_DriveSubsystem);
@@ -52,7 +52,7 @@ public class FollowLimeLightTargetCommand extends Command {
         m_DriveSubsystem.drive(
             m_DriverController.getLeftX(),
             m_DriverController.getLeftY(),
-            rot, true, false);
+            rot, true);
     }
 
 }

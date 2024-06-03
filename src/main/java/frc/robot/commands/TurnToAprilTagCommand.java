@@ -1,23 +1,15 @@
 package frc.robot.commands;
 
-import java.lang.annotation.Target;
-
-import org.photonvision.PhotonCamera;
-import org.photonvision.PhotonUtils;
-import org.photonvision.targeting.PhotonTrackedTarget;
-
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.vision.Vision;
-import frc.utils.LimelightHelpers;
 
 public class TurnToAprilTagCommand extends Command {
-    private final DriveSubsystem m_DriveSubsystem;
+    private final Drive m_DriveSubsystem;
     private final Vision vision;
 
-    public TurnToAprilTagCommand(DriveSubsystem ds, Vision vs) {
+    public TurnToAprilTagCommand(Drive ds, Vision vs) {
         m_DriveSubsystem = ds;
         vision = vs;
         addRequirements(m_DriveSubsystem);
@@ -28,7 +20,7 @@ public class TurnToAprilTagCommand extends Command {
         SmartDashboard.getBoolean("Locked On", vision.lockedOn());
         double angleDelta = 0;
         double distanceDelta = 0;
-        
+
         if (vision.hasSpeakerTag()) {
             angleDelta = vision.getAngleToSpeaker();
             distanceDelta = vision.getDistanceToShootingPosition();
@@ -43,17 +35,13 @@ public class TurnToAprilTagCommand extends Command {
             }
             SmartDashboard.putNumber("trying xSpeed", xSpeed);
             SmartDashboard.putNumber("tryingRot", rot);
-            
-            m_DriveSubsystem.drive(
-                    xSpeed,
-                    0,
-                    rot, false, false);
+
+            m_DriveSubsystem.drive(xSpeed, 0, rot, false);
         } else {
-            m_DriveSubsystem.drive(0, 0, 0, true, false);
+            m_DriveSubsystem.drive(0, 0, 0, true);
             return;
         }
     }
-    
 
     @Override
     public boolean isFinished() {

@@ -2,18 +2,18 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.DriveSubsystem;
+import frc.robot.subsystems.drive.Drive;
 import frc.robot.subsystems.intake.Intake;
 import frc.utils.LimelightHelpers;
 
 public class AutoLimeLightTargetCommand extends Command {
   private final Intake intake;
-  private final DriveSubsystem m_DriveSubsystem;
+  private final Drive drive;
 
-  public AutoLimeLightTargetCommand(DriveSubsystem ds, Intake intake) {
-    m_DriveSubsystem = ds;
+  public AutoLimeLightTargetCommand(Drive drive, Intake intake) {
+    this.drive = drive;
     this.intake = intake;
-    addRequirements(m_DriveSubsystem);
+    addRequirements(drive);
   }
 
   @Override
@@ -34,7 +34,7 @@ public class AutoLimeLightTargetCommand extends Command {
 
     SmartDashboard.putNumber("Auto Rotation", rot);
 
-    m_DriveSubsystem.drive(ySpeed, 0, rot, false, false);
+    drive.drive(ySpeed, 0, rot, false);
   }
 
   // Returns true when the command should end.

@@ -7,9 +7,6 @@ import com.revrobotics.CANSparkFlex;
 import com.revrobotics.CANSparkLowLevel.MotorType;
 import com.revrobotics.RelativeEncoder;
 
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.Solenoid;
-
 public class ShooterIOSparkFlex implements ShooterIO {
 
     private final CANSparkFlex topLeftMotor;
