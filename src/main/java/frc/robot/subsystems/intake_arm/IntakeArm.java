@@ -4,6 +4,7 @@ package frc.robot.subsystems.intake_arm;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -56,6 +57,9 @@ public class IntakeArm extends SubsystemBase {
     @AutoLogOutput @Getter
     private double teleopInput = 0.0;
 
+    private final IntakeArmMechanism actualMechanism;
+    private final IntakeArmMechanism goalMechanism;
+
     public IntakeArm(IntakeArmIO io) {
         this.io = io;
         pid = switch(Constants.getRobot()) {
@@ -63,6 +67,8 @@ public class IntakeArm extends SubsystemBase {
             default -> new PIDController(0.0, 0.0, 0.0);
         };
         pid.setSetpoint(goal.getArmSetpointSupplier().getAsDouble());
+        actualMechanism = new IntakeArmMechanism("actual", Color.kBlueViolet);
+        goalMechanism = new IntakeArmMechanism("goal", Color.kGreen);
     }
 
     public void periodic() {
@@ -89,6 +95,9 @@ public class IntakeArm extends SubsystemBase {
             }
             default -> io.stopArm();
         }
+
+        actualMechanism.update(inputs.position);
+        goalMechanism.update(goal.getArmSetpointSupplier().getAsDouble());
     }
 
     @AutoLogOutput

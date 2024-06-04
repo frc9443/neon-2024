@@ -15,7 +15,10 @@
   },
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/AdvantageKit/RealOutputs/IntakeArm/Mechanism2d/actual": "Mechanism2d",
+      "/AdvantageKit/RealOutputs/IntakeArm/Mechanism2d/goal": "Mechanism2d",
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Auto Routine": "String Chooser"
     }
   },
   "NetworkTables": {
