@@ -71,7 +71,7 @@ public class IntakeArm extends SubsystemBase {
             default -> new PIDController(1.0, 0.0, 0.0);
         };
         pid.setSetpoint(goal.getArmSetpointSupplier().getAsDouble());
-        ff = new SimpleMotorFeedforward(kS.getAsDouble(), 1.0);
+        ff = new SimpleMotorFeedforward(kS.getAsDouble(), 2.0);
         actualMechanism = new IntakeArmMechanism("actual", Color.kBlueViolet);
         goalMechanism = new IntakeArmMechanism("goal", Color.kGreen);
     }
@@ -149,7 +149,7 @@ public class IntakeArm extends SubsystemBase {
                 () -> setGoal(goal),
                 () -> {},
                 (interrupted) -> stop(),
-                this::atGoal,
+                () -> false,
                 this);
     }
 

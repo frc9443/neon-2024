@@ -38,8 +38,8 @@ public class IntakeIOSparkMax implements IntakeIO {
         leftRoller.setCANTimeout(250);
         rightRoller.setCANTimeout(250);
 
-        leftRoller.setInverted(false);
-        rightRoller.setInverted(false);
+        leftRoller.setInverted(true);
+        rightRoller.setInverted(true);
 
         leftRoller.setSmartCurrentLimit(30);
         rightRoller.setSmartCurrentLimit(30);
@@ -71,7 +71,7 @@ public class IntakeIOSparkMax implements IntakeIO {
         inputs.appliedVoltsRight = rightRoller.getAppliedOutput();
         inputs.currentAmpsRight = rightRoller.getOutputCurrent();
 
-        inputs.hasNote = leftSwitch.get() || rightSwitch.get();
+        inputs.hasNote = !leftSwitch.get() || !rightSwitch.get();
     }
 
     @Override
