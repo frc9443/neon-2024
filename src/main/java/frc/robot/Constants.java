@@ -24,9 +24,9 @@ import frc.robot.subsystems.drive.DriveConstants;
 public final class Constants {
   public static final double loopPeriodSeconds = 0.02; // 20ms loop
 
-  private static RobotType robotType = RobotType.NEON;
+  private static RobotType robotType = RobotType.SIM;
   public static ControlMode controlMode = ControlMode.Neon_2024_PostSeason;
-  public static final boolean tuningMode = false;
+  public static final boolean tuningMode = true;
 
   public static RobotType getRobot() {
     if (RobotBase.isReal() && robotType == RobotType.SIM) {

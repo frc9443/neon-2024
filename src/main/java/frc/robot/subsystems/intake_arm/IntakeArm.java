@@ -3,6 +3,7 @@ package frc.robot.subsystems.intake_arm;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.SimpleMotorFeedforward;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,6 +15,7 @@ import org.littletonrobotics.junction.Logger;
 
 import frc.utils.LoggedTunableNumber;
 
+import java.util.Random;
 import java.util.function.DoubleSupplier;
 
 import lombok.Getter;
@@ -24,12 +26,13 @@ public class IntakeArm extends SubsystemBase {
     private static final LoggedTunableNumber kP = new LoggedTunableNumber("IntakeArm/Gains/kP", IntakeArmConstants.gains.kP());
     private static final LoggedTunableNumber kI = new LoggedTunableNumber("IntakeArm/Gains/kI", IntakeArmConstants.gains.kI());
     private static final LoggedTunableNumber kD = new LoggedTunableNumber("IntakeArm/Gains/kD", IntakeArmConstants.gains.kD());
-    private static final LoggedTunableNumber ff = new LoggedTunableNumber("IntakeArm/Gains/ff", IntakeArmConstants.ff);
+    private static final LoggedTunableNumber kS = new LoggedTunableNumber("IntakeArm/Gains/ff", IntakeArmConstants.gains.kS());
 
     private final IntakeArmIO io;
     private final IntakeArmIOInputsAutoLogged inputs = new IntakeArmIOInputsAutoLogged();
 
     private final PIDController pid;
+    private final SimpleMotorFeedforward ff;
 
     public DoubleSupplier outThreshold = new LoggedTunableNumber("IntakeArm/OutThreshold", IntakeArmConstants.outThreshold);
 
@@ -64,9 +67,11 @@ public class IntakeArm extends SubsystemBase {
         this.io = io;
         pid = switch(Constants.getRobot()) {
             case NEON -> new PIDController(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble());
-            default -> new PIDController(0.0, 0.0, 0.0);
+            // case SIM -> new PIDController(kP.getAsDouble(), kI.getAsDouble(), kD.getAsDouble());
+            default -> new PIDController(1.0, 0.0, 0.0);
         };
         pid.setSetpoint(goal.getArmSetpointSupplier().getAsDouble());
+        ff = new SimpleMotorFeedforward(kS.getAsDouble(), 1.0);
         actualMechanism = new IntakeArmMechanism("actual", Color.kBlueViolet);
         goalMechanism = new IntakeArmMechanism("goal", Color.kGreen);
     }
@@ -85,17 +90,16 @@ public class IntakeArm extends SubsystemBase {
                 }
             }
             case GOAL -> {
+                double output = pid.calculate(inputs.position);
                 if (atGoal()) {
                     io.stopArm();
                 } else {
-                    double output = pid.calculate(inputs.position);
-                    double voltage = (12.0 - ff.getAsDouble()) * output + Math.signum(output) * ff.getAsDouble();
+                    double voltage = ff.calculate(output);
                     io.moveArm(MathUtil.clamp(voltage, -12.0, 12.0));
                 }
             }
             default -> io.stopArm();
         }
-
         actualMechanism.update(inputs.position);
         goalMechanism.update(goal.getArmSetpointSupplier().getAsDouble());
     }
