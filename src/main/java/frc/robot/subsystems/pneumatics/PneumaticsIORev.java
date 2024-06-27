@@ -31,7 +31,7 @@ public class PneumaticsIORev implements PneumaticsIO {
         inputs.minPressure = currentMin;
         inputs.maxPressure = currentMax;
 
-        inputs.shooterAngle = shootingAngleSolenoid.get() ? ShooterAngle.HIGH : ShooterAngle.LOW;
+        inputs.shooterAngle = shootingAngleSolenoid.get() ? ShooterAngle.LOW : ShooterAngle.HIGH;
     }
 
     public void setPressure(double min, double max) {

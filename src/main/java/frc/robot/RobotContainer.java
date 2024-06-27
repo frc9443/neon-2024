@@ -65,9 +65,9 @@ public class RobotContainer {
                                 intake = new Intake(new IntakeIOSparkMax());
                                 intakeArm = new IntakeArm(new IntakeArmIOSparkMax());
                                 shooter = new Shooter(new ShooterIOSparkFlex());
-                                // pneumatics = new Pneumatics(new PneumaticsIORev());
+                                pneumatics = new Pneumatics(new PneumaticsIORev());
                                 leds = new Leds(new LedsIOBlinkin());
-                                // vision = new Vision(new VisionIOPhoton());
+                                vision = new Vision(new VisionIOPhoton());
                         }
                         case HELIUM -> {
                                 drive = new Drive(new GyroIONavX(),
