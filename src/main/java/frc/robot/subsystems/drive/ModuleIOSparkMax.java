@@ -49,13 +49,11 @@ import java.util.Queue;
 public class ModuleIOSparkMax implements ModuleIO {
   // Gear ratios for SDS MK4i L2, adjust as necessary
   private static final double DRIVE_GEAR_RATIO = (50.0 / 14.0) * (17.0 / 27.0) * (45.0 / 15.0);
-  private static final double TURN_GEAR_RATIO = 150.0 / 7.0;
 
   private final CANSparkMax driveSparkMax;
   private final CANSparkMax turnSparkMax;
 
   private final RelativeEncoder driveEncoder;
-  private final RelativeEncoder turnRelativeEncoder;
   private final AbsoluteEncoder turnAbsoluteEncoder;
   private final Queue<Double> timestampQueue;
   private final Queue<Double> drivePositionQueue;
@@ -122,7 +120,6 @@ public class ModuleIOSparkMax implements ModuleIO {
     turnSparkMax.setCANTimeout(250);
 
     driveEncoder = driveSparkMax.getEncoder();
-    turnRelativeEncoder = turnSparkMax.getEncoder();
 
     turnSparkMax.setInverted(isTurnMotorInverted);
     driveSparkMax.setSmartCurrentLimit(50);
@@ -136,9 +133,8 @@ public class ModuleIOSparkMax implements ModuleIO {
     driveEncoder.setMeasurementPeriod(10);
     driveEncoder.setAverageDepth(2);
 
-    turnRelativeEncoder.setPosition(0.0);
-    turnRelativeEncoder.setMeasurementPeriod(10);
-    turnRelativeEncoder.setAverageDepth(2);
+    turnAbsoluteEncoder.setPositionConversionFactor(Math.PI * 2.0);
+    turnAbsoluteEncoder.setAverageDepth(2);
 
     driveSparkMax.setCANTimeout(0);
     turnSparkMax.setCANTimeout(0);
@@ -161,7 +157,7 @@ public class ModuleIOSparkMax implements ModuleIO {
     turnPositionQueue = SparkMaxOdometryThread.getInstance()
         .registerSignal(
             () -> {
-              double value = turnRelativeEncoder.getPosition();
+              double value = turnAbsoluteEncoder.getPosition();
               if (turnSparkMax.getLastError() == REVLibError.kOk) {
                 return OptionalDouble.of(value);
               } else {
@@ -181,11 +177,10 @@ public class ModuleIOSparkMax implements ModuleIO {
     inputs.driveAppliedVolts = driveSparkMax.getAppliedOutput() * driveSparkMax.getBusVoltage();
     inputs.driveCurrentAmps = new double[] { driveSparkMax.getOutputCurrent() };
 
-    inputs.turnAbsolutePosition = new Rotation2d(turnAbsoluteEncoder.getPosition())
+    inputs.turnAbsolutePosition = new Rotation2d(turnAbsoluteEncoder.getPosition() - Math.PI)
         .minus(absoluteEncoderOffset);
-    inputs.turnPosition = Rotation2d.fromRotations(turnRelativeEncoder.getPosition() / TURN_GEAR_RATIO);
-    inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(turnRelativeEncoder.getVelocity())
-        / TURN_GEAR_RATIO;
+    inputs.turnPosition = inputs.turnAbsolutePosition;
+    inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(turnAbsoluteEncoder.getVelocity());
     inputs.turnAppliedVolts = turnSparkMax.getAppliedOutput() * turnSparkMax.getBusVoltage();
     inputs.turnCurrentAmps = new double[] { turnSparkMax.getOutputCurrent() };
 
@@ -194,7 +189,7 @@ public class ModuleIOSparkMax implements ModuleIO {
         .mapToDouble((Double value) -> Units.rotationsToRadians(value) / DRIVE_GEAR_RATIO)
         .toArray();
     inputs.odometryTurnPositions = turnPositionQueue.stream()
-        .map((Double value) -> Rotation2d.fromRotations(value / TURN_GEAR_RATIO))
+        .map((Double value) -> Rotation2d.fromRotations(value))
         .toArray(Rotation2d[]::new);
     timestampQueue.clear();
     drivePositionQueue.clear();
