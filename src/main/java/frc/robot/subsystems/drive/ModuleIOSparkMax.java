@@ -60,7 +60,6 @@ public class ModuleIOSparkMax implements ModuleIO {
   private final Queue<Double> turnPositionQueue;
 
   private final boolean isTurnMotorInverted = true;
-  private final Rotation2d absoluteEncoderOffset;
 
   public ModuleIOSparkMax(int index) {
     switch (Constants.getRobot()) {
@@ -111,7 +110,6 @@ public class ModuleIOSparkMax implements ModuleIO {
     }
 
     turnAbsoluteEncoder = turnSparkMax.getAbsoluteEncoder(Type.kDutyCycle);
-    absoluteEncoderOffset = new Rotation2d(0.0);
 
     driveSparkMax.restoreFactoryDefaults();
     turnSparkMax.restoreFactoryDefaults();
@@ -133,7 +131,6 @@ public class ModuleIOSparkMax implements ModuleIO {
     driveEncoder.setMeasurementPeriod(10);
     driveEncoder.setAverageDepth(2);
 
-    turnAbsoluteEncoder.setPositionConversionFactor(Math.PI * 2.0);
     turnAbsoluteEncoder.setAverageDepth(2);
 
     driveSparkMax.setCANTimeout(0);
@@ -177,9 +174,9 @@ public class ModuleIOSparkMax implements ModuleIO {
     inputs.driveAppliedVolts = driveSparkMax.getAppliedOutput() * driveSparkMax.getBusVoltage();
     inputs.driveCurrentAmps = new double[] { driveSparkMax.getOutputCurrent() };
 
-    inputs.turnAbsolutePosition = new Rotation2d(turnAbsoluteEncoder.getPosition() - Math.PI)
-        .minus(absoluteEncoderOffset);
-    inputs.turnPosition = inputs.turnAbsolutePosition;
+    double turnPositionInRadians = turnAbsoluteEncoder.getPosition() * 2.0 * Math.PI; // Encoder returns value between 0.0 and 1.0
+    inputs.turnAbsolutePosition = new Rotation2d(turnPositionInRadians);
+    inputs.turnPosition = new Rotation2d(Math.PI - turnPositionInRadians); // Encoder is inverted
     inputs.turnVelocityRadPerSec = Units.rotationsPerMinuteToRadiansPerSecond(turnAbsoluteEncoder.getVelocity());
     inputs.turnAppliedVolts = turnSparkMax.getAppliedOutput() * turnSparkMax.getBusVoltage();
     inputs.turnCurrentAmps = new double[] { turnSparkMax.getOutputCurrent() };
